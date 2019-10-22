@@ -2,7 +2,7 @@
 
 # env
 
-¸¸¸
+```
 
 # NODE_ENV
 
@@ -50,4 +50,4 @@ FRONTEND_PORT=3000
 PUBLIC_URL=localhost:3000
 PUBLIC_API_URL=
 
-¸¸¸
+```
