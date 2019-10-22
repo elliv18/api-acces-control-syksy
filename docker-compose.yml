@@ -1,0 +1,74 @@
+version: "3.5"
+
+services:
+  prisma:
+    image: prismagraphql/prisma:1.32
+    restart: always
+    ports:
+      - "${PRISMA_PORT}:${PRISMA_PORT}"
+    environment:
+      PRISMA_CONFIG: |
+        port: ${PRISMA_PORT}
+        databases:
+          default:
+            connector: postgres
+            host: postgres
+            port: 5432
+            user: prisma
+            password: prisma
+  postgres:
+    image: postgres:10.3
+    restart: always
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  backend:
+    build:
+      context: ./
+      dockerfile: .dockerfiles/backendDev
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./backend:/opt/app
+    environment:
+      NODE_ENV: development
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_PORT: ${BACKEND_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      SALT_ROUNDS: ${SALT_ROUNDS}
+      MIN_PW: ${MIN_PW}
+      ROOT_ADMIN_EMAIL: ${ROOT_ADMIN_EMAIL}
+      ROOT_ADMIN_PASS: ${ROOT_ADMIN_PASS}
+      ROOT_ADMIN_FIRST_NAME: ${ROOT_ADMIN_FIRST_NAME}
+      ROOT_ADMIN_LAST_NAME: ${ROOT_ADMIN_LAST_NAME}
+      ROOT_ADMIN_ADDRESS: ${ROOT_ADMIN_ADDRESS}
+      ROOT_ADMIN_PERSON_NUMBER: ${ROOT_ADMIN_PERSON_NUMBER}
+      ROOT_ADMIN_PHONE: ${ROOT_ADMIN_PHONE}
+    env_file: .env
+    depends_on:
+      - prisma
+    restart: always
+    # Uncomment line below when doing destructive data model updates (comment again afterwards)
+    #command: yarn prisma:force-deploy
+  frontend:
+    build:
+      context: ./
+      dockerfile: .dockerfiles/frontendDev
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    volumes:
+      - ./frontend:/opt/app
+      - /opt/app/node_modules/.cache/
+    environment:
+      NODE_ENV: development
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_PORT: ${BACKEND_PORT}
+      PUBLIC_URL: ${PUBLIC_URL}
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+    restart: always
+volumes:
+  postgres: ~
