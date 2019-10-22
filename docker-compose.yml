@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   prisma:
-    image: prismagraphql/prisma:1.32
+    image: prismagraphql/prisma:1.34
     restart: always
     ports:
       - "${PRISMA_PORT}:${PRISMA_PORT}"
@@ -43,11 +43,6 @@ services:
       MIN_PW: ${MIN_PW}
       ROOT_ADMIN_EMAIL: ${ROOT_ADMIN_EMAIL}
       ROOT_ADMIN_PASS: ${ROOT_ADMIN_PASS}
-      ROOT_ADMIN_FIRST_NAME: ${ROOT_ADMIN_FIRST_NAME}
-      ROOT_ADMIN_LAST_NAME: ${ROOT_ADMIN_LAST_NAME}
-      ROOT_ADMIN_ADDRESS: ${ROOT_ADMIN_ADDRESS}
-      ROOT_ADMIN_PERSON_NUMBER: ${ROOT_ADMIN_PERSON_NUMBER}
-      ROOT_ADMIN_PHONE: ${ROOT_ADMIN_PHONE}
     env_file: .env
     depends_on:
       - prisma

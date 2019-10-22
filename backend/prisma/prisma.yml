@@ -1,0 +1,6 @@
+endpoint: http://prisma:3060
+datamodel: datamodel.prisma
+
+generate:
+  - generator: typescript-client
+    output: ../src/generated/prisma-client/
