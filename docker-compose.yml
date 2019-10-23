@@ -65,5 +65,23 @@ services:
       PUBLIC_URL: ${PUBLIC_URL}
       PUBLIC_API_URL: ${PUBLIC_API_URL}
     restart: always
+  gateway:
+      image: tykio/tyk-gateway:latest
+      ports:
+        - "8080:8080"
+      volumes:
+        - ./gateway/tyk.conf:/opt/tyk-gateway/tyk.conf
+        - ./gateway/apps:/opt/tyk-gateway/apps
+      environment: 
+        TYK_GW_SECRET: ${TYK_SECRET}
+      depends_on:
+        - redis
+  redis:
+    image: redis:5.0-alpine
+    #ports:
+    #  - "6379:6379"
+    #volumes:
+    #  - redis-data:/data
 volumes:
   postgres: ~
+  redis-data:
