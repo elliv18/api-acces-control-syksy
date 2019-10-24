@@ -13,20 +13,13 @@ function create(initialState) {
   let URL;
   const JWT = IS_BROWSER && Cookies.get("jwtToken");
   const temp = JWT ? `Bearer ${JWT}` : null;
-  console.log("paskaa", temp);
 
+  console.log(temp);
   if (NODE_ENV === "production") {
     URL = PUBLIC_API_URL;
   } else {
-    console.log(`
-      NODE_ENV: ${NODE_ENV}
-      BACKEND_HOST: ${BACKEND_HOST}
-      BACKEND_PORT: ${BACKEND_PORT}
-      PUBLIC_API_URL: ${PUBLIC_API_URL}
-    `);
-    console.log("JWT: ", JWT ? `Bearer ${JWT}` : null);
-
     URL = "http://localhost:3050";
+    // KIINTEÄ LOCALHOST///////////////////////
   }
 
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient

@@ -1,9 +1,12 @@
-import App, { Container } from "next/app";
 import React from "react";
 import Head from "next/head";
+import { ThemeProvider } from "@material-ui/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import theme from "../src/theme";
+
+import App, { Container } from "next/app";
 import withApolloClient from "../lib/with-apollo-client";
 import { ApolloProvider } from "react-apollo";
-import JssProvider from "react-jss/lib/JssProvider";
 import getPageContext from "../src/getPageContext";
 
 class MyApp extends App {
@@ -13,35 +16,29 @@ class MyApp extends App {
   }
 
   componentDidMount() {
-    //poistaa tokenin kun selain suljetaan
-    //window.localStorage.removeItem('jwtToken')
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles && jssStyles.parentNode) {
+    if (jssStyles) {
       jssStyles.parentNode.removeChild(jssStyles);
     }
   }
 
   render() {
-    const { Component, pageProps, apolloClient } = this.props;
-    return (
-      <Container>
-        <Head>
-          <title>Borrowd - Lainausjärjestelmä</title>
-        </Head>
+    const { Component, pageProps } = this.props;
 
-        {/* Wrap every page in Jss and Theme providers */}
-        <JssProvider
-          registry={this.pageContext.sheetsRegistry}
-          generateClassName={this.pageContext.generateClassName}
-        >
-          {/* Pass pageContext to the _document though the renderPage enhancer
-                to render collected styles on server-side. */}
-          <ApolloProvider client={apolloClient}>
+    return (
+      <React.Fragment>
+        <Head>
+          <title>My page</title>
+        </Head>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <ApolloProvider client={this.props.apolloClient}>
             <Component pageContext={this.pageContext} {...pageProps} />
           </ApolloProvider>
-        </JssProvider>
-      </Container>
+        </ThemeProvider>
+      </React.Fragment>
     );
   }
 }
