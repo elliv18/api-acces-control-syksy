@@ -73,7 +73,7 @@ services:
         - ./gateway/tyk.conf:/opt/tyk-gateway/tyk.conf
         - ./gateway/apps:/opt/tyk-gateway/apps
       environment: 
-        TYK_GW_SECRET: ${TYK_SECRET}
+        TYK_GW_SECRET: ${TYK_GW_SECRET}
       depends_on:
         - redis
   redis:

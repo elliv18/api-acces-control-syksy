@@ -29,7 +29,7 @@
     },
     "proxy": {
         "listen_path": "/first-api",
-        "target_url": "https://jsonplaceholder.typicode.com/todos",
+        "target_url": "https://jsonplaceholder.typicode.com",
         "strip_listen_path": true
     },
     "enable_batch_request_support": true
