@@ -171,6 +171,7 @@ class Login extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={() => this.logIn()}
             >
               Sign In
             </Button>
@@ -181,7 +182,7 @@ class Login extends React.Component {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signUp" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
