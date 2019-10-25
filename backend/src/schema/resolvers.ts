@@ -1,7 +1,7 @@
 import * as bcrypt from "bcryptjs";
 import * as _ from "lodash";
 import { sign } from "jsonwebtoken";
-//import { mustBeLoggedIn, mustBeAtleastLevel, UserLevels } from "../misc/auth";
+import { mustBeLoggedIn, mustBeAtleastLevel, UserLevels } from "../misc/auth";
 import { prisma } from "../generated/prisma-client";
 import {
   JWT_SECRET,
@@ -15,7 +15,7 @@ import logger from "../misc/logger";
 
 export default {
   /*************** RELATIONS *******************/
-  /*User: {
+  User: {
     async apiKeysId(user) {
       return await prisma.user({ id: user.id }).apiKeysId();
     }
@@ -26,10 +26,23 @@ export default {
     }
   },
   /*************** QUERY ***********************/
+  Query: {
+    allUsers: async (obj, args, { currentUser }) => {
+      //mustBeLoggedIn(currentUser);
+      //mustBeAtleastLevel(currentUser, UserLevels.STAFF);
+
+      /*logger.log(
+        "info",
+        "[Q ALLUSERS] User %s - list all users",
+        currentUser.id
+      );*/
+      return await prisma.users();
+    }
+  },
   /*************** MUTATIONS *******************/
   Mutation: {
     currentUser: async (obj, args, { currentUser }) => {
-      //mustBeLoggedIn(currentUser);
+      mustBeLoggedIn(currentUser);
 
       logger.log(
         "info",
@@ -64,7 +77,39 @@ export default {
         email
       );
       return { jwt };
+    },
+    signup: async (obj, { input: { email, password, passwordAgain } }) => {
+      const check = await prisma.user({ email: email });
+
+      if (check) {
+        logger.log("warn", "[M SIGNUP] Email %s found", email);
+        throw new Error("Email found!");
+      }
+
+      if (password != passwordAgain) {
+        logger.log("warn", "[M SIGNUP] Password don't match!");
+        throw new Error("Password don't match!");
+      }
+
+      // bcryptjs max input lenght is 18
+      if (password.length > MAX_PW) {
+        logger.log("warn", "[M SIGNUP] Password is too long!");
+        throw new Error("Password too long!");
+      }
+
+      // password min lenght
+      if (password.length < MIN_PW) {
+        logger.log("warn", "[M SIGNUP] Password is too short!");
+        throw new Error("Password too short!");
+      }
+
+      const user = prisma.createUser({
+        userType: "USER",
+        email: email,
+        password: await bcrypt.hash(password, SALT_ROUNDS)
+      });
+
+      return { user };
     }
-    //signup: async (obj, { input: { email, password } }) => {}
   }
 };

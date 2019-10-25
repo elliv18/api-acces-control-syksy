@@ -8,23 +8,16 @@ import {
   PRODUCTION
 } from "./environment";
 import { typeDefs, resolvers } from "./schema";
-//import createRootAdmin from "./misc/rootAdmin";
+import createRootAdmin from "./misc/rootAdmin";
 import logger from "./misc/logger";
-//import RDG from "./misc/randomDataGenerator";
 
 // Creating root admin if db is empty...
-//createRootAdmin();
-
-// Generate fake data if development is on
-/*if (NODE_ENV == "development") {
-  // paljonko generoidaan nro?
-  RDG(100);
-}*/
+createRootAdmin();
 
 const server = new GraphQLServer({
   typeDefs,
-  resolvers
-  /*context: async ctx => {
+  resolvers,
+  context: async ctx => {
     const auth = ctx.request.get("Authorization");
     let currentUser = null;
     if (auth != null) {
@@ -41,7 +34,7 @@ const server = new GraphQLServer({
       }
     }
     return { currentUser };
-  }*/
+  }
 });
 
 // Server settings - cors allow all

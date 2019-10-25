@@ -37,21 +37,27 @@ export default `
     # Queries #
     ###########
 
-    #type Query {
-
-    #}
+    type Query {
+        allUsers: [User]
+    }
 
     #############
     # Mutations #
     #############
 
     type Mutation {
+        ########## CURRENTUSER ##############
+
+        currentUser: User
+
         ############# LOGIN #################
 
         # ALL - login
-        # login(input: LoginInput!): LoginPayload
+        login(input: LoginInput!): LoginPayload
 
         ############# SIGNUP ################
+
+        signup(input: SignupInput!): SignupPayload
 
     }
 
@@ -70,5 +76,14 @@ export default `
     }
 
     ################ SIGNUP ########################
+
+    input SignupInput {
+        email: String!
+        password: String!
+        passwordAgain: String!
+    }
+    type SignupPayload {
+        user: User
+    }
 
 `;
