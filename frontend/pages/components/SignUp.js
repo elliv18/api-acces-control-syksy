@@ -13,6 +13,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withApollo } from "react-apollo";
+import { SIGNUP_MUTATION } from "../../lib/gql/mutations";
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 function Copyright() {
   return (
@@ -60,13 +67,65 @@ class SignUp extends React.Component {
     this.state = {
       email: "",
       password: "",
+      passwordAgain: "",
+      open: false,
+      ok: undefined,
       client: props.client
     };
     // STATE ENDS
   }
 
+  setEmail = e => {
+    this.setState({ email: e.target.value });
+  };
+  setPassword = e => {
+    this.setState({ password: e.target.value });
+
+  };
+  setPasswordAgain = e => {
+    this.setState({ passwordAgain: e.target.value });
+
+  };
+
+  signIn = async () => {
+    const { email, password, client, passwordAgain } = this.state;
+    console.log(email, password, passwordAgain)
+
+    await client
+      .mutate({
+        variables: {
+          email: email,
+          password: password,
+          passwordAgain: passwordAgain,
+          open: false,
+          errorMsg: undefined,
+        },
+        mutation: SIGNUP_MUTATION
+      })
+      .then(res => {
+        console.log(res)
+        this.handleClickOpen(),
+          this.setState({ ok: true })
+      })
+      .catch(e => {
+        console.log(e)
+        this.handleClickOpen()
+        this.setState({ ok: false })
+        this.setState({ errorMsg: e.message.replace('GraphQL error:', '').trim(), })
+      })
+  }
+
+  handleClickOpen = () => {
+    this.setState({ open: true })
+  };
+
+  handleClose = () => {
+    this.setState({ open: false })
+  };
+
   render() {
     const { classes } = this.props;
+    const { open } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -79,7 +138,7 @@ class SignUp extends React.Component {
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="fname"
                   name="firstName"
@@ -101,16 +160,26 @@ class SignUp extends React.Component {
                   name="lastName"
                   autoComplete="lname"
                 />
-              </Grid>
+             </Grid>*/
+              }
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
-                  required
+                  autoFocus
+                  required={true}
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={this.setEmail}
+                  onKeyPress={async ev => {
+                    if (ev.key === "Enter") {
+                      this.state.email.length == 0
+                        ? (this.setState({ errorMsg: "Email can't be empty!" }), this.handleClickOpen())
+                        : document.getElementById("password").focus();
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -123,27 +192,49 @@ class SignUp extends React.Component {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onChange={this.setPassword}
+                  onKeyPress={async ev => {
+                    if (ev.key === "Enter") {
+                      this.state.password.length == 0
+                        ? (this.setState({ errorMsg: "Password can't be empty!" }), this.handleClickOpen())
+                        : document.getElementById("passwordAgain").focus();
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="passwordAgain"
+                  label="Password again"
+                  type="password"
+                  id="passwordAgain"
+                  autoComplete="current-password"
+                  onChange={this.setPasswordAgain}
+                  onKeyPress={async ev => {
+                    if (ev.key === "Enter") {
+                      this.state.passwordAgain.length == 0
+                        ? (this.setState({ errorMsg: "Password can't be empty!" }), this.handleClickOpen())
+                        : this.signIn()
+                    }
+                  }}
                 />
               </Grid>
+
             </Grid>
             <Button
-              type="submit"
+              //type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={() => this.signIn()}
             >
               Sign Up
             </Button>
-            <Grid container justify="flex-end">
+            <Grid container justify="center">
               <Grid item>
                 <Link href="/" variant="body2">
                   Already have an account? Sign in
@@ -155,6 +246,37 @@ class SignUp extends React.Component {
         <Box mt={5}>
           <Copyright />
         </Box>
+
+
+        <Dialog
+          open={open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            {this.state.ok
+              ? <DialogContentText id="alert-dialog-description">
+                You have now an account! Please go to login page to continue.
+              </DialogContentText>
+              : <DialogContentText id="alert-dialog-description">
+                <b>Error: </b>{this.state.errorMsg}
+              </DialogContentText>
+            }
+          </DialogContent>
+          <DialogActions style={{ justifyContent: 'center' }}>
+            {this.state.ok
+              ? <Link href="/" variant="body2">
+                {"Move to login page"}
+              </Link>
+
+              : <Button onClick={() => this.handleClose()} autoFocus>
+                Close
+              </Button>
+            }
+
+          </DialogActions>
+        </Dialog>
       </Container>
     );
   }
