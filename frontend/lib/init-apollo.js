@@ -12,13 +12,20 @@ let apolloClient = null;
 function create(initialState) {
   let URL;
   const JWT = IS_BROWSER && Cookies.get("jwtToken");
-  const temp = JWT ? `Bearer ${JWT}` : null;
+  const temp = JWT !== null ? `Bearer ${JWT}` : null;
 
   console.log(temp);
   if (NODE_ENV === "production") {
     URL = PUBLIC_API_URL;
   } else {
-    URL = "http://localhost:3050";
+    console.log(`
+    NODE_ENV: ${NODE_ENV}
+    BACKEND_HOST: ${BACKEND_HOST}
+    BACKEND_PORT: ${BACKEND_PORT}
+    PUBLIC_API_URL: ${PUBLIC_API_URL}
+  `);
+
+    URL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
     // KIINTEÄ LOCALHOST///////////////////////
   }
 

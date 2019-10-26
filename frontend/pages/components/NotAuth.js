@@ -1,12 +1,13 @@
 import React from "react";
 import { Paper, Button, Link, withStyles } from "@material-ui/core";
+import NoSsr from '../../src/components/disbaleSsr'
 
 const styles = theme => ({
     margin: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing() * 2,
     },
     root: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(),
         minWidth: '230px',
         position: 'inherit',
         marginTop: '10%',
@@ -24,15 +25,17 @@ const styles = theme => ({
 const NotAuth = (props) => {
     const { classes } = props
     return (
-        <Paper className={classes.root}>
-            <div className={classes.content}>
-                <h1>Not authenticated</h1>
-                <Button href='/' className={classes.button}>
-                    Back to login
-            </Button>
-            </div>
+        <NoSsr>
+            <Paper className={classes.root}>
+                <div className={classes.content}>
+                    <h1>Not authenticated</h1>
+                    <Button href='/' className={classes.button}>
+                        Back to login
+                    </Button>
+                </div>
 
-        </Paper>
+            </Paper>
+        </NoSsr>
     )
 }
 export default withStyles(styles)(NotAuth)

@@ -19,3 +19,25 @@ mutation signInMutation($email: String!, $password: String!, $passwordAgain: Str
   }
 }
 `;
+
+
+
+export const EQUIPMENT_DELETE_MUTATION = gql`
+  mutation deleteMutation($id: ID!) {
+    deviceDelete(input: { id: $id }) {
+      device {
+        id
+      }
+    }
+  }
+`;
+
+/*********************** CURRENTUSER ****************************/
+
+export const CURRENTUSER = gql`
+  mutation {
+    currentUser {
+      email
+    }
+  }
+`;

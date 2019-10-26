@@ -9,6 +9,9 @@ import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import logOut from '../../src/components/logOut'
 import NotAuth from './NotAuth'
+import NoSsr from '../../src/components/disbaleSsr'
+import CheckLogIn from '../../src/components/checkLogIn'
+import { CURRENTUSER } from "../../lib/gql/mutations";
 
 const styles = theme => ({
   paper: {
@@ -26,7 +29,7 @@ class Home extends React.PureComponent {
 
     this.state = {
       client: props.client,
-      loggedIn: chekLogIn()
+      // loggedIn: chekLogIn()
     };
   }
   getInitialProps = ctx => {
@@ -49,21 +52,33 @@ class Home extends React.PureComponent {
         console.log(res);
       })
       .catch(e => console.log(e));
+
+    await this.state.client
+      .mutate({
+        mutation: CURRENTUSER
+      }).then(res => console.log(res))
+      .catch(e => console.log(e))
+
   }
 
   render() {
     const { loggedIn } = this.state;
     const { classes } = this.props;
-    if (loggedIn) {
-      return (
-        <Paper className={classes.paper}>
-          <h3>ETUSIVU</h3>
-          <Button onClick={() => this.handleLogOut()}>LOG OUT</Button>
-        </Paper>
-      );
-    } else {
-      return <NotAuth />;
-    }
+
+    return (
+      <div>
+        {
+          //checkLogissa noSsr
+        }
+        <CheckLogIn>
+          <Paper className={classes.paper}>
+            <h3>ETUSIVU</h3>
+            <Button onClick={() => this.handleLogOut()}>LOG OUT</Button>
+          </Paper>
+        </CheckLogIn>
+      </div>
+    );
+
   }
 }
 

@@ -97,8 +97,9 @@ class Login extends React.Component {
         mutation: LOGIN_MUTATION
       })
       .then(res => {
+        let jwt = res.data.login.jwt
         // asetetaan jwt, jos saadaan response (oikeat nimi ja salasana)
-        Cookies.set("jwtToken", res.data.login.jwt);
+        jwt !== undefined || jwt !== null ? Cookies.set("jwtToken", jwt) : null;
         window.location.href = "/home";
       })
       .catch(e => e.message.replace("GraphQL error:", "").trim());
@@ -108,11 +109,11 @@ class Login extends React.Component {
     // testataan löytyykö cookie
     Cookies.get("jwtToken")
       ? // true: Mennään kotisivulle
-        Router.push({
-          pathname: "/home"
-        })
+      Router.push({
+        pathname: "/home"
+      })
       : //false: ei tehdä mitään
-        null;
+      null;
   };
 
   render() {
