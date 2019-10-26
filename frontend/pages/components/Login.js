@@ -17,6 +17,14 @@ import { LOGIN_MUTATION } from "../../lib/gql/mutations";
 import Cookies from "js-cookie";
 import Router from "next/router";
 
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -63,6 +71,8 @@ class Login extends React.Component {
     this.state = {
       email: "",
       password: "",
+      open: false,
+      errorMsg: undefined,
       client: props.client
     };
     // STATE ENDS
@@ -75,12 +85,18 @@ class Login extends React.Component {
   // luetaan textfieldin arvot
   setEmail = e => {
     this.setState({ email: e.target.value });
-    console.log(this.state.email);
   };
   setPassword = e => {
     this.setState({ password: e.target.value });
   };
 
+  handleClickOpen = () => {
+    this.setState({ open: true })
+  };
+
+  handleClose = () => {
+    this.setState({ open: false })
+  };
   // Kirjautumis logiikka
 
   logIn = async () => {
@@ -102,7 +118,10 @@ class Login extends React.Component {
         jwt !== undefined || jwt !== null ? Cookies.set("jwtToken", jwt) : null;
         window.location.href = "/home";
       })
-      .catch(e => e.message.replace("GraphQL error:", "").trim());
+      .catch(e => {
+        this, this.setState({ errorMsg: e.message.replace("GraphQL error:", "").trim() })
+        this.handleClickOpen()
+      });
 
     // console.log(Cookies.get("jwtToken"));
 
@@ -118,6 +137,7 @@ class Login extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const { open } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -193,6 +213,38 @@ class Login extends React.Component {
         <Box mt={8}>
           <Copyright />
         </Box>
+
+        <Dialog
+          open={open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">{"ERROR"}</DialogTitle>
+
+          <DialogContent>
+            {this.state.ok
+              ? <DialogContentText id="alert-dialog-description">
+                You have now an account! Please go to login page to continue.
+              </DialogContentText>
+              : <DialogContentText id="alert-dialog-description">
+                {this.state.errorMsg}
+              </DialogContentText>
+            }
+          </DialogContent>
+          <DialogActions style={{ justifyContent: 'center' }}>
+            {this.state.ok
+              ? <Link href="/" variant="body2">
+                {"Move to login page"}
+              </Link>
+
+              : <Button onClick={() => this.handleClose()} autoFocus>
+                Close
+              </Button>
+            }
+
+          </DialogActions>
+        </Dialog>
       </Container>
     );
   }

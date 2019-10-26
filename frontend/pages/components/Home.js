@@ -10,8 +10,14 @@ import Button from "@material-ui/core/Button";
 import logOut from '../../src/components/logOut'
 import NotAuth from './NotAuth'
 import NoSsr from '../../src/components/disbaleSsr'
-import CheckLogIn from '../../src/components/checkLogIn'
 import { CURRENTUSER } from "../../lib/gql/mutations";
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+
 
 const styles = theme => ({
   paper: {
@@ -20,7 +26,16 @@ const styles = theme => ({
     flexDirection: "column",
     alignItems: "center",
     margin: 50
-  }
+  },
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
 });
 
 class Home extends React.PureComponent {
@@ -29,57 +44,49 @@ class Home extends React.PureComponent {
 
     this.state = {
       client: props.client,
-      // loggedIn: chekLogIn()
+      email: undefined
+
     };
   }
-  getInitialProps = ctx => {
-    const apolloClient = ctx.apolloClient;
-    console.log("TESTI", apolloClient);
-  };
-
-  handleLogOut = () => {
-    console.log("CLICK");
-    logOut()
-  };
-
-  async componentDidMount() {
-    console.log(this.state.loggedIn);
-    await this.state.client
-      .query({
-        query: USERS_QUERY
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => console.log(e));
-
-    await this.state.client
-      .mutate({
-        mutation: CURRENTUSER
-      }).then(res => console.log(res))
-      .catch(e => console.log(e))
-
-  }
+  /*
+ 
+   handleLogOut = () => {
+     console.log("CLICK");
+     logOut()
+   };*/
+  /*
+    async componentDidMount() {
+  
+      await this.state.client
+        .mutate({
+          mutation: CURRENTUSER
+        }).then(res => {
+          console.log(res)
+          this.setState({ email: res.data.currentUser.email })
+        })
+        .catch(e => console.log(e))
+  
+    }*/
 
   render() {
-    const { loggedIn } = this.state;
+    const { email } = this.state;
     const { classes } = this.props;
 
     return (
       <div>
-        {
-          //checkLogissa noSsr
-        }
-        <CheckLogIn>
-          <Paper className={classes.paper}>
-            <h3>ETUSIVU</h3>
-            <Button onClick={() => this.handleLogOut()}>LOG OUT</Button>
-          </Paper>
-        </CheckLogIn>
+
+
+        <Paper className={classes.paper}>
+          <h3>ETUSIVU</h3>
+        </Paper>
+
       </div>
+
     );
 
   }
 }
 
 export default withStyles(styles)(withApollo(Home));
+
+
