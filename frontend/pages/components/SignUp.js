@@ -15,49 +15,11 @@ import Container from "@material-ui/core/Container";
 import { withApollo } from "react-apollo";
 import { SIGNUP_MUTATION } from "../../lib/gql/mutations";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogAlertSignUp from './DialogAlertSignUp'
+import { signUpStyles } from './Styles'
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Copyright from './Copyright'
 
-const styles = theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
-});
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -77,19 +39,19 @@ class SignUp extends React.Component {
 
   setEmail = e => {
     this.setState({ email: e.target.value });
+    this.setState({ open: false })
   };
   setPassword = e => {
     this.setState({ password: e.target.value });
-
+    this.setState({ open: false })
   };
   setPasswordAgain = e => {
     this.setState({ passwordAgain: e.target.value });
-
+    this.setState({ open: false })
   };
 
   signIn = async () => {
     const { email, password, client, passwordAgain } = this.state;
-    console.log(email, password, passwordAgain)
 
     await client
       .mutate({
@@ -108,7 +70,7 @@ class SignUp extends React.Component {
           this.setState({ ok: true })
       })
       .catch(e => {
-        console.log(e)
+        //console.log(e)
         this.handleClickOpen()
         this.setState({ ok: false })
         this.setState({ errorMsg: e.message.replace('GraphQL error:', '').trim(), })
@@ -125,7 +87,7 @@ class SignUp extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { ok, errorMsg } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -138,30 +100,6 @@ class SignUp extends React.Component {
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
-              {/* <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="firstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                />
-             </Grid>*/
-              }
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
@@ -247,39 +185,15 @@ class SignUp extends React.Component {
           <Copyright />
         </Box>
 
-
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogContent>
-            {this.state.ok
-              ? <DialogContentText id="alert-dialog-description">
-                You have now an account! Please go to login page to continue.
-              </DialogContentText>
-              : <DialogContentText id="alert-dialog-description">
-                <b>Error: </b>{this.state.errorMsg}
-              </DialogContentText>
-            }
-          </DialogContent>
-          <DialogActions style={{ justifyContent: 'center' }}>
-            {this.state.ok
-              ? <Link href="/" variant="body2">
-                {"Move to login page"}
-              </Link>
-
-              : <Button onClick={() => this.handleClose()} autoFocus>
-                Close
-              </Button>
-            }
-
-          </DialogActions>
-        </Dialog>
+        {
+          // välitetään error message ja ok status dialogille
+          // ok tarkistaa onnistuiko käyttäjän luonti vai ei
+        }
+        {this.state.open ? <DialogAlertSignUp ok={ok} errorMsg={errorMsg} /> : null}
       </Container>
     );
   }
 }
 
-export default withStyles(styles)(withApollo(SignUp));
+export default withStyles(signUpStyles)(withApollo(SignUp));
+

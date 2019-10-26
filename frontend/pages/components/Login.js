@@ -17,51 +17,14 @@ import { LOGIN_MUTATION } from "../../lib/gql/mutations";
 import Cookies from "js-cookie";
 import Router from "next/router";
 
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogAlertLogin from './DialogAlertLogin'
+import { loginStyles } from './Styles'
+import Copyright from './Copyright'
 
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
-const styles = theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
-});
+
+
 
 class Login extends React.Component {
   constructor(props) {
@@ -85,9 +48,13 @@ class Login extends React.Component {
   // luetaan textfieldin arvot
   setEmail = e => {
     this.setState({ email: e.target.value });
+    this.setState({ open: false })
+
   };
   setPassword = e => {
     this.setState({ password: e.target.value });
+    this.setState({ open: false })
+
   };
 
   handleClickOpen = () => {
@@ -119,8 +86,8 @@ class Login extends React.Component {
         window.location.href = "/home";
       })
       .catch(e => {
-        this, this.setState({ errorMsg: e.message.replace("GraphQL error:", "").trim() })
-        this.handleClickOpen()
+        this.setState({ errorMsg: e.message.replace("GraphQL error:", "").trim() })
+        this.setState({ open: true })
       });
 
     // console.log(Cookies.get("jwtToken"));
@@ -137,7 +104,7 @@ class Login extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { errorMsg } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -192,7 +159,9 @@ class Login extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={() => this.logIn()}
+              onClick={() =>
+                this.logIn()
+              }
             >
               Sign In
             </Button>
@@ -214,40 +183,16 @@ class Login extends React.Component {
           <Copyright />
         </Box>
 
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-slide-title">{"ERROR"}</DialogTitle>
+        {this.state.open ? <DialogAlertLogin errorMsg={errorMsg} /> : null}
 
-          <DialogContent>
-            {this.state.ok
-              ? <DialogContentText id="alert-dialog-description">
-                You have now an account! Please go to login page to continue.
-              </DialogContentText>
-              : <DialogContentText id="alert-dialog-description">
-                {this.state.errorMsg}
-              </DialogContentText>
-            }
-          </DialogContent>
-          <DialogActions style={{ justifyContent: 'center' }}>
-            {this.state.ok
-              ? <Link href="/" variant="body2">
-                {"Move to login page"}
-              </Link>
-
-              : <Button onClick={() => this.handleClose()} autoFocus>
-                Close
-              </Button>
-            }
-
-          </DialogActions>
-        </Dialog>
       </Container>
     );
   }
 }
 
-export default withStyles(styles)(withApollo(Login));
+export default withStyles(loginStyles)(withApollo(Login));
+
+
+
+
+
