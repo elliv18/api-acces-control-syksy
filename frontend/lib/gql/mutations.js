@@ -37,7 +37,8 @@ export const EQUIPMENT_DELETE_MUTATION = gql`
 export const CURRENTUSER = gql`
   mutation {
     currentUser {
-      email
+      email,
+      userType
     }
   }
 `;

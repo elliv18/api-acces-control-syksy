@@ -35,9 +35,9 @@ function DialogAlert(props) {
                 </DialogContentText>
             </DialogContent>
 
-            <DialogActions style={{ justifyContent: 'center' }}>
+            <DialogActions className={classes.contentNo}>
                 <Button onClick={handleClose} autoFocus>
-                    Close
+                    <a className={classes.buttonText}>Close</a>
                 </Button>
             </DialogActions>
         </Dialog>

@@ -1,6 +1,25 @@
 import { red } from "@material-ui/core/colors";
 import { textAlign } from "@material-ui/system";
 
+
+export const homeStyle = theme => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        margin: 50
+    },
+    root: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    title: {
+        flexGrow: 1,
+    },
+});
 export const loginStyles = theme => ({
     "@global": {
         body: {
@@ -54,13 +73,20 @@ export const signUpStyles = theme => ({
 export const dialogStyle = theme => ({
     backgroundNo: {
         backgroundColor: "#e00408BF",
-        width: 250,
+
         textAlign: 'center'
     },
     textNo: {
         textAlign: 'center',
         color: 'black',
         fontSize: 20
+    },
+    contentNo: {
+
+        justifyContent: 'center'
+    },
+    buttonText: {
+        color: "#e00408",
     },
     backgroundYes: {
         backgroundColor: "#00b324BF",

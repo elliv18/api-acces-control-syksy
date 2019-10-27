@@ -21,6 +21,8 @@ import DialogAlertLogin from './DialogAlertLogin'
 import { loginStyles } from './Styles'
 import Copyright from './Copyright'
 
+import disableSsr from '../../src/components/disableSsr'
+
 
 
 
@@ -106,6 +108,8 @@ class Login extends React.Component {
     const { classes } = this.props;
     const { errorMsg } = this.state;
     return (
+
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -186,6 +190,7 @@ class Login extends React.Component {
         {this.state.open ? <DialogAlertLogin errorMsg={errorMsg} /> : null}
 
       </Container>
+
     );
   }
 }

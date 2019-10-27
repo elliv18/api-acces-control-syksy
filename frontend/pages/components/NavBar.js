@@ -9,7 +9,6 @@ import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import logOut from '../../src/components/logOut'
 import NotAuth from './NotAuth'
-import NoSsr from '../../src/components/disbaleSsr'
 import CheckLogIn from '../../src/components/checkLogIn'
 import { CURRENTUSER } from "../../lib/gql/mutations";
 
@@ -88,9 +87,9 @@ class NavBar extends React.PureComponent {
                             <Button color="inherit" onClick={() => this.handleLogOut()}>LOG OUT</Button>
                         </Toolbar>
                     </AppBar>
-                    <NoSsr>
-                        {this.props.children}
-                    </NoSsr>
+
+                    {this.props.children}
+
 
                 </CheckLogIn>
 

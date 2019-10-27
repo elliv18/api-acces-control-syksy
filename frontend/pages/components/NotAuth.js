@@ -1,6 +1,6 @@
 import React from "react";
 import { Paper, Button, Link, withStyles } from "@material-ui/core";
-import NoSsr from '../../src/components/disbaleSsr'
+import NoSsr from '../../src/components/disableSsr'
 
 const styles = theme => ({
     margin: {

@@ -9,7 +9,7 @@ import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import logOut from '../../src/components/logOut'
 import NotAuth from './NotAuth'
-import NoSsr from '../../src/components/disbaleSsr'
+import NoSsr from '../../src/components/disableSsr'
 import { CURRENTUSER } from "../../lib/gql/mutations";
 
 import AppBar from '@material-ui/core/AppBar';
@@ -17,26 +17,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
-
-const styles = theme => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    margin: 50
-  },
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-});
+import AdminHome from './AdminHome'
+import UserHome from './UserHome'
+import { homeStyle } from './Styles'
 
 class Home extends React.PureComponent {
   constructor(props) {
@@ -44,7 +27,7 @@ class Home extends React.PureComponent {
 
     this.state = {
       client: props.client,
-      email: undefined
+      isAdmin: undefined
 
     };
   }
@@ -54,39 +37,50 @@ class Home extends React.PureComponent {
      console.log("CLICK");
      logOut()
    };*/
-  /*
-    async componentDidMount() {
-  
-      await this.state.client
-        .mutate({
-          mutation: CURRENTUSER
-        }).then(res => {
-          console.log(res)
-          this.setState({ email: res.data.currentUser.email })
-        })
-        .catch(e => console.log(e))
-  
-    }*/
+
+  async componentDidMount() {
+
+    let CU = undefined
+    await this.state.client
+      .mutate({
+        mutation: CURRENTUSER
+      }).then(res => {
+        console.log(res)
+        //this.setState({ email: res.data.currentUser.email })
+        CU = res.data.currentUser
+      })
+      .catch(e => console.log(e))
+
+    await this.setState({ isAdmin: isAdmin(CU) })
+  }
 
   render() {
-    const { email } = this.state;
+    const { isAdmin } = this.state;
     const { classes } = this.props;
 
     return (
-      <div>
-
-
-        <Paper className={classes.paper}>
-          <h3>ETUSIVU</h3>
-        </Paper>
-
-      </div>
+      console.log('isadmin', isAdmin),
+      isAdmin !== undefined ?
+        isAdmin ? <AdminHome /> : <UserHome /> : null
 
     );
 
   }
 }
 
-export default withStyles(styles)(withApollo(Home));
+export default withStyles(homeStyle)(withApollo(Home));
 
 
+function isAdmin(CU) {
+  let userType = undefined
+  if (CU !== undefined) {
+
+    userType = CU.userType
+    console.log(userType)
+    if (userType === 'ADMIN')
+      return true
+    else
+      return false;
+  }
+
+}
