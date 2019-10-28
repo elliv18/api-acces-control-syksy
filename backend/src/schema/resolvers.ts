@@ -9,7 +9,8 @@ import {
   SALT_ROUNDS,
   MAX_PW,
   MIN_PW,
-  ROOT_ADMIN_EMAIL
+  ROOT_ADMIN_EMAIL,
+  DEBUG
 } from "../environment";
 import logger from "../misc/logger";
 
@@ -17,14 +18,16 @@ export default {
   /*************** QUERY ***********************/
   Query: {
     allUsers: async (obj, args, { currentUser }) => {
-      //mustBeLoggedIn(currentUser);
-      //mustBeAtleastLevel(currentUser, UserLevels.STAFF);
+      if (!DEBUG) {
+        mustBeLoggedIn(currentUser);
+        mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
 
-      /*logger.log(
-        "info",
-        "[Q ALLUSERS] User %s - list all users",
-        currentUser.id
-      );*/
+        logger.log(
+          "info",
+          "[Q ALLUSERS] User %s - list all users",
+          currentUser.id
+        );
+      }
       return await prisma.users();
     }
   },

@@ -21,4 +21,6 @@ export const NODE_ENV = process.env.NODE_ENV || DEVELOPMENT;
 export const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS) || 10;
 
 export const MAX_PW = 18;
-export const MIN_PW = process.env.MIN_PW || 3;
+export const MIN_PW = parseInt(process.env.MIN_PW) || 3;
+
+export const DEBUG = parseInt(process.env.DEBUG) || 0;

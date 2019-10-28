@@ -8,6 +8,9 @@
 
 NODE_ENV=development
 
+# DEBUG mode (0 = off, 1 = on)
+DEBUG=0
+
 # BACKEND
 
 BACKEND_PORT=3050
