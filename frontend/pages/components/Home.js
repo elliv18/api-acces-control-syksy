@@ -21,6 +21,8 @@ import AdminHome from './AdminHome'
 import UserHome from './UserHome'
 import { homeStyle } from './Styles'
 
+const { Consumer } = React.createContext();
+
 class Home extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -37,29 +39,37 @@ class Home extends React.PureComponent {
      logOut()
    };*/
 
-  async componentDidMount() {
+  /* async componentDidMount() {
+ 
+     let CU = undefined
+     await this.state.client
+       .mutate({
+         mutation: CURRENTUSER
+       }).then(res => {
+         //console.log(res)
+         CU = res.data.currentUser
+       })
+       .catch(e => null)
+ 
+     console.log('jkjkj', this.props.paska)
+ 
+     this.setState({ isAdmin: isAdmin(CU) })
+   }*/
 
-    let CU = undefined
-    await this.state.client
-      .mutate({
-        mutation: CURRENTUSER
-      }).then(res => {
-        //console.log(res)
-        CU = res.data.currentUser
-      })
-      .catch(e => null)
-
-    this.setState({ isAdmin: isAdmin(CU) })
+  componentDidMount() {
+    this.props.CU.then(res => {
+      console.log(res.userType)
+      this.setState({ isAdmin: res.userType })
+    })
   }
-
   render() {
     const { isAdmin } = this.state;
     const { classes } = this.props;
 
     return (
-      console.log('isadmin', isAdmin),
+      //console.log('isadmin', isAdmin),
       isAdmin !== undefined ?
-        isAdmin ? <AdminHome /> : <UserHome /> : null
+        isAdmin === 'ADMIN' ? <AdminHome /> : <UserHome /> : null
 
     );
 
@@ -68,15 +78,3 @@ class Home extends React.PureComponent {
 
 export default withStyles(homeStyle)(withApollo(Home));
 
-
-function isAdmin(CU) {
-  let userType = undefined
-  try {
-    if (CU.userType === 'ADMIN')
-      return true
-    else
-      return false;
-  } catch (e) { console.log(e) }
-
-
-}
