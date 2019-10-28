@@ -3,21 +3,12 @@ enum UserType {
   USER
 }
 
-
 type User {
     id: ID! @id
     userType: UserType!
     email: String! @unique
     password: String!
-    apiKeysId: [UserApiKeys] @relation(name: "ApiKeys") 
-    createdAt: DateTime! @createdAt
-    updatedAt: DateTime! @updatedAt
-}
-
-type UserApiKeys {
-    id: ID! @id
-    hash: String
-    userId: User! @relation(name: "Apikeys")
+    apiKey: String
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
 }
