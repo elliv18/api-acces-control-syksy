@@ -18,7 +18,7 @@ export default {
   /*************** QUERY ***********************/
   Query: {
     allUsers: async (obj, args, { currentUser }) => {
-      if (DEBUG) {
+      if (!DEBUG) {
         mustBeLoggedIn(currentUser);
         mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
 
