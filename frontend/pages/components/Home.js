@@ -27,8 +27,7 @@ class Home extends React.PureComponent {
 
     this.state = {
       client: props.client,
-      isAdmin: undefined
-
+      isAdmin: []
     };
   }
   /*
@@ -72,11 +71,12 @@ export default withStyles(homeStyle)(withApollo(Home));
 
 function isAdmin(CU) {
   let userType = undefined
-
-  if (CU.userType === 'ADMIN')
-    return true
-  else
-    return false;
+  try {
+    if (CU.userType === 'ADMIN')
+      return true
+    else
+      return false;
+  } catch (e) { console.log(e) }
 
 
 }

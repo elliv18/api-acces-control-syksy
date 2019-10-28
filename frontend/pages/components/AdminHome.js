@@ -14,6 +14,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+var moment = require('moment');
+
+
 const styles = theme => ({
     root: {
         marginTop: 10,
@@ -25,21 +28,11 @@ const styles = theme => ({
 
     },
     table: {
-        // minWidth: 650,
+        minWidth: 650,
     },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 class AdminHome extends React.PureComponent {
     constructor(props) {
@@ -48,7 +41,7 @@ class AdminHome extends React.PureComponent {
         this.state = {
             client: props.client,
             email: undefined,
-            allUsers: undefined
+            allUsers: []
 
         };
     }
@@ -66,28 +59,30 @@ class AdminHome extends React.PureComponent {
 
     render() {
         const { classes } = this.props
+        const { allUsers } = this.state
+        console.log(allUsers)
         return (
             <Paper className={classes.root} elevation={5}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell align="center">Usertype</TableCell>
+                            <TableCell align="center">Apikey</TableCell>
+                            <TableCell align="center">User created</TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map(row => (
-                            <TableRow key={row.name}>
+                        {allUsers.map(row => (
+                            <TableRow key={row.id}>
                                 <TableCell component="th" scope="row">
-                                    {row.name}
+                                    {row.email}
                                 </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{row.protein}</TableCell>
+                                <TableCell align="center">{row.userType}</TableCell>
+                                <TableCell align="center">{row.apiKey}</TableCell>
+                                <TableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</TableCell>
+
                             </TableRow>
                         ))}
                     </TableBody>
@@ -102,6 +97,3 @@ class AdminHome extends React.PureComponent {
 
 export default withStyles(styles)(withApollo(AdminHome));
 
-
-/*
-*/
