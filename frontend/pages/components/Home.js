@@ -45,13 +45,12 @@ class Home extends React.PureComponent {
       .mutate({
         mutation: CURRENTUSER
       }).then(res => {
-        console.log(res)
-        //this.setState({ email: res.data.currentUser.email })
+        //console.log(res)
         CU = res.data.currentUser
       })
-      .catch(e => console.log(e))
+      .catch(e => null)
 
-    await this.setState({ isAdmin: isAdmin(CU) })
+    this.setState({ isAdmin: isAdmin(CU) })
   }
 
   render() {
@@ -73,14 +72,11 @@ export default withStyles(homeStyle)(withApollo(Home));
 
 function isAdmin(CU) {
   let userType = undefined
-  if (CU !== undefined) {
 
-    userType = CU.userType
-    console.log(userType)
-    if (userType === 'ADMIN')
-      return true
-    else
-      return false;
-  }
+  if (CU.userType === 'ADMIN')
+    return true
+  else
+    return false;
+
 
 }

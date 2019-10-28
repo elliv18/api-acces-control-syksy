@@ -23,9 +23,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 const styles = theme => ({
     paper: {
         marginTop: theme.spacing(8),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        minWidth: 300,
         margin: 50
     },
     root: {
@@ -55,19 +53,19 @@ class NavBar extends React.PureComponent {
         console.log("CLICK");
         logOut()
     };
-
-    async componentDidMount() {
-
-        await this.state.client
-            .mutate({
-                mutation: CURRENTUSER
-            }).then(res => {
-                console.log(res)
-                this.setState({ email: res.data.currentUser.email })
-            })
-            .catch(e => console.log(e))
-
-    }
+    /*
+        async componentDidMount() {
+    
+            await this.state.client
+                .mutate({
+                    mutation: CURRENTUSER
+                }).then(res => {
+                    console.log(res)
+                    this.setState({ email: res.data.currentUser.email })
+                })
+                .catch(e => null)
+    
+        }*/
 
     render() {
         const { email } = this.state;
@@ -82,7 +80,7 @@ class NavBar extends React.PureComponent {
                                 <MenuIcon />
                             </IconButton>
                             <Typography variant="h6" className={classes.title}>
-                                Welcome {email}
+                                Welcome
                             </Typography>
                             <Button color="inherit" onClick={() => this.handleLogOut()}>LOG OUT</Button>
                         </Toolbar>
