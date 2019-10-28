@@ -16,19 +16,7 @@ export default `
         id: ID!
         userType: UserType
         email: String
-        apiKeysId: [UserApiKeys]
-        createdAt: String!
-        updatedAt: String!
-    }
-
-    ###############
-    # UserApiKeys #
-    ###############
-
-    type UserApiKeys {
-        id: ID!
-        hash: String
-        userId: User!
+        apiKey: String
         createdAt: String!
         updatedAt: String!
     }

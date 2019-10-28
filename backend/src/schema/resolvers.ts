@@ -14,17 +14,6 @@ import {
 import logger from "../misc/logger";
 
 export default {
-  /*************** RELATIONS *******************/
-  User: {
-    async apiKeysId(user) {
-      return await prisma.user({ id: user.id }).apiKeysId();
-    }
-  },
-  UserApiKeys: {
-    async userId(userApiKeys) {
-      return await prisma.userApiKeys({ id: userApiKeys.id }).userId();
-    }
-  },
   /*************** QUERY ***********************/
   Query: {
     allUsers: async (obj, args, { currentUser }) => {
