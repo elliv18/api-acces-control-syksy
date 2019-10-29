@@ -67,13 +67,17 @@ export default `
         
         deleteApiKey(input: DeleteKeyInput): DeleteKeyPayload
 
-        ############ ADMIN CREATE NEW USER ##############
+        ############ ADMIN - CREATE NEW USER ##############
 
         createNewUser(input: CreateNewUserInput!): CreateNewUserPayload
 
-        ############ ADMIN DELETE USER ###################
+        ############ ADMIN - DELETE USER ###################
 
         deleteUser(input: DeleteUserInput): DeleteUserPayload
+
+        ########### ADMIN - USER PW RESET #################
+
+        userPWReset(input: UserPWResetInput): UserPWResetPayload
     }
 
     ##############################
@@ -139,6 +143,17 @@ export default `
         id: ID!
     }
     type DeleteUserPayload {
+        user: User
+    }
+
+    ########### ADMIN - USER PW RESET #################
+
+    input UserPWResetInput {
+        id: ID!
+        password: String!
+        passwordAgain: String!
+    }
+    type UserPWResetPayload {
         user: User
     }
 `;
