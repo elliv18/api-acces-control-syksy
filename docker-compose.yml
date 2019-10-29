@@ -76,12 +76,14 @@ services:
         TYK_GW_SECRET: ${TYK_GW_SECRET}
       depends_on:
         - redis
+      restart: always
   redis:
     image: redis:5.0-alpine
     #ports:
     #  - "6379:6379"
-    #volumes:
-    #  - redis-data:/data
+    volumes:
+      - redis-data:/data
+    restart: always
 volumes:
   postgres: ~
   redis-data:
