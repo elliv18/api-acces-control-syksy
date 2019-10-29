@@ -104,23 +104,27 @@ class AdminHome extends React.PureComponent {
         console.log('DELETE', this.state.deleteUserId)
 
         //DELETE
-        this.state.client
-            .mutate({
-                variables: { id: this.state.deleteUserId },
-                mutation: USER_DELETE,
-            })
-            .then(response => {
-                let temp = null
-                // console.log(response)
-                temp = this.deleteRow(this.state.deleteUserId)
-                this.setState({ allUsers: temp })
+        // can't delete ROOT_ADMIN
+        this.state.deleteUserEmail !== "1"
+            ? this.state.client
+                .mutate({
+                    variables: { id: this.state.deleteUserId },
+                    mutation: USER_DELETE,
+                })
+                .then(response => {
+                    let temp = null
+                    // console.log(response)
+                    temp = this.deleteRow(this.state.deleteUserId)
+                    this.setState({ allUsers: temp })
 
-            })
+                })
 
-            .catch(error => console.log(error));
+                .catch(error => console.log(error))
+
+            : console.log('Cant delete admin')
     };
 
-    // poistetaan rivi taulukosta, ei tarvita uutta fetchia
+    //Delete row on allUsers, no need for new query
     deleteRow = deletedId => {
         const data = this.state.allUsers.slice();
         // console.log('data', data)
