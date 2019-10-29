@@ -33,6 +33,8 @@ This key will have use quota of 10 API calls, that renews every 60 seconds.
 
 See https://tyk.io/docs/security/security-policies/secure-apis-method-path/ for info about restricting based on url.
 
+
+```
     curl -X POST \
       http://localhost:8080/tyk/keys/create \
       -H 'Content-Type: application/json' \
@@ -71,6 +73,7 @@ See https://tyk.io/docs/security/security-policies/secure-apis-method-path/ for 
     },
     "meta_data": {}
 }'
+```
 
 Response ex.
 
@@ -84,12 +87,12 @@ Response ex.
 ## Call api with API key
 
 The API key generated is used for authorization for APIs. 
-
+```
     curl -X GET \
-    http://localhost:8080//first-api/todos/1 \
+http://localhost:8080/first-api/todos/1 \
     -H 'Authorization: 3f0debb70c01f462aadd09c7ca7b43240' 
 
-
     curl -X GET \
-    http://localhost:8080//second-api/breweries/1 \
+http://localhost:8080/second-api/breweries/1 \
     -H 'Authorization: 3f0debb70c01f462aadd09c7ca7b43240' 
+```
