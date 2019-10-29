@@ -14,8 +14,8 @@ import {
   TYK_GW_SECRET
 } from "../environment";
 import logger from "../misc/logger";
-import http from "http";
 import fetch from "node-fetch";
+import { access } from "fs";
 
 export default {
   /*************** QUERY ***********************/
@@ -143,6 +143,62 @@ export default {
       });
 
       return { user };
+    },
+    createNewApiKey: async (obj, { input }, { currentUser }) => {
+      if (!DEBUG) {
+        mustBeLoggedIn(currentUser);
+        mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
+
+        logger.log(
+          "info",
+          "[Q ALLUSERS] User %s - Create new api key %s",
+          currentUser.id,
+          name
+        );
+      }
+
+      const tykURL = "http://gateway:8080/tyk/keys/create";
+
+      const headers = {
+        "Content-Type": "application/json",
+        "x-tyk-authorization": TYK_GW_SECRET
+      };
+
+      input.access.map(x => {
+        console.log(x);
+        console.log(x.urls);
+
+        x.urls.map(y => {
+          console.log(y);
+
+          y.methods.map(z => {
+            console.log(z);
+          });
+        });
+      });
+
+      /*const body = {
+        access_rights: {
+          [id]: {
+            api_id: id,
+            name: name,
+            allowed_urls: {
+              url: url,
+              methods: methods
+            }
+          }
+        }
+      };
+
+      console.log(body);*/
+
+      //const res = await fetch(url, { method: "POST", body: JSON.stringify(body), headers: headers });
+
+      //const data = await res.json();  // data is object
+
+      // TODO key and hash save prisma?
+
+      //return { key: id };
     }
   }
 };

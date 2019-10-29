@@ -60,6 +60,9 @@ export default `
 
         signup(input: SignupInput!): SignupPayload
 
+        ############### TYK #####################
+
+        createNewApiKey(input: CreateNewApiKeyInput!): CreateNewApiKeyPayload
     }
 
     ##############################
@@ -87,4 +90,23 @@ export default `
         user: User
     }
 
+    ################## TYK ##########################
+
+    input AllowedUrls {
+        apiUrl: String
+        methods: [String]
+    }
+
+    input AccessRights {
+        id: String
+        name: String
+        urls: [AllowedUrls]
+    }
+
+    input CreateNewApiKeyInput {
+        access: [AccessRights]
+    }
+    type CreateNewApiKeyPayload {
+        key: String
+    }
 `;
