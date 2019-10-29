@@ -1,6 +1,23 @@
 import { red } from "@material-ui/core/colors";
 import { textAlign } from "@material-ui/system";
 
+export const navStyles = theme => ({
+    root: {
+        flexGrow: 1,
+
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+        //backgroundColor: 'rgba(0,70,85)',
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    title: {
+        flexGrow: 1,
+    },
+
+});
 
 export const homeStyle = theme => ({
     paper: {
@@ -19,6 +36,37 @@ export const homeStyle = theme => ({
     title: {
         flexGrow: 1,
     },
+
+
+});
+
+export const homeStyleUser = theme => ({
+
+
+    paper: {
+        marginTop: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        margin: 50,
+    },
+    card: {
+        margin: 10,
+        width: '60%',
+        //background: 'lightGray',
+        // borderStyle: 'solid',
+        //borderColor: 'black'
+
+    },
+    title1: {
+        textAlign: 'center',
+        backgroundColor: "#a8a0a099",
+        fontSize: 20
+    },
+    title2: {
+        padding: 10
+    }
+
 
 
 });

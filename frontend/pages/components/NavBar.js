@@ -22,22 +22,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import Router from 'next/router'
-const styles = theme => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        minWidth: 300,
-        margin: 50
-    },
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-});
+
+import { navStyles } from './Styles'
+
 
 class NavBar extends React.PureComponent {
     constructor(props) {
@@ -109,7 +96,9 @@ class NavBar extends React.PureComponent {
                         </Toolbar>
                     </AppBar>
 
-                    {this.props.children}
+                    <div className={classes.background}>
+                        {this.props.children}
+                    </div>
                 </CheckLogIn>
 
 
@@ -139,4 +128,4 @@ class NavBar extends React.PureComponent {
     }
 }
 
-export default withStyles(styles)(withApollo(NavBar));
+export default withStyles(navStyles)(withApollo(NavBar));
