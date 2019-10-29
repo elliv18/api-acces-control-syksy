@@ -241,7 +241,7 @@ export default {
         throw new Error("Password too short!");
       }
 
-      const user = prisma.createUser({
+      const user = await prisma.createUser({
         userType: userType,
         email: email,
         password: await bcrypt.hash(password, SALT_ROUNDS)
