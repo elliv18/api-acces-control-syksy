@@ -8,12 +8,7 @@ import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { homeStyle } from './Styles'
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { confirmDialogStyle } from './Styles'
+
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -22,6 +17,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import ConfirmDialog from "./ConfirmDialog";
 
 
 
@@ -73,6 +69,7 @@ class AdminHome extends React.PureComponent {
             client: props.client,
             email: undefined,
             open: false,
+            deleteStatus: false,
             allUsers: [],
             openDialog: false,
             deleteUserId: null,
@@ -97,20 +94,20 @@ class AdminHome extends React.PureComponent {
     };
 
     handleCloseNo = () => {
-        this.setState({ open: false })
+        this.setState({ deleteStatus: false, open: false })
         console.log('No')
     };
 
-    handleDeleteUser(id) {
-        console.log('DELETE User', id)
-        this.setState({ open: false })
-    }
+    handleCloseYes = () => {
+        this.setState({ deleteStatus: true, open: false })
+        console.log('DELETE', this.state.deleteUserEmail)
+    };
 
 
 
     render() {
         const { classes } = this.props
-        const { allUsers, deleteUserId, deleteUserEmail, open } = this.state
+        const { allUsers, deleteUserId, deleteUserEmail, open, deleteStatus } = this.state
         return (
             <Paper className={classes.root} elevation={5}>
                 <Table className={classes.table} aria-label="simple table">
@@ -136,7 +133,7 @@ class AdminHome extends React.PureComponent {
                                 <TableCell align="right">
                                     <IconButton onClick={() => {
                                         //dialog
-                                        this.handleClickOpen(deleteUserId)
+                                        this.handleClickOpen()
                                         this.setState({ deleteUserEmail: row.email, deleteUserId: row.id })
                                     }}>
                                         <DeleteOutlinedIcon />
@@ -147,34 +144,11 @@ class AdminHome extends React.PureComponent {
                         ))}
                     </TableBody>
                 </Table>
-
-                <Dialog
-                    open={open}
-                    onClose={this.handleCloseNo}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-slide-title" className={classes.backgroundDialogTitle}>
-                        Do you want remove apikey?
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description" className={classes.textDialog}>
-                            User: <br />{deleteUserEmail}
-                        </DialogContentText>
-                    </DialogContent>
-
-                    <DialogActions className={classes.contentDialog}>
-                        <Button variant="outlined" onClick={() => this.handleDeleteUser(deleteUserId)}>
-                            <a className={classes.buttonDialogTextYes}>Yes</a>
-
-                        </Button>
-                        <Button variant="outlined" onClick={this.handleCloseNo} autoFocus>
-                            <a className={classes.buttonDialogTextNo}>No</a>
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-
-
+                <ConfirmDialog
+                    open={this.state.open}
+                    handleCloseNo={this.handleCloseNo}
+                    handleCloseYes={this.handleCloseYes}
+                />
             </Paper>
 
         );

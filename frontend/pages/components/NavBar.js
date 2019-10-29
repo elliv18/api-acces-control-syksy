@@ -67,9 +67,17 @@ class NavBar extends React.PureComponent {
     };
 
     async componentDidMount() {
-        this.props.CU.then(res => {
-            this.setState({ currentUser: res })
-        })
+
+        let CU = undefined
+        await this.state.client
+            .mutate({
+                mutation: CURRENTUSER
+            }).then(res => {
+                //console.log(res)
+                CU = res.data.currentUser
+            })
+            .catch(e => null)
+        this.setState({ currentUser: CU })
     }
 
     render() {
