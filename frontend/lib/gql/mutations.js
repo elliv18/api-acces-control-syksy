@@ -22,10 +22,10 @@ mutation signInMutation($email: String!, $password: String!, $passwordAgain: Str
 
 
 
-export const EQUIPMENT_DELETE_MUTATION = gql`
+export const USER_DELETE = gql`
   mutation deleteMutation($id: ID!) {
-    deviceDelete(input: { id: $id }) {
-      device {
+    deleteUser(input: { id: $id }) {
+      user{
         id
       }
     }
