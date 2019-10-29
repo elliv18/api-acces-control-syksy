@@ -164,6 +164,13 @@ export default {
         "x-tyk-authorization": TYK_GW_SECRET
       };
 
+      // access
+      var accessTemp = [];
+
+      var urlsTemp = [];
+
+      var methodsTemp = [];
+
       input.access.map(x => {
         console.log(x);
         console.log(x.urls);
