@@ -248,6 +248,37 @@ export default {
       });
 
       return { user };
+    },
+    deleteUser: async (obj, { input: { id } }, { currentUser }) => {
+      if (!DEBUG) {
+        mustBeLoggedIn(currentUser);
+        mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
+
+        logger.log(
+          "info",
+          "[M DELETE USER] User %s - Delete user - %s ",
+          currentUser.id,
+          id
+        );
+      }
+
+      const userTemp = await prisma.user({ id: id });
+
+      const baseUrl = "http://gateway:8080/tyk/";
+      const keysPath = "keys/";
+
+      const headers = {
+        "Content-Type": "application/json",
+        "x-tyk-authorization": TYK_GW_SECRET
+      };
+
+      const url = baseUrl + keysPath + userTemp.apiKey + "?hashed=true";
+
+      await fetch(url, { method: "DELETE", headers: headers });
+
+      const user = await prisma.deleteUser({ id: id });
+
+      return user;
     }
   }
 };
