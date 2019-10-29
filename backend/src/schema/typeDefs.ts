@@ -51,6 +51,8 @@ export default `
 
         currentUser: User
 
+        currentUserUpdatePW(input: CurrentUserUpdatePWInput): CurrentUserUpdatePWPayload
+
         
         ############# LOGIN #################
         
@@ -77,6 +79,17 @@ export default `
     ##############################
     # Mutation inputs & payloads #
     ##############################
+
+    ################# CURRENT USER UPDATE PASSWORD ##########
+
+    input CurrentUserUpdatePWInput {
+        password: String!
+        passwordAgain: String!
+        oldPassword: String!
+    }
+    type CurrentUserUpdatePWPayload {
+        user: User
+    }
 
     ################# DELETE KEY ########################
     
