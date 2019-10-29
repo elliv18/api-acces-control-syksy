@@ -18,6 +18,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import ConfirmDialog from "./ConfirmDialog";
+import { USER_DELETE } from "../../lib/gql/mutations";
 
 
 
@@ -100,7 +101,34 @@ class AdminHome extends React.PureComponent {
 
     handleCloseYes = () => {
         this.setState({ deleteStatus: true, open: false })
-        console.log('DELETE', this.state.deleteUserEmail)
+        console.log('DELETE', this.state.deleteUserId)
+
+        //DELETE
+        this.state.client
+            .mutate({
+                variables: { id: this.state.deleteUserId },
+                mutation: USER_DELETE,
+            })
+            .then(response => {
+                let temp = null
+                // console.log(response)
+                temp = this.deleteRow(this.state.deleteUserId)
+                this.setState({ allUsers: temp })
+
+            })
+
+            .catch(error => console.log(error));
+    };
+
+    // poistetaan rivi taulukosta, ei tarvita uutta fetchia
+    deleteRow = deletedId => {
+        const data = this.state.allUsers.slice();
+        // console.log('data', data)
+        const index = data.findIndex(row => row.id === deletedId);
+        if (index > -1) {
+            data.splice(index, 1);
+        };
+        return data;
     };
 
 
