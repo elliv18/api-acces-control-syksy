@@ -17,7 +17,6 @@ To Start only the gateway for testing, also starts redis for persistence.
   docker-compose up gateway
 
 
-
 ## Reloading API gateway
 
 Hot reload tyk APIs after making changes to changes
@@ -33,7 +32,9 @@ This key will have use quota of 10 API calls, that renews every 60 seconds.
 
 See https://tyk.io/docs/security/security-policies/secure-apis-method-path/ for info about restricting based on url.
 
-    curl -X POST \
+
+```
+curl -X POST \
       http://localhost:8080/tyk/keys/create \
       -H 'Content-Type: application/json' \
       -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' \
@@ -69,27 +70,70 @@ See https://tyk.io/docs/security/security-policies/secure-apis-method-path/ for 
         "versions": ["Default"]
       }
     },
-    "meta_data": {}
+    "meta_data": {} 
 }'
+```
 
 Response ex.
 
-    {
-      "key":"3f0debb70c01f462aadd09c7ca7b43240",
-      "status":"ok",
-      "action":"added",
-      "key_hash":"9270040d"
-      }
+```
+{
+  "key":"3f0debb70c01f462aadd09c7ca7b43240",
+  "status":"ok",
+  "action":"added",
+  "key_hash":"9270040d"
+}
+```
+
+
+## Getting list of APIs from gateway
+
+```
+
+curl -X GET \
+http://localhost:8080/tyk/apis \
+-H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
+
+```
+
+## Getting list of existing API keys
+
+```
+
+curl -X GET \
+http://localhost:8080/tyk/keys \
+-H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
+
+```
+
+## Deleting API key
+
+```
+curl -X DELETE \
+  'http://192.168.44.129:8080/tyk/keys/4f6d2815?hashed=true' \
+  -H 'Content-Type: application/json' \
+  -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
+```
+
+response: 200 OK
+
+```
+{
+    "key": "4f6d2815",
+    "status": "ok",
+    "action": "deleted"
+}
+```
 
 ## Call api with API key
 
 The API key generated is used for authorization for APIs. 
+```
+curl -X GET \
+http://localhost:8080/first-api/todos/1 \
+-H 'Authorization: 3f0debb70c01f462aadd09c7ca7b43240'
 
-    curl -X GET \
-    http://localhost:8080//first-api/todos/1 \
-    -H 'Authorization: 3f0debb70c01f462aadd09c7ca7b43240' 
-
-
-    curl -X GET \
-    http://localhost:8080//second-api/breweries/1 \
-    -H 'Authorization: 3f0debb70c01f462aadd09c7ca7b43240' 
+curl -X GET \
+http://localhost:8080/second-api/breweries/1 \
+-H 'Authorization: 3f0debb70c01f462aadd09c7ca7b43240' 
+```
