@@ -69,6 +69,9 @@ export default `
 
         createNewUser(input: CreateNewUserInput!): CreateNewUserPayload
 
+        ############ ADMIN DELETE USER ###################
+
+        deleteUser(input: DeleteUserInput): DeleteUserPayload
     }
 
     ##############################
@@ -114,6 +117,15 @@ export default `
         password: String!
     }
     type CreateNewUserPayload {
+        user: User
+    }
+
+    ############ ADMIN DELETE USER ###################
+
+    input DeleteUserInput {
+        id: ID!
+    }
+    type DeleteUserPayload {
         user: User
     }
 `;
