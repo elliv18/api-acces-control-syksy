@@ -51,20 +51,35 @@ export default `
 
         currentUser: User
 
+        
         ############# LOGIN #################
-
+        
         # ALL - login
         login(input: LoginInput!): LoginPayload
-
+        
         ############# SIGNUP ################
-
+        
         signup(input: SignupInput!): SignupPayload
+        
+        ############# DELETE KEY #################
+        
+        deleteApiKey(input: DeleteKeyInput): DeleteKeyPayload
 
     }
 
     ##############################
     # Mutation inputs & payloads #
     ##############################
+
+    ################# DELETE KEY ########################
+    
+    input DeleteKeyInput {
+        keyHash: String!
+    }
+
+    type DeleteKeyPayload {
+        key: String
+    }
 
     ################# LOGIN ########################
 
