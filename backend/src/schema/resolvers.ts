@@ -124,6 +124,12 @@ export default {
         throw new Error("Password don't match!");
       }
 
+      // password legality checks
+      if (!password.replace(/\s/g, "").length || password === null) {
+        logger.log("warn", "[M CREATE NEW USER] Password is null");
+        throw new Error("Password can not be null or empty!");
+      }
+
       // bcryptjs max input lenght is 18
       if (password.length > MAX_PW) {
         logger.log("warn", "[M SIGNUP] Password is too long!");
@@ -182,6 +188,66 @@ export default {
         );
       }
       return { key: data.key };
+    },
+
+    createNewUser: async (
+      obj,
+      { input: { userType, email, password } },
+      { currentUser }
+    ) => {
+      if (!DEBUG) {
+        mustBeLoggedIn(currentUser);
+        mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
+
+        logger.log(
+          "info",
+          "[M CREATE NEW USER] User %s - Create new user - %s ",
+          currentUser.id,
+          email
+        );
+      }
+
+      // email exist?
+      if (!prisma.user({ email: email })) {
+        logger.log("warn", "[M CREATE NEW USER] Email exist! %s", email);
+        throw new Error("Email exist!");
+      }
+
+      // password legality checks
+      if (!password.replace(/\s/g, "").length || password === null) {
+        logger.log(
+          "warn",
+          "[M CREATE NEW USER] Password is null from user %s",
+          currentUser.id
+        );
+        throw new Error("Password can not be null or empty!");
+      }
+      // bcryptjs max input lenght is 18
+      if (password.length > MAX_PW) {
+        logger.log(
+          "warn",
+          "[M CREATE NEW USER] Password is too long from user %s",
+          currentUser.id
+        );
+        throw new Error("Password too long!");
+      }
+      // password min lenght
+      if (password.length < MIN_PW) {
+        logger.log(
+          "warn",
+          "[M CREATE NEW USER] Password is too short from user %s",
+          currentUser.id
+        );
+        throw new Error("Password too short!");
+      }
+
+      const user = prisma.createUser({
+        userType: userType,
+        email: email,
+        password: await bcrypt.hash(password, SALT_ROUNDS)
+      });
+
+      return { user };
     }
   }
 };
