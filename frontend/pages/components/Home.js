@@ -7,6 +7,8 @@ import AdminHome from './AdminHome'
 import UserHome from './UserHome'
 import { homeStyle } from './Styles'
 
+import Router from 'next/router'
+
 const { Consumer } = React.createContext();
 
 class Home extends React.PureComponent {
@@ -31,7 +33,11 @@ class Home extends React.PureComponent {
         CU = res.data.currentUser
       })
       .catch(e => null)
-    this.setState({ userType: CU.userType })
+
+    // check cu if backend is down
+    CU
+      ? this.setState({ userType: CU.userType })
+      : Router.push('/')
   }
 
 

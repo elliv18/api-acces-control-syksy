@@ -21,6 +21,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import Router from 'next/router'
 const styles = theme => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -77,7 +78,11 @@ class NavBar extends React.PureComponent {
                 CU = res.data.currentUser
             })
             .catch(e => null)
-        this.setState({ currentUser: CU })
+
+        // check cu if backend is down
+        CU
+            ? this.setState({ currentUser: CU })
+            : Router.push('/')
     }
 
     render() {
@@ -90,7 +95,7 @@ class NavBar extends React.PureComponent {
                     <AppBar position="static">
                         <Toolbar>
                             <Typography variant="h6" className={classes.title}>
-                                Welcome {currentUser.email}
+                                Welcome {currentUser ? currentUser.email : null}
                             </Typography>
                             {currentUser.userType === 'ADMIN'
                                 ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
@@ -99,7 +104,7 @@ class NavBar extends React.PureComponent {
                                 :
                                 <Button variant="outlined" onClick={this.handleLogOut}>
                                     Logout
-                        </Button>
+                                </Button>
                             }
                         </Toolbar>
                     </AppBar>
