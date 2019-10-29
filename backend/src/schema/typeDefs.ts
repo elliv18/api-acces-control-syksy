@@ -21,12 +21,25 @@ export default `
         updatedAt: String!
     }
 
+    ########
+    # Apis #
+    ########
+
+    type Api {
+        id: String
+        name: String
+        path: String
+        tags: String
+    }
+
     ###########
     # Queries #
     ###########
 
     type Query {
         allUsers: [User]
+
+        getApiList: [Api]
     }
 
     #############

@@ -10,9 +10,12 @@ import {
   MAX_PW,
   MIN_PW,
   ROOT_ADMIN_EMAIL,
-  DEBUG
+  DEBUG,
+  TYK_GW_SECRET
 } from "../environment";
 import logger from "../misc/logger";
+import http from "http";
+import fetch from "node-fetch";
 
 export default {
   /*************** QUERY ***********************/
@@ -28,7 +31,45 @@ export default {
           currentUser.id
         );
       }
+
       return await prisma.users();
+    },
+    getApiList: async (obj, args, { currentUser }) => {
+      if (!DEBUG) {
+        mustBeLoggedIn(currentUser);
+
+        logger.log(
+          "info",
+          "[Q ALLUSERS] User %s - list all apis",
+          currentUser.id
+        );
+      }
+
+      const url = "http://gateway:8080/tyk/apis";
+
+      const headers = {
+        "Content-Type": "application/json",
+        "x-tyk-authorization": TYK_GW_SECRET
+      };
+
+      const res = await fetch(url, { method: "GET", headers: headers });
+
+      const data = await res.json();
+
+      var apiList = [];
+
+      data.forEach(element => {
+        var api = {
+          id: element.api_id,
+          name: element.name,
+          path: element.proxy.listen_path,
+          tags: element.tags
+        };
+
+        apiList.push(api);
+      });
+
+      return apiList;
     }
   },
   /*************** MUTATIONS *******************/

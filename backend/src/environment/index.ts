@@ -24,3 +24,5 @@ export const MAX_PW = 18;
 export const MIN_PW = parseInt(process.env.MIN_PW) || 3;
 
 export const DEBUG = parseInt(process.env.DEBUG) || 0;
+
+export const TYK_GW_SECRET = process.env.TYK_GW_SECRET || "holomoloo";
