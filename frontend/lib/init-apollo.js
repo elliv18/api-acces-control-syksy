@@ -4,6 +4,11 @@ import { IS_BROWSER, NODE_ENV } from "../lib/environment";
 import getConfig from "next/config";
 import Cookies from "js-cookie";
 
+import { setContext } from "apollo-link-context";
+
+import { createHttpLink } from 'apollo-link-http';
+
+
 const { publicRuntimeConfig } = getConfig();
 const { BACKEND_HOST, BACKEND_PORT, PUBLIC_API_URL } = publicRuntimeConfig;
 
@@ -26,22 +31,30 @@ function create(initialState) {
   `);
 
     URL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;
-    // KIINTEÄ LOCALHOST///////////////////////
+
   }
 
-  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
-  return new ApolloClient({
-    connectToDevTools: process.browser,
-    ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
-    link: new HttpLink({
-      uri: URL,
-      credentials: "same-origin", // Additional fetch() options like `credentials` or `headers`
-      headers: { Authorization: temp },
-      // Use fetch() polyfill on the server
-      fetch: !process.browser && fetch
-    }),
-    cache: new InMemoryCache().restore(initialState || {})
+  const authLink = setContext((_) => {
+    // get the authentication token from local storage if it exists
+    const token = Cookies.get('jwtToken');
+    // return the headers to the context so httpLink can read them
+    return {
+      headers: {
+        authorization: token ? `Bearer ${token}` : "",
+      }
+    }
   });
+
+  const httpLink = createHttpLink({
+    uri: URL,
+  });
+
+  return new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
+  });
+  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
+
 }
 
 export default function initApollo(initialState) {

@@ -2,52 +2,159 @@ import React from "react";
 
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
-import Cookies from "js-cookie";
-import chekLogIn from "../../src/components/checkLogIn";
-import { Paper } from "@material-ui/core";
+
+import { Paper, Grid, IconButton } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
-import logOut from '../../src/components/logOut'
-import NotAuth from './NotAuth'
-import NoSsr from '../../src/components/disableSsr'
-import { CURRENTUSER } from "../../lib/gql/mutations";
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
 import { homeStyle } from './Styles'
 
-class Home extends React.PureComponent {
+
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import ConfirmDialog from "./ConfirmDialog";
+
+
+
+
+var moment = require('moment');
+
+
+const styles = theme => ({
+    root: {
+        marginTop: 10,
+        alignSelf: 'center',
+        overflow: 'auto',
+        minWidth: 300,
+        marginLeft: '1%',
+        marginRight: '1%'
+
+    },
+    table: {
+        minWidth: 650,
+    },
+    backgroundDialogTitle: {
+        backgroundColor: "#a8a0a099",
+        textAlign: 'center'
+    },
+    textDialog: {
+        textAlign: 'center',
+        color: 'black',
+        fontSize: 20
+    },
+    contentDialog: {
+        justifyContent: 'center',
+
+    },
+    buttonDialogTextYes: {
+        color: "green",
+    },
+    buttonDialogTextNo: {
+        color: "red",
+    },
+});
+
+
+
+class AdminHome extends React.PureComponent {
     constructor(props) {
         super(props);
 
         this.state = {
             client: props.client,
-            email: undefined
-
+            email: undefined,
+            open: false,
+            deleteStatus: false,
+            allUsers: [],
+            openDialog: false,
+            deleteUserId: null,
+            deleteUserEmail: null
         };
     }
 
+    async componentDidMount() {
+        await this.state.client
+            .query({
+                query: USERS_QUERY
+            })
+            .then(res => {
+                this.setState({ allUsers: res.data.allUsers })
+            })
+            .catch(e => console.log(e))
+    }
+
+    // Dialog state handlers
+    handleClickOpen = () => {
+        this.setState({ open: true })
+    };
+
+    handleCloseNo = () => {
+        this.setState({ deleteStatus: false, open: false })
+        console.log('No')
+    };
+
+    handleCloseYes = () => {
+        this.setState({ deleteStatus: true, open: false })
+        console.log('DELETE', this.state.deleteUserEmail)
+    };
+
+
+
     render() {
-        const { email } = this.state;
-        const { classes } = this.props;
-
+        const { classes } = this.props
+        const { allUsers, deleteUserId, deleteUserEmail, open, deleteStatus } = this.state
         return (
-            <div>
-                <Paper className={classes.paper}>
-                    <h3>ETUSIVU ADMIN</h3>
-                </Paper>
+            <Paper className={classes.root} elevation={5}>
+                <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Email</TableCell>
+                            <TableCell align="center">Usertype</TableCell>
+                            <TableCell align="center">User id</TableCell>
+                            <TableCell align="center">Apikey</TableCell>
+                            <TableCell align="center">User created</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {allUsers.map((row, i) => (
+                            <TableRow key={i}>
+                                <TableCell component="th" scope="row">
+                                    {row.email}
+                                </TableCell>
+                                <TableCell align="center">{row.userType}</TableCell>
+                                <TableCell align="center">{row.id}</TableCell>
+                                <TableCell align="center">{row.apiKey}</TableCell>
+                                <TableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</TableCell>
+                                <TableCell align="right">
+                                    <IconButton onClick={() => {
+                                        //dialog
+                                        this.handleClickOpen()
+                                        this.setState({ deleteUserEmail: row.email, deleteUserId: row.id })
+                                    }}>
+                                        <DeleteOutlinedIcon />
+                                    </IconButton>
+                                </TableCell>
 
-            </div>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <ConfirmDialog
+                    open={this.state.open}
+                    handleCloseNo={this.handleCloseNo}
+                    handleCloseYes={this.handleCloseYes}
+                />
+            </Paper>
 
         );
-
     }
 }
 
-export default withStyles(homeStyle)(withApollo(Home));
+export default withStyles(styles)(withApollo(AdminHome));
 
 

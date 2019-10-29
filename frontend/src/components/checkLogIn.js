@@ -18,5 +18,12 @@ export default function CheckLogin(props) {
     )
   }
   else return <NotAuth />
+}
+
+export function loginStatus() {
+  if (Cookies.get('jwtToken') !== undefined) {
+    return true
+  }
+  return false
 
 }

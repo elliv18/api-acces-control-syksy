@@ -19,6 +19,8 @@ export const homeStyle = theme => ({
     title: {
         flexGrow: 1,
     },
+
+
 });
 export const loginStyles = theme => ({
     "@global": {
@@ -104,3 +106,4 @@ export const dialogStyle = theme => ({
     }
 
 });
+

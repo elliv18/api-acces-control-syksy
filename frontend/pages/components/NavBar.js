@@ -4,7 +4,7 @@ import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
 import Cookies from "js-cookie";
 import chekLogIn from "../../src/components/checkLogIn";
-import { Paper } from "@material-ui/core";
+import { Paper, Link } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import logOut from '../../src/components/logOut'
@@ -18,14 +18,13 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
     paper: {
         marginTop: theme.spacing(8),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        minWidth: 300,
         margin: 50
     },
     root: {
@@ -45,7 +44,8 @@ class NavBar extends React.PureComponent {
 
         this.state = {
             client: props.client,
-            email: undefined
+            currentUser: [],
+            anchorEl: null
             // loggedIn: chekLogIn()
         };
     }
@@ -56,21 +56,32 @@ class NavBar extends React.PureComponent {
         logOut()
     };
 
+    // menu handlers
+
+    handleClickOpenMenu = event => {
+        this.setState({ anchorEl: event.currentTarget })
+    };
+
+    handleCloseMenu = () => {
+        this.setState({ anchorEl: null })
+    };
+
     async componentDidMount() {
 
+        let CU = undefined
         await this.state.client
             .mutate({
                 mutation: CURRENTUSER
             }).then(res => {
-                console.log(res)
-                this.setState({ email: res.data.currentUser.email })
+                //console.log(res)
+                CU = res.data.currentUser
             })
-            .catch(e => console.log(e))
-
+            .catch(e => null)
+        this.setState({ currentUser: CU })
     }
 
     render() {
-        const { email } = this.state;
+        const { anchorEl, currentUser } = this.state;
         const { classes } = this.props;
 
         return (
@@ -78,21 +89,44 @@ class NavBar extends React.PureComponent {
                 <CheckLogIn>
                     <AppBar position="static">
                         <Toolbar>
-                            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                <MenuIcon />
-                            </IconButton>
                             <Typography variant="h6" className={classes.title}>
-                                Welcome {email}
+                                Welcome {currentUser.email}
                             </Typography>
-                            <Button color="inherit" onClick={() => this.handleLogOut()}>LOG OUT</Button>
+                            {currentUser.userType === 'ADMIN'
+                                ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
+                                    <MenuIcon />
+                                </IconButton>
+                                :
+                                <Button variant="outlined" onClick={this.handleLogOut}>
+                                    Logout
+                        </Button>
+                            }
                         </Toolbar>
                     </AppBar>
 
                     {this.props.children}
-
-
                 </CheckLogIn>
 
+
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleCloseMenu}
+                >
+                    <MenuItem onClick={this.handleCloseMenu}>
+                        <Link href={'/home'} style={{ width: '100%' }}>
+                            Home
+                        </Link>
+                    </MenuItem>
+                    <MenuItem onClick={this.handleCloseMenu}>
+                        <Link href={'/createAdmin'}>
+                            Create admin
+                        </Link>
+                    </MenuItem>
+                    <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
+                </Menu>
             </div>
 
         );
