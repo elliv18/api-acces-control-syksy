@@ -65,6 +65,10 @@ export default `
         
         deleteApiKey(input: DeleteKeyInput): DeleteKeyPayload
 
+        ############ ADMIN CREATE NEW USER ##############
+
+        createNewUser(input: CreateNewUserInput!): CreateNewUserPayload
+
     }
 
     ##############################
@@ -102,4 +106,14 @@ export default `
         user: User
     }
 
+    ############ ADMIN CREATE NEW USER ##############
+
+    input CreateNewUserInput {
+        userType: UserType!
+        email: String!
+        password: String!
+    }
+    type CreateNewUserPayload {
+        user: User
+    }
 `;
