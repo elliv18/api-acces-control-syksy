@@ -3,13 +3,10 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
 
-import { Paper, Grid, IconButton } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { homeStyle } from './Styles'
-
-
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,49 +14,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditIcon from '@material-ui/icons/Edit'
+
 import ConfirmDialog from "./ConfirmDialog";
 import { USER_DELETE } from "../../lib/gql/mutations";
 
-
-
+import { AdminHomeStyles } from './Styles'
+import DialogResetPw from "./DialogResetPw";
 
 var moment = require('moment');
-
-
-const styles = theme => ({
-    root: {
-        marginTop: 10,
-        alignSelf: 'center',
-        overflow: 'auto',
-        minWidth: 300,
-        marginLeft: '1%',
-        marginRight: '1%'
-
-    },
-    table: {
-        minWidth: 650,
-    },
-    backgroundDialogTitle: {
-        backgroundColor: "#a8a0a099",
-        textAlign: 'center'
-    },
-    textDialog: {
-        textAlign: 'center',
-        color: 'black',
-        fontSize: 20
-    },
-    contentDialog: {
-        justifyContent: 'center',
-
-    },
-    buttonDialogTextYes: {
-        color: "green",
-    },
-    buttonDialogTextNo: {
-        color: "red",
-    },
-});
-
 
 
 class AdminHome extends React.PureComponent {
@@ -69,12 +32,11 @@ class AdminHome extends React.PureComponent {
         this.state = {
             client: props.client,
             email: undefined,
-            open: false,
-            deleteStatus: false,
+            openConfirm: false,
             allUsers: [],
-            openDialog: false,
-            deleteUserId: null,
-            deleteUserEmail: null
+            openPwReset: false,
+            selectedUserId: null,
+            selectedUserEmail: null
         };
     }
 
@@ -90,31 +52,36 @@ class AdminHome extends React.PureComponent {
     }
 
     // Dialog state handlers
-    handleClickOpen = () => {
-        this.setState({ open: true })
+    handleOpenDelete = () => {
+        this.setState({ openConfirm: true })
     };
 
-    handleCloseNo = () => {
-        this.setState({ deleteStatus: false, open: false })
-        console.log('No')
+    handleOpenPwReset = () => {
+        console.log('OPEN')
+        this.setState({ openPwReset: true })
     };
 
-    handleCloseYes = () => {
-        this.setState({ deleteStatus: true, open: false })
-        console.log('DELETE', this.state.deleteUserId)
+    handleClose = () => {
+        this.setState({ openConfirm: false, openPwReset: false })
+        console.log('Close')
+    };
+
+    handleCloseDeleteYes = () => {
+        this.setState({ openConfirm: false })
+        console.log('DELETE', this.state.selectedUserId)
 
         //DELETE
         // can't delete ROOT_ADMIN
-        this.state.deleteUserEmail !== "1"
+        this.state.selectedUserEmail !== "1"
             ? this.state.client
                 .mutate({
-                    variables: { id: this.state.deleteUserId },
+                    variables: { id: this.state.selectedUserId },
                     mutation: USER_DELETE,
                 })
                 .then(response => {
                     let temp = null
                     // console.log(response)
-                    temp = this.deleteRow(this.state.deleteUserId)
+                    temp = this.deleteRow(this.state.selectedUserId)
                     this.setState({ allUsers: temp })
 
                 })
@@ -139,7 +106,7 @@ class AdminHome extends React.PureComponent {
 
     render() {
         const { classes } = this.props
-        const { allUsers, deleteUserId, deleteUserEmail, open, deleteStatus } = this.state
+        const { allUsers, openConfirm, openPwReset, selectedUserId, selectedUserEmail } = this.state
         return (
             <Paper className={classes.root} elevation={5}>
                 <Table className={classes.table} aria-label="simple table">
@@ -150,6 +117,7 @@ class AdminHome extends React.PureComponent {
                             <TableCell align="center">User id</TableCell>
                             <TableCell align="center">Apikey</TableCell>
                             <TableCell align="center">User created</TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -163,13 +131,24 @@ class AdminHome extends React.PureComponent {
                                 <TableCell align="center">{row.apiKey}</TableCell>
                                 <TableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</TableCell>
                                 <TableCell align="right">
-                                    <IconButton onClick={() => {
-                                        //dialog
-                                        this.handleClickOpen()
-                                        this.setState({ deleteUserEmail: row.email, deleteUserId: row.id })
-                                    }}>
-                                        <DeleteOutlinedIcon />
-                                    </IconButton>
+                                    <Tooltip title={"Delete user & apikey"}>
+                                        <IconButton onClick={() => {
+                                            //dialog
+                                            this.handleOpenDelete()
+                                            this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                        }}>
+                                            <DeleteOutlinedIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title={"Reset password"}>
+                                        <IconButton onClick={() => {
+                                            //dialog
+                                            this.handleOpenPwReset()
+                                            this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                        }}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
                                 </TableCell>
 
                             </TableRow>
@@ -177,9 +156,16 @@ class AdminHome extends React.PureComponent {
                     </TableBody>
                 </Table>
                 <ConfirmDialog
-                    open={this.state.open}
-                    handleCloseNo={this.handleCloseNo}
-                    handleCloseYes={this.handleCloseYes}
+                    open={openConfirm}
+                    handleClose={this.handleClose}
+                    handleCloseYes={this.handleCloseDeleteYes}
+                />
+                <DialogResetPw
+                    open={openPwReset}
+                    handleClose={this.handleClose}
+                    userId={selectedUserId}
+                    userEmail={selectedUserEmail}
+                    title={"Reset user password?"}
                 />
             </Paper>
 
@@ -187,6 +173,6 @@ class AdminHome extends React.PureComponent {
     }
 }
 
-export default withStyles(styles)(withApollo(AdminHome));
+export default withStyles(AdminHomeStyles)(withApollo(AdminHome));
 
 

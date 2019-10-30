@@ -67,9 +67,41 @@ export const homeStyleUser = theme => ({
         padding: 10
     }
 
-
-
 });
+export const AdminHomeStyles = theme => ({
+    root: {
+        marginTop: 10,
+        alignSelf: 'center',
+        overflow: 'auto',
+        minWidth: 300,
+        marginLeft: '1%',
+        marginRight: '1%'
+
+    },
+    table: {
+        minWidth: 650,
+    },
+    backgroundDialogTitle: {
+        backgroundColor: "#a8a0a099",
+        textAlign: 'center'
+    },
+    textDialog: {
+        textAlign: 'center',
+        color: 'black',
+        fontSize: 20
+    },
+    contentDialog: {
+        justifyContent: 'center',
+
+    },
+    buttonDialogTextYes: {
+        color: "green",
+    },
+    buttonDialogTextNo: {
+        color: "red",
+    },
+});
+
 export const loginStyles = theme => ({
     "@global": {
         body: {

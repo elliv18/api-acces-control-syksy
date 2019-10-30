@@ -24,6 +24,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Router from 'next/router'
 
 import { navStyles } from './Styles'
+import ConfirmDialog from "./ConfirmDialog";
+import DialogResetPw from "./DialogResetPw";
 
 
 class NavBar extends React.PureComponent {
@@ -33,7 +35,8 @@ class NavBar extends React.PureComponent {
         this.state = {
             client: props.client,
             currentUser: [],
-            anchorEl: null
+            anchorEl: null,
+            open: false
             // loggedIn: chekLogIn()
         };
     }
@@ -52,6 +55,13 @@ class NavBar extends React.PureComponent {
 
     handleCloseMenu = () => {
         this.setState({ anchorEl: null })
+    };
+
+    handleOpenDialog = () => {
+        this.setState({ anchorEl: null, open: true })
+    };
+    handleCloseDialog = () => {
+        this.setState({ anchorEl: null, open: false })
     };
 
     async componentDidMount() {
@@ -73,7 +83,7 @@ class NavBar extends React.PureComponent {
     }
 
     render() {
-        const { anchorEl, currentUser } = this.state;
+        const { anchorEl, currentUser, open } = this.state;
         const { classes } = this.props;
 
         return (
@@ -88,10 +98,11 @@ class NavBar extends React.PureComponent {
                                 ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
                                     <MenuIcon />
                                 </IconButton>
-                                :
-                                <Button variant="outlined" onClick={this.handleLogOut}>
-                                    Logout
+                                : currentUser.userType === 'USER'
+                                    ? <Button variant="outlined" onClick={this.handleLogOut}>
+                                        Logout
                                 </Button>
+                                    : null
                             }
                         </Toolbar>
                     </AppBar>
@@ -119,8 +130,12 @@ class NavBar extends React.PureComponent {
                             Create admin
                         </Link>
                     </MenuItem>
+
+
                     <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
                 </Menu>
+
+                <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
             </div>
 
         );
