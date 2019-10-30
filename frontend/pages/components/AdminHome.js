@@ -15,12 +15,15 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit'
+import AddIcon from '@material-ui/icons/Add'
 
 import ConfirmDialog from "./ConfirmDialog";
 import { USER_DELETE } from "../../lib/gql/mutations";
 
 import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
+import DialogAddUser from "./DialogAddUser";
+
 
 var moment = require('moment');
 
@@ -29,14 +32,18 @@ class AdminHome extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.handleAddedData = this.handleAddedData.bind(this)
         this.state = {
             client: props.client,
             email: undefined,
             openConfirm: false,
-            allUsers: [],
             openPwReset: false,
+            openAddUser: false,
+            allUsers: [],
+            addedRow: null,
             selectedUserId: null,
-            selectedUserEmail: null
+            selectedUserEmail: null,
+            rowColor: 'lightGray'
         };
     }
 
@@ -52,6 +59,27 @@ class AdminHome extends React.PureComponent {
     }
 
     // Dialog state handlers
+    //Basic close
+    handleClose = () => {
+        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
+        console.log('Close')
+    };
+    //Add user close
+    handleAddedData(added, id) {
+        let temp = null;
+        this.setState({ addedRow: added })
+
+        console.log('Added', this.state.addedRow, 'index', this.state.allUsers.length)
+
+        temp = [
+            ...this.state.allUsers,
+            added.user
+        ]
+        this.setState({ allUsers: temp })
+        //console.log('edit', temp)
+    }
+
+    //handle opens
     handleOpenDelete = () => {
         this.setState({ openConfirm: true })
     };
@@ -60,11 +88,11 @@ class AdminHome extends React.PureComponent {
         console.log('OPEN')
         this.setState({ openPwReset: true })
     };
-
-    handleClose = () => {
-        this.setState({ openConfirm: false, openPwReset: false })
-        console.log('Close')
+    handleOpenAddUser = () => {
+        this.setState({ openAddUser: true })
     };
+
+    //handle delete close
 
     handleCloseDeleteYes = () => {
         this.setState({ openConfirm: false })
@@ -106,23 +134,38 @@ class AdminHome extends React.PureComponent {
 
     render() {
         const { classes } = this.props
-        const { allUsers, openConfirm, openPwReset, selectedUserId, selectedUserEmail } = this.state
+        const { allUsers,
+            openConfirm,
+            openPwReset,
+            selectedUserId,
+            selectedUserEmail,
+            openAddUser,
+            rowColor
+        } = this.state
         return (
             <Paper className={classes.root} elevation={5}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
-                        <TableRow>
+                        <TableRow >
                             <TableCell>Email</TableCell>
                             <TableCell align="center">Usertype</TableCell>
                             <TableCell align="center">User id</TableCell>
                             <TableCell align="center">Apikey</TableCell>
                             <TableCell align="center">User created</TableCell>
+                            <TableCell align="right">
+                                <Tooltip title={"Add user"}>
+                                    <IconButton className={classes.addButton} onClick={this.handleOpenAddUser}>
+                                        <AddIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {allUsers.map((row, i) => (
-                            <TableRow key={i}>
+
+                            <TableRow key={i} style={{ backgroundColor: row.userType === 'ADMIN' ? rowColor : null }}>
                                 <TableCell component="th" scope="row">
                                     {row.email}
                                 </TableCell>
@@ -157,6 +200,7 @@ class AdminHome extends React.PureComponent {
                 </Table>
                 <ConfirmDialog
                     open={openConfirm}
+                    email={selectedUserEmail}
                     handleClose={this.handleClose}
                     handleCloseYes={this.handleCloseDeleteYes}
                 />
@@ -166,6 +210,12 @@ class AdminHome extends React.PureComponent {
                     userId={selectedUserId}
                     userEmail={selectedUserEmail}
                     title={"Reset user password?"}
+                />
+
+                <DialogAddUser
+                    open={openAddUser}
+                    handleClose={this.handleClose}
+                    handleAddedData={this.handleAddedData}
                 />
             </Paper>
 

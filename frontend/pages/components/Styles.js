@@ -4,7 +4,8 @@ import { textAlign } from "@material-ui/system";
 export const navStyles = theme => ({
     root: {
         flexGrow: 1,
-
+        height: '100%',
+        // backgroundColor: 'lightBlue'
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -75,11 +76,13 @@ export const AdminHomeStyles = theme => ({
         overflow: 'auto',
         minWidth: 300,
         marginLeft: '1%',
-        marginRight: '1%'
-
+        marginRight: '1%',
+        // height: 500
     },
     table: {
         minWidth: 650,
+        // overflow: 'auto',
+
     },
     backgroundDialogTitle: {
         backgroundColor: "#a8a0a099",
@@ -100,6 +103,11 @@ export const AdminHomeStyles = theme => ({
     buttonDialogTextNo: {
         color: "red",
     },
+    addButton: {
+        color: 'green',
+        backgroundColor: '#f5f5f5',
+        marginRight: theme.spacing(3)
+    }
 });
 
 export const loginStyles = theme => ({
@@ -187,3 +195,40 @@ export const dialogStyle = theme => ({
 
 });
 
+export const addUserStyle = theme => ({
+    textField: {
+        margin: 5,
+    },
+    eye: {
+        cursor: 'pointer',
+    },
+    dialogContent: {
+        textAlign: 'center',
+        overflow: 'hidden'
+
+    },
+    dialogTitle: {
+        textAlign: 'center'
+    },
+    main: {
+        width: 350,
+    },
+    buttonDialogTextNo: {
+        color: 'red'
+    },
+    buttonDialogTextYes: {
+        color: 'green'
+    },
+    textField: {
+        width: '100%',
+        overflow: 'auto',
+        marginTop: 5
+    },
+    select: {
+        width: '100%',
+        marginBottom: 5
+    },
+    dialogActions: {
+        justifyContent: 'center'
+    }
+});
