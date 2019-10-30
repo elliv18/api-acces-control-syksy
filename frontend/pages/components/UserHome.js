@@ -53,7 +53,7 @@ class HomeUser extends React.PureComponent {
                 {console.log('apis', apiList)}
 
                 {apiList.map((row, index) => {
-                    console.log('row', row)
+                    //    console.log('row', row)
                     return (
                         <Paper elevation={10} className={classes.card} key={index}>
                             <Typography className={classes.title1}>

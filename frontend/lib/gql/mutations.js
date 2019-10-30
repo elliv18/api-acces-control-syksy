@@ -21,12 +21,27 @@ mutation signInMutation($email: String!, $password: String!, $passwordAgain: Str
 `;
 
 
+/*********************** USERS EDIT ****************************/
 
 export const USER_DELETE = gql`
   mutation deleteMutation($id: ID!) {
     deleteUser(input: { id: $id }) {
       user{
         id
+      }
+    }
+  }
+`;
+
+
+export const ADMIN_RESET_PW = gql`
+  mutation updateMutation($id: ID! $password: String! $passwordAgain: String!) 
+  {
+    userPWReset(input: { id: $id, password: $password, passwordAgain: $passwordAgain } )
+    {
+      user {
+        id,
+        email
       }
     }
   }

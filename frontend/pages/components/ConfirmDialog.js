@@ -60,7 +60,7 @@ function ConfirmDialog(props) {
                     <a className={classes.buttonDialogTextYes}>Yes</a>
 
                 </Button>
-                <Button variant="outlined" onClick={props.handleCloseNo} autoFocus>
+                <Button variant="outlined" onClick={props.handleClose} autoFocus>
                     <a className={classes.buttonDialogTextNo}>No</a>
                 </Button>
             </DialogActions>
