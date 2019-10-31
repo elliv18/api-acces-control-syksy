@@ -27,9 +27,9 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <React.Fragment>
+      <React.Fragment >
         <Head>
-          <title>My page</title>
+          <title>AAC</title>
         </Head>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

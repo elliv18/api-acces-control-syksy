@@ -1,21 +1,28 @@
 import { red } from "@material-ui/core/colors";
 import { textAlign } from "@material-ui/system";
+import { Grid } from "@material-ui/core";
 
 export const navStyles = theme => ({
     root: {
         flexGrow: 1,
-        height: '100%',
-        // backgroundColor: 'lightBlue'
+        //backgroundColor: 'lightBlue',
     },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        //backgroundColor: 'rgba(0,70,85)',
+        backgroundColor: theme.palette.primary,
+
     },
     menuButton: {
         marginRight: theme.spacing(2),
     },
     title: {
         flexGrow: 1,
+    },
+    content: {
+        paddingTop: theme.spacing(3),
+        backgroundColor: theme.palette.secondary.main,
+        paddingBottom: '10px',
+        minHeight: 'calc(100vh - 64px)',
+        overflow: 'hidden'
     },
 
 });
@@ -71,18 +78,20 @@ export const homeStyleUser = theme => ({
 });
 export const AdminHomeStyles = theme => ({
     root: {
-        marginTop: 10,
-        alignSelf: 'center',
-        overflow: 'auto',
-        minWidth: 300,
-        marginLeft: '1%',
-        marginRight: '1%',
-        // height: 500
+        width: '95%',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        maxHeight: '570px',
+        overflowY: 'auto',
+        paddingBottom: '10px'
+
     },
     table: {
         minWidth: 650,
         // overflow: 'auto',
-
+    },
+    tableHeader: {
+        backgroundColor: 'red'
     },
     backgroundDialogTitle: {
         backgroundColor: "#a8a0a099",
@@ -105,15 +114,16 @@ export const AdminHomeStyles = theme => ({
     },
     addButton: {
         color: 'green',
-        backgroundColor: '#f5f5f5',
-        marginRight: theme.spacing(3)
-    }
+        backgroundColor: theme.palette.secondary.main,
+        // marginLeft: theme.spacing(5)
+    },
+
 });
 
 export const loginStyles = theme => ({
     "@global": {
         body: {
-            backgroundColor: theme.palette.common.white
+            backgroundColor: theme.palette.primary.main
         }
     },
     paper: {
@@ -204,7 +214,6 @@ export const addUserStyle = theme => ({
     },
     dialogContent: {
         textAlign: 'center',
-        overflow: 'hidden'
 
     },
     dialogTitle: {
@@ -221,7 +230,6 @@ export const addUserStyle = theme => ({
     },
     textField: {
         width: '100%',
-        overflow: 'auto',
         marginTop: 5
     },
     select: {

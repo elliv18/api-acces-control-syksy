@@ -26,6 +26,7 @@ import Router from 'next/router'
 import { navStyles } from './Styles'
 import ConfirmDialog from "./ConfirmDialog";
 import DialogResetPw from "./DialogResetPw";
+import App from "./App";
 
 
 class NavBar extends React.PureComponent {
@@ -89,7 +90,7 @@ class NavBar extends React.PureComponent {
         return (
             <div className={classes.root}>
                 <CheckLogIn>
-                    <AppBar position="static">
+                    <AppBar position="sticky" className={classes.appBar}>
                         <Toolbar>
                             <Typography variant="h6" className={classes.title}>
                                 Welcome {currentUser ? currentUser.email : null}
@@ -107,9 +108,11 @@ class NavBar extends React.PureComponent {
                         </Toolbar>
                     </AppBar>
 
-                    <div className={classes.background}>
-                        {this.props.children}
-                    </div>
+                    <App>
+                        <div className={classes.content}>
+                            {this.props.children}
+                        </div>
+                    </App>
                 </CheckLogIn>
 
 

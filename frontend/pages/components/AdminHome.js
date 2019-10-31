@@ -3,7 +3,7 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
 
-import { Paper, Grid, IconButton, Tooltip } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip, CssBaseline } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { homeStyle } from './Styles'
@@ -28,6 +28,23 @@ import DialogAddUser from "./DialogAddUser";
 var moment = require('moment');
 
 
+
+//customcell
+const StyledTableCell = withStyles(theme => ({
+    head: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+        borderBottomStyle: 'solid',
+        borderColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.tableCell.default,
+    },
+}))(TableCell);
+
+
+////////''''''''''''''CLASS'''''''''''''/////////////
 class AdminHome extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -144,21 +161,24 @@ class AdminHome extends React.PureComponent {
         } = this.state
         return (
             <Paper className={classes.root} elevation={5}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
+                <CssBaseline />
+                <Table stickyHeader aria-label="sticky table" className={classes.table} aria-label="simple table">
+                    <TableHead >
                         <TableRow >
-                            <TableCell>Email</TableCell>
-                            <TableCell align="center">Usertype</TableCell>
-                            <TableCell align="center">User id</TableCell>
-                            <TableCell align="center">Apikey</TableCell>
-                            <TableCell align="center">User created</TableCell>
-                            <TableCell align="right">
-                                <Tooltip title={"Add user"}>
-                                    <IconButton className={classes.addButton} onClick={this.handleOpenAddUser}>
-                                        <AddIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </TableCell>
+                            <StyledTableCell align="center">
+                                <div>
+                                    <Tooltip title={"Add user"} className={classes.addButton}>
+                                        <IconButton onClick={this.handleOpenAddUser}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            </StyledTableCell>
+                            <StyledTableCell align="center">Email</StyledTableCell>
+                            <StyledTableCell align="center">Usertype</StyledTableCell>
+                            <StyledTableCell align="center">User id</StyledTableCell>
+                            <StyledTableCell align="center">Apikey</StyledTableCell>
+                            <StyledTableCell align="center">User created</StyledTableCell>
 
                         </TableRow>
                     </TableHead>
@@ -166,33 +186,39 @@ class AdminHome extends React.PureComponent {
                         {allUsers.map((row, i) => (
 
                             <TableRow key={i} style={{ backgroundColor: row.userType === 'ADMIN' ? rowColor : null }}>
-                                <TableCell component="th" scope="row">
-                                    {row.email}
-                                </TableCell>
-                                <TableCell align="center">{row.userType}</TableCell>
-                                <TableCell align="center">{row.id}</TableCell>
-                                <TableCell align="center">{row.apiKey}</TableCell>
-                                <TableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</TableCell>
-                                <TableCell align="right">
+                                <StyledTableCell align="center">
+
                                     <Tooltip title={"Delete user & apikey"}>
-                                        <IconButton onClick={() => {
-                                            //dialog
-                                            this.handleOpenDelete()
-                                            this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                        }}>
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() => {
+                                                //dialog
+                                                this.handleOpenDelete()
+                                                this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
                                             <DeleteOutlinedIcon />
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title={"Reset password"}>
-                                        <IconButton onClick={() => {
-                                            //dialog
-                                            this.handleOpenPwReset()
-                                            this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                        }}>
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() => {
+                                                //dialog
+                                                this.handleOpenPwReset()
+                                                this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
                                             <EditIcon />
                                         </IconButton>
                                     </Tooltip>
-                                </TableCell>
+                                </StyledTableCell>
+                                <StyledTableCell component="th" scope="row" align="center">
+                                    {row.email}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">{row.userType}</StyledTableCell>
+                                <StyledTableCell align="center">{row.id}</StyledTableCell>
+                                <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
+                                <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
+
 
                             </TableRow>
                         ))}
@@ -226,3 +252,6 @@ class AdminHome extends React.PureComponent {
 export default withStyles(AdminHomeStyles)(withApollo(AdminHome));
 
 
+/*
+
+               */

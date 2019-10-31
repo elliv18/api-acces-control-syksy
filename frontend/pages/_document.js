@@ -6,7 +6,7 @@ import theme from '../src/theme';
 class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <html lang="en" style={{ height: '100vm' }}>
         <Head>
           <meta charSet="utf-8" />
           <meta

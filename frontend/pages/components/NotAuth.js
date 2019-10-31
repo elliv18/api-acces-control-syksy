@@ -4,10 +4,10 @@ import NoSsr from '../../src/components/disableSsr'
 
 const styles = theme => ({
     margin: {
-        margin: theme.spacing() * 2,
+        margin: theme.spacing(2),
     },
     root: {
-        padding: theme.spacing(),
+        padding: theme.spacing(1),
         minWidth: '230px',
         position: 'inherit',
         marginTop: '10%',
