@@ -18,7 +18,6 @@ import { USER_DELETE } from "../../lib/gql/mutations";
 import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
-import AdminUsersTable from "../../src/components/tableFunctions";
 
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -200,19 +199,19 @@ class AdminHome extends React.PureComponent {
 
     handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelecteds = this.state.allUsers.map(n => n.name);
+            const newSelecteds = this.state.allUsers.map(n => n.id);
             this.setState({ selected: newSelecteds })
             return;
         }
         this.setState({ selected: [] })
     };
 
-    handleClickSelect = (event, name) => {
-        const selectedIndex = this.state.selected.indexOf(name);
+    handleClickSelect = (event, id) => {
+        const selectedIndex = this.state.selected.indexOf(id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(this.state.selected, name);
+            newSelected = newSelected.concat(this.state.selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(this.state.selected.slice(1));
         } else if (selectedIndex === this.state.selected.length - 1) {
@@ -225,10 +224,11 @@ class AdminHome extends React.PureComponent {
         }
 
         this.setState({ selected: newSelected })
+        //console.log('select', this.state.selected)
     };
 
 
-    isSelected = name => this.state.selected.indexOf(name) !== -1;
+    isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 
     // Dialog state handlers
@@ -340,14 +340,14 @@ class AdminHome extends React.PureComponent {
                     <TableBody>
                         {stableSort(allUsers, getSorting(order, orderBy))
                             .map((row, index) => {
-                                const isItemSelected = this.isSelected(row.name);
+                                const isItemSelected = this.isSelected(row.id);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
                                     <TableRow
                                         key={index}
                                         hover
-                                        onClick={event => this.handleClickSelect(event, row.name)}
+                                        onClick={event => this.handleClickSelect(event, row.id)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
