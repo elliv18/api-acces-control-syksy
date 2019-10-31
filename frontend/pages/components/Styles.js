@@ -116,8 +116,27 @@ export const AdminHomeStyles = theme => ({
         color: 'green',
         //marginBottom: theme.spacing(3),
         backgroundColor: theme.palette.secondary.main,
-        marginLeft: theme.spacing(3)
+        // marginLeft: theme.spacing(3)
+        marginRight: theme.spacing(2)
     },
+    deleteUpButton: {
+        color: 'red',
+        //marginBottom: theme.spacing(3),
+        backgroundColor: theme.palette.secondary.main,
+        // marginLeft: theme.spacing(3)
+        marginRight: theme.spacing(2)
+    },
+
+    sortIcon: {
+        icon: {
+            display: 'none',
+        },
+        active: {
+            '& $icon': {
+                display: 'none',
+            },
+        },
+    }
 
 });
 

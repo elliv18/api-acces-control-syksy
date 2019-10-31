@@ -62,9 +62,9 @@ const StyledTableCell = withStyles(theme => ({
 //***************************TABLE***************************** */
 const headCells = [
 
-    { id: 'actions', numeric: false, disablePadding: true },
+    { id: 'actions' },
     { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
-    { id: 'userTypes', numeric: false, disablePadding: false, label: 'Usertype' },
+    { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
     { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
     { id: 'apikey', numeric: false, disablePadding: false, label: 'Apikey' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created' },
@@ -100,7 +100,7 @@ function getSorting(order, orderBy) {
 function EnhancedTableHead(props) {
     const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = property => event => {
-        onRequestSort(event, property);
+        property !== 'actions' ? onRequestSort(event, property) : null
     };
 
     return (
@@ -111,9 +111,8 @@ function EnhancedTableHead(props) {
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={numSelected === rowCount}
                         onChange={onSelectAllClick}
-                        inputProps={{ 'aria-label': 'select all desserts' }}
+                        inputProps={{ 'aria-label': 'select all ' }}
                     />
-
 
                 </StyledTableCell>
                 {headCells.map(headCell => (
@@ -123,27 +122,33 @@ function EnhancedTableHead(props) {
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
                         <TableSortLabel
-                            active={orderBy === headCell.id}
+                            hideSortIcon={true}
+                            active={headCell.id !== 'actions' && orderBy === headCell.id}
                             direction={order}
                             onClick={createSortHandler(headCell.id)}
                         >
-                            {headCell.id === 'actions'
-                                ? <Tooltip title={"Add user"} className={classes.addButton}>
-                                    <IconButton onClick={props.handleOpenAddUser}>
-                                        <AddIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                : headCell.label
-
-                            }
-                            {orderBy === headCell.id ? (
+                            {headCell.label}
+                            {orderBy === headCell.id && headCell.id !== 'actions' ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? '' : ''}
                                 </span>
-                            ) : null}
+                            ) : headCell.id === 'actions' && props.selected.length === 0
+
+                                    ? <Tooltip title={"Add user"} className={classes.addButton}>
+                                        <IconButton onClick={props.handleOpenAddUser}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    : headCell.id === 'actions'
+
+                                        ? <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
+                                            <IconButton onClick={props.getSelected}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        : null}
                         </TableSortLabel>
-
-
 
                     </StyledTableCell>
                 ))}
@@ -188,6 +193,11 @@ class AdminHome extends React.PureComponent {
                 this.setState({ allUsers: res.data.allUsers })
             })
             .catch(e => console.log(e))
+    }
+
+    getSelected = () => {
+        console.log(this.state.selected)
+        this.setState({ selected: [] })
     }
 
 
@@ -328,6 +338,8 @@ class AdminHome extends React.PureComponent {
                     aria-label="enhanced table"
                 >
                     <EnhancedTableHead
+                        getSelected={this.getSelected}
+                        selected={selected}
                         classes={classes}
                         numSelected={selected.length}
                         order={order}
@@ -359,7 +371,7 @@ class AdminHome extends React.PureComponent {
                                                 inputProps={{ 'aria-labelledby': labelId }}
                                             />
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">
+                                        <StyledTableCell align="left">
                                             <Tooltip title={"Delete user & apikey"}>
                                                 <IconButton
                                                     color="primary"
@@ -429,84 +441,7 @@ class AdminHome extends React.PureComponent {
 export default withStyles(AdminHomeStyles)(withApollo(AdminHome));
 
 
-/*
 
-
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-
-
-/*
-<Table stickyHeader aria-label="sticky table" className={classes.table} aria-label="simple table">
-                    <TableHead >
-                        <TableRow >
-                            <StyledTableCell align="center">
-                                <div>
-                                    <Tooltip title={"Add user"} className={classes.addButton}>
-                                        <IconButton onClick={this.handleOpenAddUser}>
-                                            <AddIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </div>
-                            </StyledTableCell>
-                            <StyledTableCell align="center">Email</StyledTableCell>
-                            <StyledTableCell align="center">Usertype</StyledTableCell>
-                            <StyledTableCell align="center">User id</StyledTableCell>
-                            <StyledTableCell align="center">Apikey</StyledTableCell>
-                            <StyledTableCell align="center">User created</StyledTableCell>
-
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {allUsers.map((row, i) => (
-
-<TableRow
-                        hover
-                        onClick={event => handleClick(event, row.name)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.name}
-                        selected={isItemSelected}
-                      >                                <StyledTableCell align="center">
-
-                                    <Tooltip title={"Delete user & apikey"}>
-                                        <IconButton
-                                            color="primary"
-                                            onClick={() => {
-                                                //dialog
-                                                this.handleOpenDelete()
-                                                this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                            }}>
-                                            <DeleteOutlinedIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title={"Reset password"}>
-                                        <IconButton
-                                            color="primary"
-                                            onClick={() => {
-                                                //dialog
-                                                this.handleOpenPwReset()
-                                                this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                            }}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align="center">
-                                    {row.email}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">{row.userType}</StyledTableCell>
-                                <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
-                                <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
-
-
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>*/
 
 
 
