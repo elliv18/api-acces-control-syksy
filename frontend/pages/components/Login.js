@@ -84,8 +84,8 @@ class Login extends React.Component {
       .then(res => {
         let jwt = res.data.login.jwt
         // asetetaan jwt, jos saadaan response (oikeat nimi ja salasana)
-        jwt !== undefined || jwt !== null ? Cookies.set("jwtToken", jwt) : null;
-        window.location.href = "/home";
+        Cookies.set("jwtToken", jwt)
+        //window.location.href = "/home";
       })
       .catch(e => {
         this.setState({ errorMsg: e.message.replace("GraphQL error:", "").trim() })

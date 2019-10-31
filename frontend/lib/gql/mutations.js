@@ -21,12 +21,43 @@ mutation signInMutation($email: String!, $password: String!, $passwordAgain: Str
 `;
 
 
+/*********************** USERS EDIT ****************************/
 
-export const EQUIPMENT_DELETE_MUTATION = gql`
+export const USER_DELETE = gql`
   mutation deleteMutation($id: ID!) {
-    deviceDelete(input: { id: $id }) {
-      device {
+    deleteUser(input: { id: $id }) {
+      user{
         id
+      }
+    }
+  }
+`;
+
+
+export const ADMIN_RESET_PW = gql`
+  mutation updateMutation($id: ID! $password: String! $passwordAgain: String!) 
+  {
+    userPWReset(input: { id: $id, password: $password, passwordAgain: $passwordAgain } )
+    {
+      user {
+        id,
+        email
+      }
+    }
+  }
+`;
+
+/*********************** ADD USER **************************** */
+export const ADD_USER = gql`
+  mutation addUserMutation($userType: UserType! $email: String! $password: String! ) 
+  {
+    createNewUser(input: { userType: $userType, email: $email password: $password } )
+    {
+      user {
+        id,
+        email,
+        userType,
+        createdAt
       }
     }
   }

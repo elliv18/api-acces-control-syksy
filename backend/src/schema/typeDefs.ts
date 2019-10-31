@@ -51,23 +51,62 @@ export default `
 
         currentUser: User
 
-        ############# LOGIN #################
+        currentUserUpdatePW(input: CurrentUserUpdatePWInput): CurrentUserUpdatePWPayload
 
+        
+        ############# LOGIN #################
+        
         # ALL - login
         login(input: LoginInput!): LoginPayload
-
+        
         ############# SIGNUP ################
-
+        
         signup(input: SignupInput!): SignupPayload
+        
+        ############# DELETE KEY #################
+        
+        deleteApiKey(input: DeleteKeyInput): DeleteKeyPayload
+
+        ############ ADMIN - CREATE NEW USER ##############
 
         ############### TYK #####################
 
         createNewApiKey(input: CreateNewApiKeyInput!): CreateNewApiKeyPayload
+        createNewUser(input: CreateNewUserInput!): CreateNewUserPayload
+
+        ############ ADMIN - DELETE USER ###################
+
+        deleteUser(input: DeleteUserInput): DeleteUserPayload
+
+        ########### ADMIN - USER PW RESET #################
+
+        userPWReset(input: UserPWResetInput): UserPWResetPayload
     }
 
     ##############################
     # Mutation inputs & payloads #
     ##############################
+
+    ################# CURRENT USER UPDATE PASSWORD ##########
+
+    input CurrentUserUpdatePWInput {
+        password: String!
+        passwordAgain: String!
+        oldPassword: String!
+    }
+    type CurrentUserUpdatePWPayload {
+        user: User
+    }
+
+    ################# DELETE KEY ########################
+    
+    input DeleteKeyInput {
+        keyHash: String!
+    }
+
+    type DeleteKeyPayload {
+        key: String
+    }
 
     ################# LOGIN ########################
 
@@ -109,5 +148,35 @@ export default `
     type CreateNewApiKeyPayload {
         key: String
         keyHash: String
+    }
+    ############ ADMIN CREATE NEW USER ##############
+
+    input CreateNewUserInput {
+        userType: UserType!
+        email: String!
+        password: String!
+    }
+    type CreateNewUserPayload {
+        user: User
+    }
+
+    ############ ADMIN DELETE USER ###################
+
+    input DeleteUserInput {
+        id: ID!
+    }
+    type DeleteUserPayload {
+        user: User
+    }
+
+    ########### ADMIN - USER PW RESET #################
+
+    input UserPWResetInput {
+        id: ID!
+        password: String!
+        passwordAgain: String!
+    }
+    type UserPWResetPayload {
+        user: User
     }
 `;

@@ -1,55 +1,91 @@
 import React from "react";
 
 import { withApollo } from "react-apollo";
-import { USERS_QUERY } from "../../lib/gql/queries";
-import Cookies from "js-cookie";
-import chekLogIn from "../../src/components/checkLogIn";
-import { Paper } from "@material-ui/core";
+import { Paper, GridList, Grid, GridListTile } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
-import logOut from '../../src/components/logOut'
-import NotAuth from './NotAuth'
-import NoSsr from '../../src/components/disableSsr'
+
 import { CURRENTUSER } from "../../lib/gql/mutations";
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
-import { homeStyle } from './Styles'
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
-class Home extends React.PureComponent {
+
+import { homeStyleUser } from './Styles'
+import { API_LIST_QUERY } from "../../lib/gql/queries";
+import { spacing } from "@material-ui/system";
+
+
+
+class HomeUser extends React.PureComponent {
     constructor(props) {
         super(props);
 
         this.state = {
             client: props.client,
-            email: undefined
-
+            apiList: []
         };
     }
 
+    async componentDidMount() {
+        await this.state.client
+            .query({
+                query: API_LIST_QUERY
+            })
+            .then(res => {
+                console.log(res.data.getApiList)
+                this.setState({ apiList: res.data.getApiList })
+            })
+            .catch(e => console.log(e))
+    }
+
     render() {
-        const { email } = this.state;
+        const { apiList } = this.state;
         const { classes } = this.props;
 
         return (
-            <div>
+            <div className={classes.paper}>
+                <h1>Avaible apis</h1> ,
+                {console.log('apis', apiList)}
 
-
-                <Paper className={classes.paper}>
-                    <h3>ETUSIVU USER</h3>
-                </Paper>
-
+                {apiList.map((row, index) => {
+                    //    console.log('row', row)
+                    return (
+                        <Paper elevation={10} className={classes.card} key={index}>
+                            <Typography className={classes.title1}>
+                                <b>{row.name}</b>
+                            </Typography>
+                            <Typography className={classes.title2}>
+                                <b>Path:</b>  {row.path}
+                            </Typography>
+                            <Typography className={classes.title2}>
+                                <b>Blah:</b>  blah blah
+                            </Typography>
+                        </Paper>
+                    )
+                })}
             </div>
-
-        );
+        )
 
     }
 }
 
-export default withStyles(homeStyle)(withApollo(Home));
+export default withStyles(homeStyleUser)(withApollo(HomeUser));
 
 
+/* <Card key={index} elevation={5} className={classes.card}>
+
+                                    <CardContent>
+                                        <Typography className={classes.title2}>
+                                            Api name: {row.name}
+                                        </Typography>
+                                        <Typography className={classes.title2}>
+                                            Path: {row.path}
+                                        </Typography>
+
+                                    </CardContent>
+                                </Card>*/
