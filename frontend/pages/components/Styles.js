@@ -82,7 +82,7 @@ export const AdminHomeStyles = theme => ({
         marginRight: 'auto',
         marginLeft: 'auto',
         maxHeight: '570px',
-        overflowY: 'auto',
+        overflow: 'auto',
         paddingBottom: '10px'
 
     },
@@ -116,8 +116,27 @@ export const AdminHomeStyles = theme => ({
         color: 'green',
         //marginBottom: theme.spacing(3),
         backgroundColor: theme.palette.secondary.main,
-        // marginLeft: theme.spacing(5)
+        // marginLeft: theme.spacing(3)
+        marginRight: theme.spacing(2)
     },
+    deleteUpButton: {
+        color: 'red',
+        //marginBottom: theme.spacing(3),
+        backgroundColor: theme.palette.secondary.main,
+        // marginLeft: theme.spacing(3)
+        marginRight: theme.spacing(2)
+    },
+
+    sortIcon: {
+        icon: {
+            display: 'none',
+        },
+        active: {
+            '& $icon': {
+                display: 'none',
+            },
+        },
+    }
 
 });
 
