@@ -3,7 +3,7 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
 
-import { Paper, Grid, IconButton, Tooltip } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip, CssBaseline } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { homeStyle } from './Styles'
@@ -15,28 +15,52 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit'
+import AddIcon from '@material-ui/icons/Add'
 
 import ConfirmDialog from "./ConfirmDialog";
 import { USER_DELETE } from "../../lib/gql/mutations";
 
 import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
+import DialogAddUser from "./DialogAddUser";
+
 
 var moment = require('moment');
 
 
+
+//customcell
+const StyledTableCell = withStyles(theme => ({
+    head: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+        borderBottomStyle: 'solid',
+        borderColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.tableCell.default,
+    },
+}))(TableCell);
+
+
+////////''''''''''''''CLASS'''''''''''''/////////////
 class AdminHome extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.handleAddedData = this.handleAddedData.bind(this)
         this.state = {
             client: props.client,
             email: undefined,
             openConfirm: false,
-            allUsers: [],
             openPwReset: false,
+            openAddUser: false,
+            allUsers: [],
+            addedRow: null,
             selectedUserId: null,
-            selectedUserEmail: null
+            selectedUserEmail: null,
+            rowColor: 'lightGray'
         };
     }
 
@@ -52,6 +76,27 @@ class AdminHome extends React.PureComponent {
     }
 
     // Dialog state handlers
+    //Basic close
+    handleClose = () => {
+        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
+        console.log('Close')
+    };
+    //Add user close
+    handleAddedData(added, id) {
+        let temp = null;
+        this.setState({ addedRow: added })
+
+        console.log('Added', this.state.addedRow, 'index', this.state.allUsers.length)
+
+        temp = [
+            ...this.state.allUsers,
+            added.user
+        ]
+        this.setState({ allUsers: temp })
+        //console.log('edit', temp)
+    }
+
+    //handle opens
     handleOpenDelete = () => {
         this.setState({ openConfirm: true })
     };
@@ -60,11 +105,11 @@ class AdminHome extends React.PureComponent {
         console.log('OPEN')
         this.setState({ openPwReset: true })
     };
-
-    handleClose = () => {
-        this.setState({ openConfirm: false, openPwReset: false })
-        console.log('Close')
+    handleOpenAddUser = () => {
+        this.setState({ openAddUser: true })
     };
+
+    //handle delete close
 
     handleCloseDeleteYes = () => {
         this.setState({ openConfirm: false })
@@ -106,50 +151,74 @@ class AdminHome extends React.PureComponent {
 
     render() {
         const { classes } = this.props
-        const { allUsers, openConfirm, openPwReset, selectedUserId, selectedUserEmail } = this.state
+        const { allUsers,
+            openConfirm,
+            openPwReset,
+            selectedUserId,
+            selectedUserEmail,
+            openAddUser,
+            rowColor
+        } = this.state
         return (
             <Paper className={classes.root} elevation={5}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Email</TableCell>
-                            <TableCell align="center">Usertype</TableCell>
-                            <TableCell align="center">User id</TableCell>
-                            <TableCell align="center">Apikey</TableCell>
-                            <TableCell align="center">User created</TableCell>
+                <CssBaseline />
+                <Table stickyHeader aria-label="sticky table" className={classes.table} aria-label="simple table">
+                    <TableHead >
+                        <TableRow >
+                            <StyledTableCell align="center">
+                                <div>
+                                    <Tooltip title={"Add user"} className={classes.addButton}>
+                                        <IconButton onClick={this.handleOpenAddUser}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            </StyledTableCell>
+                            <StyledTableCell align="center">Email</StyledTableCell>
+                            <StyledTableCell align="center">Usertype</StyledTableCell>
+                            <StyledTableCell align="center">User id</StyledTableCell>
+                            <StyledTableCell align="center">Apikey</StyledTableCell>
+                            <StyledTableCell align="center">User created</StyledTableCell>
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {allUsers.map((row, i) => (
-                            <TableRow key={i}>
-                                <TableCell component="th" scope="row">
-                                    {row.email}
-                                </TableCell>
-                                <TableCell align="center">{row.userType}</TableCell>
-                                <TableCell align="center">{row.id}</TableCell>
-                                <TableCell align="center">{row.apiKey}</TableCell>
-                                <TableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</TableCell>
-                                <TableCell align="right">
+
+                            <TableRow key={i} style={{ backgroundColor: row.userType === 'ADMIN' ? rowColor : null }}>
+                                <StyledTableCell align="center">
+
                                     <Tooltip title={"Delete user & apikey"}>
-                                        <IconButton onClick={() => {
-                                            //dialog
-                                            this.handleOpenDelete()
-                                            this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                        }}>
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() => {
+                                                //dialog
+                                                this.handleOpenDelete()
+                                                this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
                                             <DeleteOutlinedIcon />
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title={"Reset password"}>
-                                        <IconButton onClick={() => {
-                                            //dialog
-                                            this.handleOpenPwReset()
-                                            this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                        }}>
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() => {
+                                                //dialog
+                                                this.handleOpenPwReset()
+                                                this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
                                             <EditIcon />
                                         </IconButton>
                                     </Tooltip>
-                                </TableCell>
+                                </StyledTableCell>
+                                <StyledTableCell component="th" scope="row" align="center">
+                                    {row.email}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">{row.userType}</StyledTableCell>
+                                <StyledTableCell align="center">{row.id}</StyledTableCell>
+                                <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
+                                <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
+
 
                             </TableRow>
                         ))}
@@ -157,6 +226,7 @@ class AdminHome extends React.PureComponent {
                 </Table>
                 <ConfirmDialog
                     open={openConfirm}
+                    email={selectedUserEmail}
                     handleClose={this.handleClose}
                     handleCloseYes={this.handleCloseDeleteYes}
                 />
@@ -167,6 +237,12 @@ class AdminHome extends React.PureComponent {
                     userEmail={selectedUserEmail}
                     title={"Reset user password?"}
                 />
+
+                <DialogAddUser
+                    open={openAddUser}
+                    handleClose={this.handleClose}
+                    handleAddedData={this.handleAddedData}
+                />
             </Paper>
 
         );
@@ -176,3 +252,6 @@ class AdminHome extends React.PureComponent {
 export default withStyles(AdminHomeStyles)(withApollo(AdminHome));
 
 
+/*
+
+               */

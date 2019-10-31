@@ -47,13 +47,8 @@ function ConfirmDialog(props) {
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-slide-title" className={classes.backgroundDialogTitle}>
-                Do you want remove apikey?
+                Delete {props.email} ?
                     </DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-description" className={classes.textDialog}>
-                    User:
-                </DialogContentText>
-            </DialogContent>
 
             <DialogActions className={classes.contentDialog}>
                 <Button variant="outlined" onClick={props.handleCloseYes}>
