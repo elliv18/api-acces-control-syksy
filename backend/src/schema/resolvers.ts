@@ -152,8 +152,7 @@ export default {
         logger.log(
           "info",
           "[Q ALLUSERS] User %s - Create new api key %s",
-          currentUser.id,
-          name
+          currentUser.id
         );
       }
 
@@ -164,48 +163,76 @@ export default {
         "x-tyk-authorization": TYK_GW_SECRET
       };
 
-      // access
-      var accessTemp = [];
+      var access_rights = {};
 
-      var urlsTemp = [];
+      /*  Example input: array of APIs that each can have multiple endpoints each with multiple methods
 
-      var methodsTemp = [];
-
-      input.access.map(x => {
-        console.log(x);
-        console.log(x.urls);
-
-        x.urls.map(y => {
-          console.log(y);
-
-          y.methods.map(z => {
-            console.log(z);
-          });
-        });
-      });
-
-      /*const body = {
-        access_rights: {
-          [id]: {
-            api_id: id,
-            name: name,
-            allowed_urls: {
-              url: url,
-              methods: methods
-            }
+       access: [
+        {
+          id: "1", name: "api 1", urls:                                     // API 1
+          [
+            {
+            url: "/todos(/.*)?", methods: ["GET", "PUT", "DELETE"]          // API 1 url 1
+            },
+            {
+            url: "/users(/.*)?", methods: ["GET", "POST"]                   // API 1 url 2
+          	}
+          ]
+        }, 
+        {
+          id: "2", name: "api 2", urls:                                     // API 2
+          {
+            url: "url 2", methods: ["GET", "PUT"]                           // API 2 url 1
           }
         }
+      ]
+
+
+
+      */
+
+      input.access.map(api => {
+        var apiTemp = {
+          api_id: api.id,
+          api_name: api.name,
+          allowed_urls: []
+        };
+        api.urls.map(url => {
+          var urlTemp = {
+            // Temporary helper to parse single url with all its methods
+
+            url: url.url,
+            methods: []
+          };
+          url.methods.map(method => {
+            urlTemp.methods.push(method);
+          });
+          apiTemp.allowed_urls.push(urlTemp);
+        });
+        access_rights[api.id] = apiTemp;
+      });
+
+      // jsonstring only for debugging
+      const jsonString = JSON.stringify(access_rights);
+      console.log("access_rights passed to gateway", jsonString);
+
+      const body = {
+        access_rights: access_rights
       };
 
-      console.log(body);*/
+      console.log(body);
 
-      //const res = await fetch(url, { method: "POST", body: JSON.stringify(body), headers: headers });
+      const res = await fetch(tykURL, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: headers
+      });
 
-      //const data = await res.json();  // data is object
-
+      const data = await res.json(); // data is object
+      console.log(data);
       // TODO key and hash save prisma?
 
-      //return { key: id };
+      return { key: data.key, keyHash: data.key_hash };
     }
   }
 };

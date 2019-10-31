@@ -93,7 +93,7 @@ export default `
     ################## TYK ##########################
 
     input AllowedUrls {
-        apiUrl: String
+        url: String
         methods: [String]
     }
 
@@ -108,5 +108,6 @@ export default `
     }
     type CreateNewApiKeyPayload {
         key: String
+        keyHash: String
     }
 `;
