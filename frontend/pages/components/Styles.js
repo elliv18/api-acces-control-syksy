@@ -114,6 +114,7 @@ export const AdminHomeStyles = theme => ({
     },
     addButton: {
         color: 'green',
+        //marginBottom: theme.spacing(3),
         backgroundColor: theme.palette.secondary.main,
         // marginLeft: theme.spacing(5)
     },
@@ -123,7 +124,7 @@ export const AdminHomeStyles = theme => ({
 export const loginStyles = theme => ({
     "@global": {
         body: {
-            backgroundColor: theme.palette.primary.main
+            backgroundColor: theme.palette.secondary.main
         }
     },
     paper: {
@@ -134,7 +135,7 @@ export const loginStyles = theme => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.primary.main
     },
     form: {
         width: "100%", // Fix IE 11 issue.

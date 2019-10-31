@@ -28,6 +28,11 @@ const theme = createMuiTheme({
       stickyHeader: {
         borderCollapse: 'collapse'
       }
+    },
+    MuiTableCell: {
+      root: {
+        borderBottomStyle: 'none'
+      }
     }
   }
 });
