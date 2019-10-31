@@ -69,6 +69,9 @@ export default `
 
         ############ ADMIN - CREATE NEW USER ##############
 
+        ############### TYK #####################
+
+        createNewApiKey(input: CreateNewApiKeyInput!): CreateNewApiKeyPayload
         createNewUser(input: CreateNewUserInput!): CreateNewUserPayload
 
         ############ ADMIN - DELETE USER ###################
@@ -126,6 +129,26 @@ export default `
         user: User
     }
 
+    ################## TYK ##########################
+
+    input AllowedUrls {
+        url: String
+        methods: [String]
+    }
+
+    input AccessRights {
+        id: String
+        name: String
+        urls: [AllowedUrls]
+    }
+
+    input CreateNewApiKeyInput {
+        access: [AccessRights]
+    }
+    type CreateNewApiKeyPayload {
+        key: String
+        keyHash: String
+    }
     ############ ADMIN CREATE NEW USER ##############
 
     input CreateNewUserInput {
