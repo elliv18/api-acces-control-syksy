@@ -5,6 +5,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { confirmDialogStyle } from './Styles'
 import { withStyles, Button } from '@material-ui/core';
+import helpers from '../../src/components/helpers';
 
 
 
@@ -38,6 +39,9 @@ function ConfirmDialog(props) {
         setOpen(true);
     };
 
+    const emails = helpers.getEmailFromId(props.selected, props.allUsers)
+
+    let msg = ''
 
     return (
         <Dialog
@@ -46,12 +50,24 @@ function ConfirmDialog(props) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
+
             <DialogTitle id="alert-dialog-slide-title" className={classes.backgroundDialogTitle}>
-                Delete {props.email} ?
-                    </DialogTitle>
+                Delete users: {emails.map(row => (
+                    <div key={row}>{
+                        row}<br />
+                    </div>
+                ))}
+            </DialogTitle>
 
             <DialogActions className={classes.contentDialog}>
-                <Button variant="outlined" onClick={props.handleCloseYes}>
+                <Button variant="outlined" onClick={() => {
+                    props.handleCloseYes()
+                    emails.map(row => (
+                        msg += (row + ", ")
+                    ))
+                    props.getMessage('Users:' + msg + ' deleted!')
+
+                }}>
                     <a className={classes.buttonDialogTextYes}>Yes</a>
 
                 </Button>

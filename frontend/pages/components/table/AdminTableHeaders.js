@@ -12,17 +12,18 @@ import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, withStyles, Che
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { StyledTableCell } from './tableFunctions'
+import EditIcon from '@material-ui/icons/Edit'
 
 
 
 const headCells = [
+    { id: 'actions' },
 
     { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
     { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
     { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
     { id: 'apikey', numeric: false, disablePadding: false, label: 'Apikey' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created' },
-    { id: 'actions' },
 
 ];
 
@@ -68,13 +69,28 @@ function AdminTableHeaders(props) {
                                             <AddIcon />
                                         </IconButton>
                                     </Tooltip>
+
                                     : headCell.id === 'actions'
 
-                                        ? <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
-                                            <IconButton onClick={props.handleOpenDelete}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
+                                        ? <div >
+                                            <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
+                                                <IconButton onClick={() => {
+                                                    props.handleOpenDelete()
+
+                                                    props.setSelected([])
+                                                }}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={"Change selected password"} className={classes.editUpButton}>
+                                                <IconButton onClick={() => {
+                                                    props.handleOpenPwReset()
+                                                    props.setSelected([])
+                                                }}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </div>
 
                                         : null}
                         </TableSortLabel>

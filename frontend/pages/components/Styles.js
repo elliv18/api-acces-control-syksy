@@ -117,10 +117,20 @@ export const AdminHomeStyles = theme => ({
         //marginBottom: theme.spacing(3),
         backgroundColor: theme.palette.secondary.main,
         // marginLeft: theme.spacing(3)
-        marginRight: theme.spacing(2)
+        marginRight: theme.spacing(3),
+
     },
     deleteUpButton: {
         color: 'red',
+        display: 'initial',
+        //marginBottom: theme.spacing(3),
+        backgroundColor: theme.palette.secondary.main,
+        // marginLeft: theme.spacing(3)
+        marginRight: theme.spacing(2)
+    },
+    editUpButton: {
+        color: theme.palette.secondary,
+        display: 'initial',
         //marginBottom: theme.spacing(3),
         backgroundColor: theme.palette.secondary.main,
         // marginLeft: theme.spacing(3)
