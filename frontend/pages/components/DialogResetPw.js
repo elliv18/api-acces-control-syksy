@@ -12,6 +12,7 @@ import { withApollo } from 'react-apollo';
 import { ADMIN_RESET_PW } from '../../lib/gql/mutations';
 import Snackbar from './SnackBar';
 import DoneSnackbar from './SnackBar';
+import helpers from '../../src/components/helpers';
 
 
 
@@ -44,7 +45,6 @@ function DialogResetPw(props) {
     const [isMasked, setMask] = React.useState(true);
     const [pw, setPw] = React.useState(null)
     const [pwAgain, setPwAgain] = React.useState(null)
-    const [openSnack, setOpenSnack] = React.useState(props.openSnack)
     const [buttonDisabled, setButtonDisabled] = React.useState(props.openSnack)
 
 
@@ -52,26 +52,30 @@ function DialogResetPw(props) {
     let users = null;
 
     // RESET PW LOGIC
-    const handlePwReset = async () => {
+    const handlePwReset = () => {
+        let msg = ''
         // console.log('ID', props.userId, 'PW', pw, 'PW2', pwAgain)
-        pw === pwAgain
-            ? await props.client
-                .mutate({
-                    variables: {
-                        id: props.userId,
-                        password: pw,
-                        passwordAgain: pwAgain
-                    },
-                    mutation: ADMIN_RESET_PW
-                })
-                .then(res => {
-                    //  console.log(res)
-                    handleOpenSnack()
-                    setButtonDisabled(true)
-                })
-                .catch(e => console.log(e))
-            : console.log('PW NOT MATCH')
+        props.userIds.map(async (row, index) => {
+            pw === pwAgain
+                ? await props.client
+                    .mutate({
+                        variables: {
+                            id: row,
+                            password: pw,
+                            passwordAgain: pwAgain
+                        },
+                        mutation: ADMIN_RESET_PW
+                    })
+                    .then(res => {
+                        msg = ("Passwords reset for users: " + helpers.getEmailFromId(props.userIds, props.allUsers))
+                        props.setAutoHide(6000)
+                        props.handleClose()
+                    })
+                    .catch(e => console.log(e))
+                : msg = "Passwords not match!"
+            props.getMessage(msg)
 
+        })
         //props.handleClose()
     };
 
@@ -93,18 +97,7 @@ function DialogResetPw(props) {
     }
 
     //HANDLE SNACKBAR
-    const handleOpenSnack = () => {
-        setOpenSnack(true)
-    };
 
-    const handleCloseSnack = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenSnack(false)
-        setButtonDisabled(false)
-        props.handleClose()
-    };
 
     return (
         <Dialog
@@ -162,11 +155,6 @@ function DialogResetPw(props) {
                 </Button>
             </DialogActions>
 
-            <DoneSnackbar
-                open={openSnack}
-                handleClose={handleCloseSnack}
-                title={"Password changed for user: " + props.userEmail}
-            />
         </Dialog>
 
     )

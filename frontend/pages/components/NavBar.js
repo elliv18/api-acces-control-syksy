@@ -128,11 +128,7 @@ class NavBar extends React.PureComponent {
                             Home
                         </Link>
                     </MenuItem>
-                    <MenuItem onClick={this.handleCloseMenu}>
-                        <Link href={'/createAdmin'}>
-                            Create admin
-                        </Link>
-                    </MenuItem>
+
 
 
                     <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>

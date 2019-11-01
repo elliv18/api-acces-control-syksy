@@ -11,6 +11,7 @@ import { homeStyle } from './Styles'
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import ConfirmDialog from "./ConfirmDialog";
 import { USER_DELETE } from "../../lib/gql/mutations";
@@ -32,130 +33,14 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-
+import helpers from "../../src/components/helpers";
+import AdminTableHeaders from "./table/AdminTableHeaders";
+import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
+import AdminTableBody from "./AdminTableBody";
+import DoneSnackbar from "./SnackBar";
 
 var moment = require('moment');
-
-
-
-//customcell
-const StyledTableCell = withStyles(theme => ({
-    head: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
-    },
-    body: {
-        fontSize: 14,
-        borderBottomStyle: 'solid',
-        borderColor: theme.palette.secondary.main,
-        backgroundColor: theme.palette.tableCell.default,
-    },
-}))(TableCell);
-
-
-//**************************** TOOLBARTABLE ********************** */
-
-
-
-//***************************TABLE***************************** */
-const headCells = [
-
-    { id: 'actions' },
-    { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
-    { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
-    { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
-    { id: 'apikey', numeric: false, disablePadding: false, label: 'Apikey' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created' },
-];
-
-
-function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function stableSort(array, cmp) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = cmp(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
-//**************************************** HEAD *********************************************************** */
-
-function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-    const createSortHandler = property => event => {
-        property !== 'actions' ? onRequestSort(event, property) : null
-    };
-
-    return (
-        <TableHead>
-            <TableRow>
-                <StyledTableCell padding="checkbox">
-                    <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{ 'aria-label': 'select all ' }}
-                    />
-
-                </StyledTableCell>
-                {headCells.map(headCell => (
-                    <StyledTableCell
-                        key={headCell.id}
-                        align={'center'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        <TableSortLabel
-                            hideSortIcon={true}
-                            active={headCell.id !== 'actions' && orderBy === headCell.id}
-                            direction={order}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id && headCell.id !== 'actions' ? (
-                                <span className={classes.visuallyHidden}>
-                                    {order === 'desc' ? '' : ''}
-                                </span>
-                            ) : headCell.id === 'actions' && props.selected.length === 0
-
-                                    ? <Tooltip title={"Add user"} className={classes.addButton}>
-                                        <IconButton onClick={props.handleOpenAddUser}>
-                                            <AddIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    : headCell.id === 'actions'
-
-                                        ? <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
-                                            <IconButton onClick={props.getSelected}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-
-                                        : null}
-                        </TableSortLabel>
-
-                    </StyledTableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    );
-}
 
 
 
@@ -167,20 +52,23 @@ class AdminHome extends React.PureComponent {
 
         this.handleAddedData = this.handleAddedData.bind(this)
         this.handleOpenAddUser = this.handleOpenAddUser.bind(this)
+        this.getSelected = this.getSelected.bind(this)
+        this.setAutoHide = this.setAutoHide.bind(this)
+        this.getMessage = this.getMessage.bind(this)
         this.state = {
             client: props.client,
             email: undefined,
             openConfirm: false,
             openPwReset: false,
             openAddUser: false,
+            openSnack: false,
             allUsers: [],
             addedRow: null,
-            selectedUserId: null,
-            selectedUserEmail: null,
-            rowColor: 'lightGray',
-            order: 'asc',
-            orderBy: 'email',
-            selected: []
+            selectedEmails: [],
+            selected: [],
+            message: '',
+            autoHide: null,
+            failed: false,
         };
     }
 
@@ -195,56 +83,42 @@ class AdminHome extends React.PureComponent {
             .catch(e => console.log(e))
     }
 
-    getSelected = () => {
-        console.log(this.state.selected)
-        this.setState({ selected: [] })
+    getSelected = (selected) => {
+        this.setState({ selected: selected })
+    }
+    getMessage = (msg) => {
+        this.setState({ message: msg })
+        console.log(this.state.message)
+        this.handleOpenSnack()
+    }
+    setAutoHide = (autoHide) => {
+        this.setState({ autoHide: autoHide })
     }
 
-
-    handleRequestSort = (event, property) => {
-        const isDesc = this.state.orderBy === property && this.state.order === 'desc';
-        isDesc ? this.setState({ order: 'asc' }) : this.setState({ order: 'desc' })
-        this.setState({ orderBy: property })
+    // SNACK
+    //HANDLE SNACKBAR
+    handleOpenSnack = () => {
+        this.state.message !== ''
+            ? this.setState({ openSnack: true })
+            : this.setState({ openSnack: false })
     };
 
-    handleSelectAllClick = event => {
-        if (event.target.checked) {
-            const newSelecteds = this.state.allUsers.map(n => n.id);
-            this.setState({ selected: newSelecteds })
+    handleCloseSnack = (event, reason) => {
+        if (reason === 'clickaway') {
             return;
         }
-        this.setState({ selected: [] })
+        this.setState({ openSnack: false, autoHide: null })
+        // setAutoHide(null)
+        // setButtonDisabled(false)
+        // props.handleClose()
     };
-
-    handleClickSelect = (event, id) => {
-        const selectedIndex = this.state.selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(this.state.selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(this.state.selected.slice(1));
-        } else if (selectedIndex === this.state.selected.length - 1) {
-            newSelected = newSelected.concat(this.state.selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                this.state.selected.slice(0, selectedIndex),
-                this.state.selected.slice(selectedIndex + 1),
-            );
-        }
-
-        this.setState({ selected: newSelected })
-        //console.log('select', this.state.selected)
-    };
-
-
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
-
 
     // Dialog state handlers
     //Basic close
     handleClose = () => {
         this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
+        //this.getMessage()
+        this.handleOpenSnack()
         console.log('Close')
     };
     //Add user close
@@ -276,43 +150,14 @@ class AdminHome extends React.PureComponent {
     };
 
     //handle delete close
-
-    handleCloseDeleteYes = () => {
-        this.setState({ openConfirm: false })
-        console.log('DELETE', this.state.selectedUserId)
-
-        //DELETE
-        // can't delete ROOT_ADMIN
-        this.state.selectedUserEmail !== "1"
-            ? this.state.client
-                .mutate({
-                    variables: { id: this.state.selectedUserId },
-                    mutation: USER_DELETE,
-                })
-                .then(response => {
-                    let temp = null
-                    // console.log(response)
-                    temp = this.deleteRow(this.state.selectedUserId)
-                    this.setState({ allUsers: temp })
-
-                })
-
-                .catch(error => console.log(error))
-
-            : console.log('Cant delete admin')
-    };
-
-    //Delete row on allUsers, no need for new query
-    deleteRow = deletedId => {
-        const data = this.state.allUsers.slice();
-        // console.log('data', data)
-        const index = data.findIndex(row => row.id === deletedId);
-        if (index > -1) {
-            data.splice(index, 1);
-        };
-        return data;
-    };
-
+    /////////////////////////////////////////////////////////////////////
+    handleCloseDeleteYes = async () => {
+        let data = null
+        await helpers.deleteUser(this.state.selected, this.state.client);
+        data = await helpers.deleteRows(this.state.selected, this.state.allUsers)
+        this.setState({ openConfirm: false, allUsers: data, autoHide: 6000 })
+        this.handleOpenSnack()
+    }
 
 
     render() {
@@ -320,110 +165,43 @@ class AdminHome extends React.PureComponent {
         const { allUsers,
             openConfirm,
             openPwReset,
-            selectedUserId,
-            selectedUserEmail,
+            openSnack,
+            selectedEmails,
             openAddUser,
             selected,
-            order,
-            orderBy,
-            rowColor
+            message,
+            autoHide
         } = this.state
         return (
+            //  console.log(helpers.getEmailFromId(selected, allUsers)),
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
-                <Table
-                    className={classes.table}
-                    aria-labelledby="tableTitle"
-                    aria-label="enhanced table"
-                >
-                    <EnhancedTableHead
-                        getSelected={this.getSelected}
-                        selected={selected}
-                        classes={classes}
-                        numSelected={selected.length}
-                        order={order}
-                        orderBy={orderBy}
-                        onSelectAllClick={this.handleSelectAllClick}
-                        onRequestSort={this.handleRequestSort}
-                        rowCount={allUsers.length}
-                        handleOpenAddUser={this.handleOpenAddUser}
-                    />
-                    <TableBody>
-                        {stableSort(allUsers, getSorting(order, orderBy))
-                            .map((row, index) => {
-                                const isItemSelected = this.isSelected(row.id);
-                                const labelId = `enhanced-table-checkbox-${index}`;
-
-                                return (
-                                    <TableRow
-                                        key={index}
-                                        hover
-                                        onClick={event => this.handleClickSelect(event, row.id)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        selected={isItemSelected}
-                                    >
-                                        <StyledTableCell padding="checkbox">
-                                            <Checkbox
-                                                checked={isItemSelected}
-                                                inputProps={{ 'aria-labelledby': labelId }}
-                                            />
-                                        </StyledTableCell>
-                                        <StyledTableCell align="left">
-                                            <Tooltip title={"Delete user & apikey"}>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => {
-                                                        //dialog
-                                                        this.handleOpenDelete()
-                                                        this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                                    }}>
-                                                    <DeleteOutlinedIcon />
-                                                </IconButton>
-                                            </Tooltip>
-
-                                            <Tooltip title={"Reset password"}>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => {
-                                                        //dialog
-                                                        this.handleOpenPwReset()
-                                                        this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                                    }}>
-                                                    <EditIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {row.email}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">{row.userType}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
-                                        <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
-
-
-                                    </TableRow>
-
-                                );
-                            })}
-
-                    </TableBody>
-                </Table>
+                <AdminTableBody
+                    allUsers={allUsers}
+                    handleOpenDelete={this.handleOpenDelete}
+                    handleOpenAddUser={this.handleOpenAddUser}
+                    handleOpenPwReset={this.handleOpenPwReset}
+                    classes={classes}
+                    getSelected={this.getSelected}
+                />
 
                 <ConfirmDialog
                     open={openConfirm}
-                    email={selectedUserEmail}
+                    selected={selected}
+                    allUsers={allUsers}
                     handleClose={this.handleClose}
                     handleCloseYes={this.handleCloseDeleteYes}
+                    getMessage={this.getMessage}
                 />
                 <DialogResetPw
                     open={openPwReset}
                     handleClose={this.handleClose}
-                    userId={selectedUserId}
-                    userEmail={selectedUserEmail}
+                    userIds={selected}
+                    userEmail={selectedEmails}
+                    allUsers={allUsers}
+                    setAutoHide={this.setAutoHide}
+                    getMessage={this.getMessage}
                     title={"Reset user password?"}
                 />
 
@@ -431,6 +209,18 @@ class AdminHome extends React.PureComponent {
                     open={openAddUser}
                     handleClose={this.handleClose}
                     handleAddedData={this.handleAddedData}
+                    getMessage={this.getMessage}
+                    setAutoHide={this.setAutoHide}
+
+                />
+                <Button onClick={this.getEmailsFromId}>TEST BURRON</Button>
+
+                <DoneSnackbar
+                    open={openSnack}
+                    message={message}
+                    onClose={this.handleCloseSnack}
+                    autoHide={autoHide}
+                    handleClose={this.handleCloseSnack}
                 />
             </Paper>
 

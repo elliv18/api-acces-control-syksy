@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
 export default function DoneSnackbar(props) {
     const classes = useStyles();
 
+
     //const autoHide = success ? 2000 : 100000
     return (
         <div>
@@ -34,7 +35,7 @@ export default function DoneSnackbar(props) {
                 ContentProps={{
                     'aria-describedby': 'message-id',
                 }}
-                message={<span id="message-id">{props.title}</span>}
+                message={<span id="message-id">{props.message}</span>}
                 action={[
                     props.autoHide !== null
                         ? <IconButton

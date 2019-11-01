@@ -45,19 +45,18 @@ function DialogAddUser(props) {
             })
             .then(res => {
                 //  console.log(res)
-                setMessage("New user " + email + " created")
-                setAutoHide(6000)
-                handleOpenSnack()
-                setButtonDisabled(true)
+                props.getMessage("New user " + email + " created")
+                props.setAutoHide(6000)
                 props.handleAddedData(res.data.createNewUser, res.data.createNewUser.user.id)
+                props.handleClose()
+
             })
             .catch(e => {
                 console.log(e)
                 let temp = e.message.replace("GraphQL error:", "").trim()
                 // email exist error too long
-                temp.length > 20 ? setMessage('Email alreydy exist!') : setMessage(temp)
+                temp.length > 20 ? props.getMessage('Email alreydy exist!') : props.getMessage(temp)
                 setAutoHide(null)
-                handleOpenSnack()
             })
     };
 
@@ -75,22 +74,6 @@ function DialogAddUser(props) {
         //   console.log(pw)
     }
 
-
-
-    //HANDLE SNACKBAR
-    const handleOpenSnack = () => {
-        setOpenSnack(true)
-    };
-
-    const handleCloseSnack = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenSnack(false)
-        setAutoHide(null)
-        setButtonDisabled(false)
-        props.handleClose()
-    };
 
     //HANDLE SELECT
     const handleSelect = event => {
@@ -166,12 +149,7 @@ function DialogAddUser(props) {
                 </DialogActions>
             </Container>
 
-            <DoneSnackbar
-                open={openSnack}
-                autoHide={autoHide}
-                handleClose={handleCloseSnack}
-                title={message}
-            />
+
         </Dialog>
 
     )
