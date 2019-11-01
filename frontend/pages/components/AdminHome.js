@@ -11,6 +11,7 @@ import { homeStyle } from './Styles'
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import ConfirmDialog from "./ConfirmDialog";
 import { USER_DELETE } from "../../lib/gql/mutations";
@@ -32,130 +33,29 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-
+import helpers from "../../src/components/helpers";
+import AdminTableHeaders from "./table/AdminTableHeaders";
+import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
 
 var moment = require('moment');
 
-
-
 //customcell
-const StyledTableCell = withStyles(theme => ({
-    head: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
-    },
-    body: {
-        fontSize: 14,
-        borderBottomStyle: 'solid',
-        borderColor: theme.palette.secondary.main,
-        backgroundColor: theme.palette.tableCell.default,
-    },
-}))(TableCell);
 
 
-//**************************** TOOLBARTABLE ********************** */
+
 
 
 
 //***************************TABLE***************************** */
-const headCells = [
-
-    { id: 'actions' },
-    { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
-    { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
-    { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
-    { id: 'apikey', numeric: false, disablePadding: false, label: 'Apikey' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created' },
-];
 
 
-function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
 
-function stableSort(array, cmp) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = cmp(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-}
 
-function getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
 
 //**************************************** HEAD *********************************************************** */
 
-function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-    const createSortHandler = property => event => {
-        property !== 'actions' ? onRequestSort(event, property) : null
-    };
 
-    return (
-        <TableHead>
-            <TableRow>
-                <StyledTableCell padding="checkbox">
-                    <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{ 'aria-label': 'select all ' }}
-                    />
-
-                </StyledTableCell>
-                {headCells.map(headCell => (
-                    <StyledTableCell
-                        key={headCell.id}
-                        align={'center'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        <TableSortLabel
-                            hideSortIcon={true}
-                            active={headCell.id !== 'actions' && orderBy === headCell.id}
-                            direction={order}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id && headCell.id !== 'actions' ? (
-                                <span className={classes.visuallyHidden}>
-                                    {order === 'desc' ? '' : ''}
-                                </span>
-                            ) : headCell.id === 'actions' && props.selected.length === 0
-
-                                    ? <Tooltip title={"Add user"} className={classes.addButton}>
-                                        <IconButton onClick={props.handleOpenAddUser}>
-                                            <AddIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    : headCell.id === 'actions'
-
-                                        ? <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
-                                            <IconButton onClick={props.getSelected}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-
-                                        : null}
-                        </TableSortLabel>
-
-                    </StyledTableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    );
-}
 
 
 
@@ -200,7 +100,7 @@ class AdminHome extends React.PureComponent {
         this.setState({ selected: [] })
     }
 
-
+    //********TABLE SORTING & SELECTING */
     handleRequestSort = (event, property) => {
         const isDesc = this.state.orderBy === property && this.state.order === 'desc';
         isDesc ? this.setState({ order: 'asc' }) : this.setState({ order: 'desc' })
@@ -239,6 +139,7 @@ class AdminHome extends React.PureComponent {
 
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
+    //********TABLE SORTING & SELECTING ENDS */
 
 
     // Dialog state handlers
@@ -276,43 +177,14 @@ class AdminHome extends React.PureComponent {
     };
 
     //handle delete close
+    /////////////////////////////////////////////////////////////////////
+    handleCloseDeleteYes = async () => {
+        let data = null
+        await helpers.deleteUser(this.state.selected, this.state.allUsers, this.state.client);
+        data = await helpers.deleteRows(this.state.selected, this.state.allUsers)
+        this.setState({ openConfirm: false, allUsers: data })
 
-    handleCloseDeleteYes = () => {
-        this.setState({ openConfirm: false })
-        console.log('DELETE', this.state.selectedUserId)
-
-        //DELETE
-        // can't delete ROOT_ADMIN
-        this.state.selectedUserEmail !== "1"
-            ? this.state.client
-                .mutate({
-                    variables: { id: this.state.selectedUserId },
-                    mutation: USER_DELETE,
-                })
-                .then(response => {
-                    let temp = null
-                    // console.log(response)
-                    temp = this.deleteRow(this.state.selectedUserId)
-                    this.setState({ allUsers: temp })
-
-                })
-
-                .catch(error => console.log(error))
-
-            : console.log('Cant delete admin')
-    };
-
-    //Delete row on allUsers, no need for new query
-    deleteRow = deletedId => {
-        const data = this.state.allUsers.slice();
-        // console.log('data', data)
-        const index = data.findIndex(row => row.id === deletedId);
-        if (index > -1) {
-            data.splice(index, 1);
-        };
-        return data;
-    };
-
+    }
 
 
     render() {
@@ -337,7 +209,7 @@ class AdminHome extends React.PureComponent {
                     aria-labelledby="tableTitle"
                     aria-label="enhanced table"
                 >
-                    <EnhancedTableHead
+                    <AdminTableHeaders
                         getSelected={this.getSelected}
                         selected={selected}
                         classes={classes}
@@ -347,6 +219,7 @@ class AdminHome extends React.PureComponent {
                         onSelectAllClick={this.handleSelectAllClick}
                         onRequestSort={this.handleRequestSort}
                         rowCount={allUsers.length}
+                        handleOpenDelete={this.handleOpenDelete}
                         handleOpenAddUser={this.handleOpenAddUser}
                     />
                     <TableBody>
@@ -371,8 +244,20 @@ class AdminHome extends React.PureComponent {
                                                 inputProps={{ 'aria-labelledby': labelId }}
                                             />
                                         </StyledTableCell>
-                                        <StyledTableCell align="left">
-                                            <Tooltip title={"Delete user & apikey"}>
+
+                                        <StyledTableCell align="center">
+                                            {row.email}
+                                        </StyledTableCell>
+                                        <StyledTableCell align="center">{row.userType}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.id}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
+                                        <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
+
+                                        <StyledTableCell align="left" style={{ width: '130px' }}>
+                                            <Tooltip title={"Delete user & apikey"}
+                                                style={{ display: selected.length < 2 ? 'initial' : 'none' }}
+
+                                            >
                                                 <IconButton
                                                     color="primary"
                                                     onClick={() => {
@@ -384,7 +269,10 @@ class AdminHome extends React.PureComponent {
                                                 </IconButton>
                                             </Tooltip>
 
-                                            <Tooltip title={"Reset password"}>
+                                            <Tooltip title={"Reset password"}
+                                                style={{ display: selected.length < 2 ? 'initial' : 'none' }}
+
+                                            >
                                                 <IconButton
                                                     color="primary"
                                                     onClick={() => {
@@ -396,13 +284,6 @@ class AdminHome extends React.PureComponent {
                                                 </IconButton>
                                             </Tooltip>
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {row.email}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">{row.userType}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
-                                        <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
 
 
                                     </TableRow>
