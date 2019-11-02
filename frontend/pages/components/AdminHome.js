@@ -202,6 +202,7 @@ class AdminHome extends React.PureComponent {
                     allUsers={allUsers}
                     setAutoHide={this.setAutoHide}
                     getMessage={this.getMessage}
+                    userType={this.props.userType}
                     title={"Reset user password?"}
                 />
 

@@ -46,6 +46,17 @@ export const ADMIN_RESET_PW = gql`
     }
   }
 `;
+export const CURRENTUSER_UPDATE_PW = gql`
+  mutation updateMutation($password: String! $passwordAgain: String!, $oldPassword: String!) 
+  {
+    currentUserUpdatePW(input: {password: $password, passwordAgain: $passwordAgain, oldPassword: $oldPassword } )
+    {
+      user {
+        id
+      }
+    }
+  }
+`;
 
 /*********************** ADD USER **************************** */
 export const ADD_USER = gql`
@@ -68,6 +79,7 @@ export const ADD_USER = gql`
 export const CURRENTUSER = gql`
   mutation {
     currentUser {
+      id,
       email,
       userType
     }

@@ -26,16 +26,21 @@ import ConfirmDialog from "./ConfirmDialog";
 import DialogResetPw from "./DialogResetPw";
 import App from "./App";
 import NoSsr from '../../src/components/disableSsr'
+import DoneSnackbar from "./SnackBar";
 
 class NavBar extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.getMessage = this.getMessage.bind(this)
         this.state = {
             client: props.client,
             currentUser: [],
             anchorEl: null,
-            open: false
+            open: false,
+            openPwReset: false,
+            autoHide: null,
+            message: ''
             // loggedIn: chekLogIn()
         };
     }
@@ -63,6 +68,40 @@ class NavBar extends React.PureComponent {
         this.setState({ anchorEl: null, open: false })
     };
 
+    handleOpenPwReset = () => {
+        console.log('OPEN')
+        this.setState({ openPwReset: true })
+        this.handleCloseMenu()
+    };
+    handleClosePwReset = () => {
+        this.setState({ openPwReset: false })
+        this.handleOpenSnack()
+    }
+    getMessage = (msg) => {
+        console.log('msg', msg)
+        this.setState({ message: msg })
+        console.log(this.state.message)
+        this.handleOpenSnack()
+    }
+    setAutoHide = (autoHide) => {
+        this.setState({ autoHide: autoHide })
+    }
+    handleOpenSnack = () => {
+        this.state.message !== ''
+            ? this.setState({ openSnack: true })
+            : this.setState({ openSnack: false })
+    };
+
+    handleCloseSnack = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ openSnack: false, autoHide: null, message: '' })
+        // setAutoHide(null)
+        // setButtonDisabled(false)
+        // props.handleClose()
+    };
+
     async componentDidMount() {
 
         let CU = undefined
@@ -82,7 +121,7 @@ class NavBar extends React.PureComponent {
     }
 
     render() {
-        const { anchorEl, currentUser, open } = this.state;
+        const { anchorEl, currentUser, open, openPwReset, openSnack, message, autoHide } = this.state;
         const { classes } = this.props;
 
         return (
@@ -94,16 +133,9 @@ class NavBar extends React.PureComponent {
                                 <Typography variant="h6" className={classes.title}>
                                     Welcome {currentUser ? currentUser.email : null}
                                 </Typography>
-                                {currentUser.userType === 'ADMIN'
-                                    ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
-                                        <MenuIcon />
-                                    </IconButton>
-                                    : currentUser.userType === 'USER'
-                                        ? <Button variant="outlined" onClick={this.handleLogOut}>
-                                            Logout
-                            </Button>
-                                        : null
-                                }
+                                <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
+                                    <MenuIcon />
+                                </IconButton>
                             </Toolbar>
                         </AppBar>
                         : <div style={{ height: '64px', backgroundColor: '#B9CCD0' }} />
@@ -113,9 +145,6 @@ class NavBar extends React.PureComponent {
                     <div className={classes.content}>
                         {this.props.children}
                     </div>
-
-
-
                     <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}
@@ -126,16 +155,39 @@ class NavBar extends React.PureComponent {
                         <MenuItem onClick={this.handleCloseMenu}>
                             <Link href={'/home'} style={{ width: '100%' }}>
                                 Home
-                        </Link>
+                            </Link>
+
                         </MenuItem>
-
-
-
+                        {currentUser.userType === 'USER'
+                            ? <MenuItem>
+                                <Button onClick={this.handleOpenPwReset}>Change password</Button>
+                            </MenuItem>
+                            : null}
                         <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
                     </Menu>
 
                     <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
                 </div>
+
+                <DialogResetPw
+                    open={openPwReset}
+                    handleClose={this.handleClosePwReset}
+                    userIds={currentUser.id}
+                    userEmail={currentUser.email}
+                    setAutoHide={this.setAutoHide}
+                    getMessage={this.getMessage}
+                    userType={currentUser.userType}
+                    title={"Change password?"}
+                />
+
+                <DoneSnackbar
+                    open={openSnack}
+                    message={message}
+                    onClose={this.handleCloseSnack}
+                    autoHide={autoHide}
+                    handleClose={this.handleCloseSnack}
+                    getMessage={this.getMessage}
+                />
             </App>
 
         );

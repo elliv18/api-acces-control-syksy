@@ -37,7 +37,6 @@ class HomeUser extends React.PureComponent {
                 query: API_LIST_QUERY
             })
             .then(res => {
-                console.log(res.data.getApiList)
                 this.setState({ apiList: res.data.getApiList })
             })
             .catch(e => console.log(e))
@@ -50,7 +49,6 @@ class HomeUser extends React.PureComponent {
         return (
             <div className={classes.paper}>
                 <h1>Avaible apis</h1> ,
-                {console.log('apis', apiList)}
 
                 {apiList.map((row, index) => {
                     //    console.log('row', row)
