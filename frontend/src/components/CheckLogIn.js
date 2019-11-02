@@ -4,6 +4,7 @@ import Router from 'next/router'
 import NotAuth from "../../pages/components/NotAuth";
 import { NoSsr } from "@material-ui/core";
 import Login from '../../pages/components/Login'
+import disableSsr from "./disableSsr";
 
 /*
 export default function checkLogIn() {
@@ -17,7 +18,9 @@ export default function CheckLogin(props) {
     )
   }
   else {
-    return <Login />
+    return (
+      <NotAuth />
+    )
   }
 }
 

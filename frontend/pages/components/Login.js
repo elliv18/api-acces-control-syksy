@@ -21,10 +21,12 @@ import DialogAlertLogin from './DialogAlertLogin'
 import { loginStyles } from './Styles'
 import Copyright from './Copyright'
 
-import disableSsr from '../../src/components/disableSsr'
+import { GoogleLogin } from 'react-google-login';
 
+import getConfig from "next/config";
 
-
+const { publicRuntimeConfig } = getConfig();
+const { GOOGLE_CLIENT_ID } = publicRuntimeConfig;
 
 
 
@@ -66,6 +68,17 @@ class Login extends React.Component {
   handleClose = () => {
     this.setState({ open: false })
   };
+
+
+  onFailure = (error) => {
+    alert(error);
+  };
+
+
+  googleResponse = (response) => {
+
+    console.log(response);
+  };
   // Kirjautumis logiikka
 
   logIn = async () => {
@@ -92,10 +105,9 @@ class Login extends React.Component {
         this.setState({ open: true })
       });
 
-    // console.log(Cookies.get("jwtToken"));
 
     // testataan löytyykö cookie
-    Cookies.get("jwtToken")
+    await Cookies.get("jwtToken")
       ? // true: Mennään kotisivulle
       Router.push({
         pathname: "/home"
@@ -104,13 +116,14 @@ class Login extends React.Component {
       null;
   };
 
+
+
   render() {
     const { classes } = this.props;
     const { errorMsg } = this.state;
     return (
 
-
-      <Container component="main" maxWidth="xs">
+      < Container component="main" maxWidth="xs" >
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -169,6 +182,14 @@ class Login extends React.Component {
             >
               Sign In
             </Button>
+            <div className={classes.googleButton}>
+              <GoogleLogin
+                clientId={GOOGLE_CLIENT_ID}
+                buttonText="Login with google account"
+                onSuccess={this.googleResponse}
+                onFailure={this.onFailure}
+              />
+            </div>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -189,7 +210,7 @@ class Login extends React.Component {
 
         {this.state.open ? <DialogAlertLogin errorMsg={errorMsg} /> : null}
 
-      </Container>
+      </Container >
 
     );
   }
@@ -198,6 +219,14 @@ class Login extends React.Component {
 export default withStyles(loginStyles)(withApollo(Login));
 
 
-
+/*
+render={renderProps => (
+                <Button onClick={renderProps.onClick}
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.googleButton}
+                >Google login</Button>
+              )}*/
 
 

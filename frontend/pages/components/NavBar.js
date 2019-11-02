@@ -25,7 +25,7 @@ import { navStyles } from './Styles'
 import ConfirmDialog from "./ConfirmDialog";
 import DialogResetPw from "./DialogResetPw";
 import App from "./App";
-
+import NoSsr from '../../src/components/disableSsr'
 
 class NavBar extends React.PureComponent {
     constructor(props) {
@@ -88,23 +88,26 @@ class NavBar extends React.PureComponent {
         return (
             <App>
                 <div className={classes.root}>
-                    <AppBar position="sticky" className={classes.appBar}>
-                        <Toolbar>
-                            <Typography variant="h6" className={classes.title}>
-                                Welcome {currentUser ? currentUser.email : null}
-                            </Typography>
-                            {currentUser.userType === 'ADMIN'
-                                ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
-                                    <MenuIcon />
-                                </IconButton>
-                                : currentUser.userType === 'USER'
-                                    ? <Button variant="outlined" onClick={this.handleLogOut}>
-                                        Logout
-                                </Button>
-                                    : null
-                            }
-                        </Toolbar>
-                    </AppBar>
+                    {currentUser.email
+                        ? <AppBar position="sticky" className={classes.appBar}>
+                            <Toolbar>
+                                <Typography variant="h6" className={classes.title}>
+                                    Welcome {currentUser ? currentUser.email : null}
+                                </Typography>
+                                {currentUser.userType === 'ADMIN'
+                                    ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
+                                        <MenuIcon />
+                                    </IconButton>
+                                    : currentUser.userType === 'USER'
+                                        ? <Button variant="outlined" onClick={this.handleLogOut}>
+                                            Logout
+                            </Button>
+                                        : null
+                                }
+                            </Toolbar>
+                        </AppBar>
+                        : <div style={{ height: '64px', backgroundColor: '#B9CCD0' }} />
+                    }
 
 
                     <div className={classes.content}>
@@ -134,7 +137,6 @@ class NavBar extends React.PureComponent {
                     <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
                 </div>
             </App>
-
 
         );
 

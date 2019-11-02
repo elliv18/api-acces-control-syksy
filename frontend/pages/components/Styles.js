@@ -9,7 +9,11 @@ export const navStyles = theme => ({
     },
     appBar: {
         backgroundColor: theme.palette.primary,
+    },
+    appBarSpaceHolder: {
+        backgroundColor: theme.palette.primary,
 
+        height: '64px',
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -172,6 +176,10 @@ export const loginStyles = theme => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2)
+    },
+    googleButton: {
+        margin: theme.spacing(0, 0, 2),
+        textAlign: 'center',
     }
 });
 
