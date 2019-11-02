@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import Router from 'next/router'
 import NotAuth from "../../pages/components/NotAuth";
 import { NoSsr } from "@material-ui/core";
+import Login from '../../pages/components/Login'
+import disableSsr from "./disableSsr";
 
 /*
 export default function checkLogIn() {
@@ -12,12 +14,14 @@ export default function checkLogIn() {
 export default function CheckLogin(props) {
   if (Cookies.get('jwtToken') !== undefined) {
     return (
-      <NoSsr>
-        {props.children}
-      </NoSsr>
+      props.children
     )
   }
-  else return <NotAuth />
+  else {
+    return (
+      <NotAuth />
+    )
+  }
 }
 
 export function loginStatus() {

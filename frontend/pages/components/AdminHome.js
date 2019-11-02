@@ -213,7 +213,6 @@ class AdminHome extends React.PureComponent {
                     setAutoHide={this.setAutoHide}
 
                 />
-                <Button onClick={this.getEmailsFromId}>TEST BURRON</Button>
 
                 <DoneSnackbar
                     open={openSnack}

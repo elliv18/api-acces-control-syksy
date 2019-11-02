@@ -37,7 +37,7 @@ class Home extends React.PureComponent {
     // check cu if backend is down
     CU
       ? this.setState({ userType: CU.userType })
-      : Router.push('/')
+      : null
   }
 
 

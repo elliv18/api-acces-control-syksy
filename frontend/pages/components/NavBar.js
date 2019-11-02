@@ -3,13 +3,11 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
 import Cookies from "js-cookie";
-import chekLogIn from "../../src/components/checkLogIn";
+import chekLogIn from "../../src/components/CheckLogIn";
 import { Paper, Link } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
-import logOut from '../../src/components/logOut'
 import NotAuth from './NotAuth'
-import CheckLogIn from '../../src/components/checkLogIn'
 import { CURRENTUSER } from "../../lib/gql/mutations";
 
 import AppBar from '@material-ui/core/AppBar';
@@ -27,7 +25,7 @@ import { navStyles } from './Styles'
 import ConfirmDialog from "./ConfirmDialog";
 import DialogResetPw from "./DialogResetPw";
 import App from "./App";
-
+import NoSsr from '../../src/components/disableSsr'
 
 class NavBar extends React.PureComponent {
     constructor(props) {
@@ -44,8 +42,8 @@ class NavBar extends React.PureComponent {
 
 
     handleLogOut = () => {
-        console.log("CLICK");
-        logOut()
+        Cookies.remove("jwtToken");
+        Router.push('/')
     };
 
     // menu handlers
@@ -88,54 +86,57 @@ class NavBar extends React.PureComponent {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
-                <CheckLogIn>
-                    <AppBar position="sticky" className={classes.appBar}>
-                        <Toolbar>
-                            <Typography variant="h6" className={classes.title}>
-                                Welcome {currentUser ? currentUser.email : null}
-                            </Typography>
-                            {currentUser.userType === 'ADMIN'
-                                ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
-                                    <MenuIcon />
-                                </IconButton>
-                                : currentUser.userType === 'USER'
-                                    ? <Button variant="outlined" onClick={this.handleLogOut}>
-                                        Logout
-                                </Button>
-                                    : null
-                            }
-                        </Toolbar>
-                    </AppBar>
-
-                    <App>
-                        <div className={classes.content}>
-                            {this.props.children}
-                        </div>
-                    </App>
-                </CheckLogIn>
+            <App>
+                <div className={classes.root}>
+                    {currentUser.email
+                        ? <AppBar position="sticky" className={classes.appBar}>
+                            <Toolbar>
+                                <Typography variant="h6" className={classes.title}>
+                                    Welcome {currentUser ? currentUser.email : null}
+                                </Typography>
+                                {currentUser.userType === 'ADMIN'
+                                    ? <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
+                                        <MenuIcon />
+                                    </IconButton>
+                                    : currentUser.userType === 'USER'
+                                        ? <Button variant="outlined" onClick={this.handleLogOut}>
+                                            Logout
+                            </Button>
+                                        : null
+                                }
+                            </Toolbar>
+                        </AppBar>
+                        : <div style={{ height: '64px', backgroundColor: '#B9CCD0' }} />
+                    }
 
 
-                <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={this.handleCloseMenu}
-                >
-                    <MenuItem onClick={this.handleCloseMenu}>
-                        <Link href={'/home'} style={{ width: '100%' }}>
-                            Home
+                    <div className={classes.content}>
+                        {this.props.children}
+                    </div>
+
+
+
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleCloseMenu}
+                    >
+                        <MenuItem onClick={this.handleCloseMenu}>
+                            <Link href={'/home'} style={{ width: '100%' }}>
+                                Home
                         </Link>
-                    </MenuItem>
+                        </MenuItem>
 
 
 
-                    <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
-                </Menu>
+                        <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
+                    </Menu>
 
-                <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
-            </div>
+                    <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
+                </div>
+            </App>
 
         );
 
