@@ -13,33 +13,11 @@ import { ADMIN_RESET_PW, CURRENTUSER_UPDATE_PW } from '../../lib/gql/mutations';
 import Snackbar from './SnackBar';
 import DoneSnackbar from './SnackBar';
 import helpers from '../../src/components/helpers';
+import { dialogResetPwstyle } from './Styles';
 
 
 
-const styles = theme => ({
-    textField: {
-        margin: 5,
-    },
-    eye: {
-        cursor: 'pointer',
-    },
-    dialogContent: {
-        textAlign: 'center',
 
-    },
-    dialogTitle: {
-        textAlign: 'center'
-    },
-    main: {
-        width: 250,
-    },
-    buttonDialogTextNo: {
-        color: 'red'
-    },
-    buttonDialogTextYes: {
-        color: 'green'
-    }
-});
 
 function DialogResetPw(props) {
     const [isMasked, setMask] = React.useState(true);
@@ -75,7 +53,10 @@ function DialogResetPw(props) {
                             props.setAutoHide(6000)
                             props.handleClose()
                         })
-                        .catch(e => console.log(e))
+                        .catch(e => {
+                            //  console.log(e)
+                            msg = e.message.replace("GraphQL error:", "").trim()
+                        })
                     : msg = "Passwords not match!"
                 props.getMessage(msg)
 
@@ -227,7 +208,7 @@ function DialogResetPw(props) {
     )
 }
 
-export default withStyles(styles)(withApollo(DialogResetPw))
+export default withStyles(dialogResetPwstyle)(withApollo(DialogResetPw))
 
 
 

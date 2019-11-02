@@ -243,6 +243,31 @@ export const dialogStyle = theme => ({
 
 });
 
+export const dialogResetPwstyle = theme => ({
+    textField: {
+        margin: 5,
+    },
+    eye: {
+        cursor: 'pointer',
+    },
+    dialogContent: {
+        textAlign: 'center',
+
+    },
+    dialogTitle: {
+        textAlign: 'center'
+    },
+    main: {
+        width: 250,
+    },
+    buttonDialogTextNo: {
+        color: 'red'
+    },
+    buttonDialogTextYes: {
+        color: 'green'
+    }
+});
+
 export const addUserStyle = theme => ({
     textField: {
         margin: 5,
