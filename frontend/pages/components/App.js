@@ -1,7 +1,19 @@
-export default ({ children }) => (
-  <main>
-    {children}
-    <style jsx global>{`
+import CheckLogin from "../../src/components/CheckLogIn";
+
+
+export default function App(props) {
+
+  return (
+    <CheckLogin>
+      {props.children}
+
+    </CheckLogin>
+  )
+
+
+}
+/*
+<style jsx global>{`
       * {
         font-family: Menlo, Monaco, 'Lucida Console', 'Liberation Mono',
           'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New',
@@ -25,6 +37,4 @@ export default ({ children }) => (
           background-color: #fff;
         }
       }
-    `}</style>
-  </main>
-);
+    `}</style>*/

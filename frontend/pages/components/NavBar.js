@@ -3,13 +3,11 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
 import Cookies from "js-cookie";
-import chekLogIn from "../../src/components/checkLogIn";
+import chekLogIn from "../../src/components/CheckLogIn";
 import { Paper, Link } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
-import logOut from '../../src/components/logOut'
 import NotAuth from './NotAuth'
-import CheckLogIn from '../../src/components/checkLogIn'
 import { CURRENTUSER } from "../../lib/gql/mutations";
 
 import AppBar from '@material-ui/core/AppBar';
@@ -44,8 +42,8 @@ class NavBar extends React.PureComponent {
 
 
     handleLogOut = () => {
-        console.log("CLICK");
-        logOut()
+        Cookies.remove("jwtToken");
+        Router.push('/')
     };
 
     // menu handlers
@@ -88,8 +86,8 @@ class NavBar extends React.PureComponent {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
-                <CheckLogIn>
+            <App>
+                <div className={classes.root}>
                     <AppBar position="sticky" className={classes.appBar}>
                         <Toolbar>
                             <Typography variant="h6" className={classes.title}>
@@ -108,34 +106,35 @@ class NavBar extends React.PureComponent {
                         </Toolbar>
                     </AppBar>
 
-                    <App>
-                        <div className={classes.content}>
-                            {this.props.children}
-                        </div>
-                    </App>
-                </CheckLogIn>
+
+                    <div className={classes.content}>
+                        {this.props.children}
+                    </div>
 
 
-                <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={this.handleCloseMenu}
-                >
-                    <MenuItem onClick={this.handleCloseMenu}>
-                        <Link href={'/home'} style={{ width: '100%' }}>
-                            Home
+
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleCloseMenu}
+                    >
+                        <MenuItem onClick={this.handleCloseMenu}>
+                            <Link href={'/home'} style={{ width: '100%' }}>
+                                Home
                         </Link>
-                    </MenuItem>
+                        </MenuItem>
 
 
 
-                    <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
-                </Menu>
+                        <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
+                    </Menu>
 
-                <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
-            </div>
+                    <DialogResetPw open={open} handleClose={this.handleCloseDialog} />
+                </div>
+            </App>
+
 
         );
 
