@@ -4,7 +4,7 @@
 
 ```
 
-# NODE_ENV
+#  NODE_ENV
 
 NODE_ENV=development
 
@@ -50,5 +50,11 @@ PUBLIC_API_URL=
 
 # TYK MAIN SECRET
 TYK_GW_SECRET=352d20ee67be67f6340b4c0605b044b7
+
+# GOOGLE CLIENT ID
+GOOGLE_CLIENT_ID=801648603590-o007dgui6ndqkurfs5k0gu8bpsml5d70.apps.googleusercontent.com
+
+# GOOGLE SECRET
+GOOGLE_SECRET=ywHQXfdJQcZwGy1vksRCKgQ5
 
 ```
