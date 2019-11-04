@@ -35,10 +35,16 @@ export default {
         );
       }
 
+      console.log(await prisma.user({ email: email }));
+
       // email exist?
-      if (!prisma.user({ email: email })) {
-        logger.log("warn", "[M CREATE NEW USER] Email exist! %s", email);
-        throw new Error("Email exist!");
+      if ((await prisma.user({ email: email })) !== null) {
+        logger.log(
+          "warn",
+          "[M CREATE NEW USER] Email already exist! %s",
+          email
+        );
+        throw new Error("Email already exist!");
       }
 
       // password legality checks

@@ -19,11 +19,10 @@ import {
 export default {
   Mutation: {
     signup: async (obj, { input: { email, password, passwordAgain } }) => {
-      const check = await prisma.user({ email: email });
-
-      if (check) {
-        logger.log("warn", "[M SIGNUP] Email %s found", email);
-        throw new Error("Email found!");
+      // email exist?
+      if ((await prisma.user({ email: email })) !== null) {
+        logger.log("warn", "[M SIGNUP] Email already exist! %s", email);
+        throw new Error("Email already exist!");
       }
 
       if (password != passwordAgain) {
@@ -33,7 +32,7 @@ export default {
 
       // password legality checks
       if (!password.replace(/\s/g, "").length || password === null) {
-        logger.log("warn", "[M CREATE NEW USER] Password is null");
+        logger.log("warn", "[M SIGNUP] Password is null");
         throw new Error("Password can not be null or empty!");
       }
 
