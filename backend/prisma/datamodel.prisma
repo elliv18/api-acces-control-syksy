@@ -4,11 +4,27 @@ enum UserType {
 }
 
 type User {
-    id: ID! @id
-    userType: UserType!
-    email: String! @unique
-    password: String!
-    apiKey: String
-    createdAt: DateTime! @createdAt
-    updatedAt: DateTime! @updatedAt
+  id: ID! @id
+  userType: UserType!
+  email: String! @unique
+  password: String!
+  apiKey: String
+  apis: [Api]! @relation(name: "UserApis")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Api {
+  id: ID! @id
+  api_id: String @unique
+  api_name: String
+  urls: [Url]! @relation(name: "ApiUrls")
+  users: [User]! @relation(name: "UserApis")
+}
+
+type Url {
+  id: ID! @id
+  url: String
+  methods: String
+  api: Api @relation(name: "ApiUrls")
 }
