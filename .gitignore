@@ -24,3 +24,6 @@ logs/
 # backend generated files
 backend/src/generated/
 backend/logs/
+
+# backups folder
+backups/
