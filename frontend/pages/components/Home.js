@@ -46,7 +46,7 @@ class Home extends React.PureComponent {
     const { classes } = this.props;
 
     if (userType === 'ADMIN') {
-      return <AdminHome />
+      return <AdminHome userType={userType} />
     }
     else if (userType === 'USER') {
       return <UserHome />

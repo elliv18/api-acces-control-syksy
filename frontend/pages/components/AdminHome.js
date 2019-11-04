@@ -116,9 +116,8 @@ class AdminHome extends React.PureComponent {
     // Dialog state handlers
     //Basic close
     handleClose = () => {
-        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
+        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false, message: '' })
         //this.getMessage()
-        this.handleOpenSnack()
         console.log('Close')
     };
     //Add user close
@@ -202,6 +201,7 @@ class AdminHome extends React.PureComponent {
                     allUsers={allUsers}
                     setAutoHide={this.setAutoHide}
                     getMessage={this.getMessage}
+                    userType={this.props.userType}
                     title={"Reset user password?"}
                 />
 
