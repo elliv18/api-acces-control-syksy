@@ -13,7 +13,7 @@ export const StyledTableCell = withStyles(theme => ({
         borderBottom: 'initial',
         borderBottomColor: theme.palette.secondary.main,
         // backgroundColor: theme.palette.secondary.main,
-        height: '80px'
+        //height: '80px'
     },
 }))(TableCell);
 

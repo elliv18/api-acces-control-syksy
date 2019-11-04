@@ -148,7 +148,7 @@ function AdminTableBody(props) {
                                 </StyledTableCell>
 
                                 <StyledTableCell align="left" style={{ width: '180px' }}>
-                                    <div style={{ height: '50px' }}>
+                                    <div>
                                         <Tooltip title={"Delete user & apikey"}
                                             style={{ display: selected.length === 0 ? 'initial' : 'none' }}
 
