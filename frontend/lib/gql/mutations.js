@@ -85,3 +85,24 @@ export const CURRENTUSER = gql`
     }
   }
 `;
+
+
+//***************** CREATE APIKEY *************** */
+export const CREATE_NEW_APIKEY = gql`
+
+  mutation createApikeyMutation($id: String, $get: String) 
+  {
+    createNewApiKey(input: {
+      access: [
+        {id: $id, name: $id, urls: 
+          {url: $id, methods: [$get, $get]}}, 
+        {id: $id, name: $id, urls: 
+          {url: $id, methods: [$get, $get]}}
+      ]
+     } )
+    {
+      key
+    }
+  }
+`;
+

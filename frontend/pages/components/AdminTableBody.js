@@ -46,6 +46,8 @@ function AdminTableBody(props) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
+    const [apikey, setApikey] = React.useState(null);
+
 
     const { classes } = props;
 
@@ -91,7 +93,6 @@ function AdminTableBody(props) {
         setSelected(newSelected);
         props.getSelected(newSelected)
     };
-
 
 
 
@@ -146,7 +147,7 @@ function AdminTableBody(props) {
                                     />
                                 </StyledTableCell>
 
-                                <StyledTableCell align="left" style={{ width: '160px' }}>
+                                <StyledTableCell align="left" style={{ width: '180px' }}>
                                     <div style={{ height: '50px' }}>
                                         <Tooltip title={"Delete user & apikey"}
                                             style={{ display: selected.length === 0 ? 'initial' : 'none' }}
@@ -182,12 +183,26 @@ function AdminTableBody(props) {
                                                 <EditIcon />
                                             </IconButton>
                                         </Tooltip>
+
+                                        <Tooltip title={"Create new apikey"}
+                                            style={{ display: selected.length === 0 ? 'initial' : 'none' }}
+                                        >
+                                            <IconButton
+                                                color="primary"
+                                                onClick={event => {
+                                                    //dialog
+                                                    handleClickSelect(event, row.id)
+                                                    helpers.createNewApikey(props.client)
+                                                    setSelected([])
+                                                    //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                                }}>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Tooltip>
                                     </div>
                                 </StyledTableCell>
 
-                                <StyledTableCell align="center">
-                                    {row.email}
-                                </StyledTableCell>
+                                <StyledTableCell align="center">{row.email}</StyledTableCell>
                                 <StyledTableCell align="center">{row.userType}</StyledTableCell>
                                 <StyledTableCell align="center">{row.id}</StyledTableCell>
                                 <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
