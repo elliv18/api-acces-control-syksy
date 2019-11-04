@@ -1,20 +1,8 @@
 import { sign } from "jsonwebtoken";
 import logger from "../../misc/logger";
 import * as bcrypt from "bcryptjs";
-import {
-  mustBeLoggedIn,
-  mustBeAtleastLevel,
-  UserLevels
-} from "../../misc/auth";
 import { prisma } from "../../generated/prisma-client";
-import {
-  JWT_SECRET,
-  JWT_TIME,
-  SALT_ROUNDS,
-  MAX_PW,
-  MIN_PW,
-  DEBUG
-} from "../../environment";
+import { JWT_SECRET, JWT_TIME } from "../../environment";
 
 export default {
   Mutation: {

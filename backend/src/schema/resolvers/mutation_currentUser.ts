@@ -1,10 +1,6 @@
 import { prisma } from "../../generated/prisma-client";
 import logger from "../../misc/logger";
-import {
-  mustBeLoggedIn,
-  mustBeAtleastLevel,
-  UserLevels
-} from "../../misc/auth";
+import { mustBeLoggedIn } from "../../misc/auth";
 
 export default {
   Mutation: {
