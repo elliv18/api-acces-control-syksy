@@ -9,22 +9,7 @@ import fetch from "node-fetch";
 import { DEBUG, TYK_GW_SECRET } from "../../environment";
 
 export default {
-  /*************** QUERY ***********************/
   Query: {
-    allUsers: async (obj, args, { currentUser }) => {
-      if (!DEBUG) {
-        mustBeLoggedIn(currentUser);
-        mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
-
-        logger.log(
-          "info",
-          "[Q ALLUSERS] User %s - list all users",
-          currentUser.id
-        );
-      }
-
-      return await prisma.users();
-    },
     getApiList: async (obj, args, { currentUser }) => {
       if (!DEBUG) {
         mustBeLoggedIn(currentUser);

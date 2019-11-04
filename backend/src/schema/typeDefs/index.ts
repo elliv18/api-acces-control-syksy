@@ -1,9 +1,34 @@
 import { mergeTypes } from "merge-graphql-schemas";
-import tables from "./tables";
-import queries from "./queries";
-import mutations from "./mutations";
-import mutationsTyk from "./mutationsTyk";
 
-const types = [tables, queries, mutations, mutationsTyk];
+import tables from "./tables";
+
+import query_allUsers from "./query_allUsers";
+import query_getApiList from "./query_getApiList";
+
+import mutation_createNewUser from "./mutation_createNewUser";
+import mutation_currentUser from "./mutation_currentUser";
+import mutation_currentUserUpdatePW from "./mutation_currentUserUpdatePW";
+import mutation_login from "./mutation_login";
+import mutation_signup from "./mutation_signup";
+import mutation_userPWReset from "./mutation_userPWReset";
+
+import mutation_tyk_createNewApiKey from "./mutation_tyk_createNewApiKey";
+import mutation_tyk_deleteApiKey from "./mutation_tyk_deleteApiKey";
+import mutation_tyk_deleteUser from "./mutation_tyk_deleteUser";
+
+const types = [
+  tables,
+  query_allUsers,
+  query_getApiList,
+  mutation_createNewUser,
+  mutation_currentUser,
+  mutation_currentUserUpdatePW,
+  mutation_login,
+  mutation_signup,
+  mutation_userPWReset,
+  mutation_tyk_createNewApiKey,
+  mutation_tyk_deleteApiKey,
+  mutation_tyk_deleteUser
+];
 
 export default mergeTypes(types, { all: true });
