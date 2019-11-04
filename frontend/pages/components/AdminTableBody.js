@@ -105,6 +105,7 @@ function AdminTableBody(props) {
             className={classes.table}
             aria-labelledby="tableTitle"
             aria-label="enhanced table"
+            stickyHeader
         >
             <AdminTableHeaders
                 // getSelected={this.getSelected}

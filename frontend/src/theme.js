@@ -18,23 +18,7 @@ const theme = createMuiTheme({
       default: '#faf9d9'
     }
   },
-  overrides: {
-    MuiTableHead: {
-      root: {
-        borderCollapse: 'collapse'
-      }
-    },
-    MuiTable: {
-      stickyHeader: {
-        borderCollapse: 'collapse'
-      }
-    },
-    MuiTableCell: {
-      root: {
-        borderBottomStyle: 'none'
-      }
-    }
-  }
+
 });
 
 export default theme;
