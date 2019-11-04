@@ -17,15 +17,39 @@ export default `
         userType: UserType
         email: String
         apiKey: String
+        apis: [Api]!
         createdAt: String!
         updatedAt: String!
     }
 
-    ########
-    # Apis #
-    ########
+    #######
+    # Api #
+    #######
 
     type Api {
+        id: ID!
+        api_id: String
+        api_name: String
+        urls: [Url]
+        users: [User]
+    }
+
+    #######
+    # Url #
+    #######
+
+    type Url {
+        id: ID!
+        url: String
+        methods: String
+        api: Api
+    }
+
+    ########
+    # ApiList #
+    ########
+
+    type ApiList {
         id: String
         name: String
         path: String
@@ -39,7 +63,7 @@ export default `
     type Query {
         allUsers: [User]
 
-        getApiList: [Api]
+        getApiList: [ApiList]
     }
 
     #############
