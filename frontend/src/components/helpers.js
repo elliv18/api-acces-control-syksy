@@ -1,5 +1,5 @@
 import { withApollo } from "react-apollo"
-import { USER_DELETE } from "../../lib/gql/mutations"
+import { USER_DELETE, CREATE_NEW_APIKEY } from "../../lib/gql/mutations"
 
 let data = null
 const helpers = {
@@ -45,6 +45,18 @@ const helpers = {
         })
         // console.log('emails', emails)
         return emails
+    },
+
+    createNewApikey: function (client) {
+        console.log('api')
+        client
+            .mutate({
+                variables: {
+                    id: "1",
+                    get: "GET"
+                },
+                mutation: CREATE_NEW_APIKEY
+            }).then(res => console.log(res.data.createNewApiKey))
     }
 }
 

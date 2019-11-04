@@ -116,7 +116,7 @@ class AdminHome extends React.PureComponent {
     // Dialog state handlers
     //Basic close
     handleClose = () => {
-        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false, message: '' })
+        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
         //this.getMessage()
         console.log('Close')
     };
@@ -159,6 +159,8 @@ class AdminHome extends React.PureComponent {
     }
 
 
+
+
     render() {
         const { classes } = this.props
         const { allUsers,
@@ -183,6 +185,7 @@ class AdminHome extends React.PureComponent {
                     handleOpenPwReset={this.handleOpenPwReset}
                     classes={classes}
                     getSelected={this.getSelected}
+                    client={this.state.client}
                 />
 
                 <ConfirmDialog
