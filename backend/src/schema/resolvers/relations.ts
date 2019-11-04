@@ -1,7 +1,6 @@
 import { prisma } from "../../generated/prisma-client";
 
 export default {
-  /************* RELATIONS *****************/
   User: {
     async apis(user) {
       return await prisma.user({ id: user.id }).apis();
