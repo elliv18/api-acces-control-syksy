@@ -10,8 +10,9 @@ export const StyledTableCell = withStyles(theme => ({
     body: {
         fontSize: 14,
         borderBottomStyle: 'solid',
-        borderColor: theme.palette.secondary.main,
-        backgroundColor: theme.palette.tableCell.default,
+        borderBottom: 'initial',
+        borderBottomColor: theme.palette.secondary.main,
+        // backgroundColor: theme.palette.secondary.main,
         height: '80px'
     },
 }))(TableCell);

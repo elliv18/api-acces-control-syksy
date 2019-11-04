@@ -147,40 +147,42 @@ function AdminTableBody(props) {
                                 </StyledTableCell>
 
                                 <StyledTableCell align="left" style={{ width: '160px' }}>
-                                    <Tooltip title={"Delete user & apikey"}
-                                        style={{ display: selected.length === 0 ? 'initial' : 'none' }}
+                                    <div style={{ height: '50px' }}>
+                                        <Tooltip title={"Delete user & apikey"}
+                                            style={{ display: selected.length === 0 ? 'initial' : 'none' }}
 
-                                    >
-                                        <IconButton
-                                            color="primary"
-                                            onClick={event => {
-                                                //dialog
-                                                handleClickSelect(event, row.id)
-                                                props.handleOpenDelete()
-                                                setSelected([])
+                                        >
+                                            <IconButton
+                                                color="primary"
+                                                onClick={event => {
+                                                    //dialog
+                                                    handleClickSelect(event, row.id)
+                                                    props.handleOpenDelete()
+                                                    setSelected([])
 
-                                                // this.setState({selectedUserEmail: row.email, selectedUserId: row.id })
-                                            }}>
-                                            <DeleteOutlinedIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                                    // this.setState({selectedUserEmail: row.email, selectedUserId: row.id })
+                                                }}>
+                                                <DeleteOutlinedIcon />
+                                            </IconButton>
+                                        </Tooltip>
 
-                                    <Tooltip title={"Reset password"}
-                                        style={{ display: selected.length === 0 ? 'initial' : 'none' }}
+                                        <Tooltip title={"Reset password"}
+                                            style={{ display: selected.length === 0 ? 'initial' : 'none' }}
 
-                                    >
-                                        <IconButton
-                                            color="primary"
-                                            onClick={event => {
-                                                //dialog
-                                                handleClickSelect(event, row.id)
-                                                props.handleOpenPwReset()
-                                                setSelected([])
-                                                //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                            }}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                        >
+                                            <IconButton
+                                                color="primary"
+                                                onClick={event => {
+                                                    //dialog
+                                                    handleClickSelect(event, row.id)
+                                                    props.handleOpenPwReset()
+                                                    setSelected([])
+                                                    //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                                }}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </div>
                                 </StyledTableCell>
 
                                 <StyledTableCell align="center">
