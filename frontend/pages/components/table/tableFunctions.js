@@ -12,8 +12,9 @@ export const StyledTableCell = withStyles(theme => ({
         borderBottomStyle: 'solid',
         borderBottom: 'initial',
         borderBottomColor: theme.palette.secondary.main,
+        // minHeight: '80px'
         // backgroundColor: theme.palette.secondary.main,
-        //height: '80px'
+        height: '80px'
     },
 }))(TableCell);
 

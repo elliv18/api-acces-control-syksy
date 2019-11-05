@@ -1,42 +1,14 @@
 import React from "react";
-
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
-
 import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import Button from "@material-ui/core/Button";
-import { homeStyle } from './Styles'
-
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import EditIcon from '@material-ui/icons/Edit'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete';
-
+// omat componentit
 import ConfirmDialog from "./ConfirmDialog";
-import { USER_DELETE } from "../../lib/gql/mutations";
-
 import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
-
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import helpers from "../../src/components/helpers";
-import AdminTableHeaders from "./table/AdminTableHeaders";
-import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
 import AdminTableBody from "./AdminTableBody";
 import DoneSnackbar from "./SnackBar";
 
@@ -136,7 +108,7 @@ class AdminHome extends React.PureComponent {
     }
 
     //handle opens
-    handleOpenDelete = () => {
+    handleOpenConfirm = () => {
         this.setState({ openConfirm: true })
     };
 
@@ -180,7 +152,7 @@ class AdminHome extends React.PureComponent {
 
                 <AdminTableBody
                     allUsers={allUsers}
-                    handleOpenDelete={this.handleOpenDelete}
+                    handleOpenConfirm={this.handleOpenConfirm}
                     handleOpenAddUser={this.handleOpenAddUser}
                     handleOpenPwReset={this.handleOpenPwReset}
                     classes={classes}

@@ -1,14 +1,10 @@
 
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { AdminHomeStyles } from '../Styles';
-import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, withStyles, Checkbox } from "@material-ui/core";
+import { IconButton, Tooltip, Checkbox } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { StyledTableCell } from './tableFunctions'
@@ -75,7 +71,7 @@ function AdminTableHeaders(props) {
                                         ? <div >
                                             <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
                                                 <IconButton onClick={() => {
-                                                    props.handleOpenDelete()
+                                                    props.handleOpenConfirm()
 
                                                     props.setSelected([])
                                                 }}>
@@ -102,4 +98,4 @@ function AdminTableHeaders(props) {
     );
 }
 
-export default AdminTableHeaders//withStyles(AdminHomeStyles) 
+export default AdminTableHeaders
