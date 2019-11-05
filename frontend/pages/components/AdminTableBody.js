@@ -136,7 +136,7 @@ function AdminTableBody(props) {
                                                 onClick={event => {
                                                     //dialog
                                                     handleClickSelect(event, row.id)
-                                                    props.handleOpenDelete()
+                                                    props.handleOpenConfirm()
                                                     setSelected([])
 
                                                     // this.setState({selectedUserEmail: row.email, selectedUserId: row.id })

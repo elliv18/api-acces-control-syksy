@@ -1,25 +1,10 @@
 import React from "react";
-
 import { withApollo } from "react-apollo";
-import { Paper, GridList, Grid, GridListTile } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import Button from "@material-ui/core/Button";
-
-import { CURRENTUSER } from "../../lib/gql/mutations";
-
-
-import IconButton from '@material-ui/core/IconButton';
-
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-
-
 import { homeStyleUser } from './Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
-import { spacing } from "@material-ui/system";
-
-
 
 class HomeUser extends React.PureComponent {
     constructor(props) {
@@ -73,17 +58,3 @@ class HomeUser extends React.PureComponent {
 }
 
 export default withStyles(homeStyleUser)(withApollo(HomeUser));
-
-
-/* <Card key={index} elevation={5} className={classes.card}>
-
-                                    <CardContent>
-                                        <Typography className={classes.title2}>
-                                            Api name: {row.name}
-                                        </Typography>
-                                        <Typography className={classes.title2}>
-                                            Path: {row.path}
-                                        </Typography>
-
-                                    </CardContent>
-                                </Card>*/

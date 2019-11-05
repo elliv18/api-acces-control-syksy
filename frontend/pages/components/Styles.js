@@ -303,3 +303,26 @@ export const addUserStyle = theme => ({
         justifyContent: 'center'
     }
 });
+
+export const Confirmstyle = theme => ({
+
+    backgroundDialogTitle: {
+        backgroundColor: "#a8a0a099",
+        textAlign: 'center'
+    },
+    textDialog: {
+        textAlign: 'center',
+        color: 'black',
+        fontSize: 20
+    },
+    contentDialog: {
+        justifyContent: 'center',
+
+    },
+    buttonDialogTextYes: {
+        color: "green",
+    },
+    buttonDialogTextNo: {
+        color: "red",
+    },
+});
