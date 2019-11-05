@@ -1,7 +1,7 @@
 import React from "react";
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
-import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 // omat componentit
 import ConfirmDialog from "./ConfirmDialog";
@@ -27,6 +27,8 @@ class AdminHome extends React.PureComponent {
         this.getSelected = this.getSelected.bind(this)
         this.setAutoHide = this.setAutoHide.bind(this)
         this.getMessage = this.getMessage.bind(this)
+        // table shows filteredUsers array, need allUsers when remove searchfield
+        // all components uses allUsers array
         this.state = {
             client: props.client,
             email: undefined,
@@ -35,24 +37,28 @@ class AdminHome extends React.PureComponent {
             openAddUser: false,
             openSnack: false,
             allUsers: [],
+            filteredUsers: [],
             addedRow: null,
             selectedEmails: [],
             selected: [],
             message: '',
             autoHide: null,
             failed: false,
+            value: '',
         };
     }
 
     async componentDidMount() {
+        let data = null
         await this.state.client
             .query({
                 query: USERS_QUERY
             })
             .then(res => {
-                this.setState({ allUsers: res.data.allUsers })
+                data = res.data.allUsers
             })
             .catch(e => console.log(e))
+        this.setState({ allUsers: data, filteredUsers: data })
     }
 
     getSelected = (selected) => {
@@ -97,13 +103,13 @@ class AdminHome extends React.PureComponent {
         let temp = null;
         this.setState({ addedRow: added })
 
-        console.log('Added', this.state.addedRow, 'index', this.state.allUsers.length)
+        // console.log('Added', this.state.addedRow, 'index', this.state.allUsers.length)
 
         temp = [
             ...this.state.allUsers,
             added.user
         ]
-        this.setState({ allUsers: temp })
+        this.setState({ allUsers: temp, filteredUsers: temp, value: '' })
         //console.log('edit', temp)
     }
 
@@ -126,11 +132,21 @@ class AdminHome extends React.PureComponent {
         let data = null
         await helpers.deleteUser(this.state.selected, this.state.client);
         data = await helpers.deleteRows(this.state.selected, this.state.allUsers)
-        this.setState({ openConfirm: false, allUsers: data, autoHide: 6000 })
+        this.setState({ openConfirm: false, allUsers: data, autoHide: 6000, filteredUsers: data, value: '' })
         this.handleOpenSnack()
     }
 
 
+    handleFilter = (e) => {
+        let value = e.target.value
+        let newlist = []
+        let currentList = this.state.allUsers
+        newlist = currentList.filter(filter => {
+            return filter.email.includes(value)
+        })
+        this.setState({ filteredUsers: newlist, value: value })
+        //console.log(this.state.filteredUsers)
+    }
 
 
     render() {
@@ -143,15 +159,25 @@ class AdminHome extends React.PureComponent {
             openAddUser,
             selected,
             message,
-            autoHide
+            autoHide,
+            filteredUsers,
+            value
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
+                <TextField
+                    fullWidth
+                    label='Search...'
+                    style={{ backgroundColor: 'lightBlue' }}
+                    variant={'filled'}
+                    onChange={this.handleFilter}
+                    value={value} />
+
                 <AdminTableBody
-                    allUsers={allUsers}
+                    allUsers={filteredUsers}
                     handleOpenConfirm={this.handleOpenConfirm}
                     handleOpenAddUser={this.handleOpenAddUser}
                     handleOpenPwReset={this.handleOpenPwReset}

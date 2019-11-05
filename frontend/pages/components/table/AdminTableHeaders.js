@@ -60,7 +60,8 @@ function AdminTableHeaders(props) {
                                 </span>
                             ) : headCell.id === 'actions' && props.selected.length === 0
 
-                                    ? <Tooltip title={"Add user"} className={classes.addButton}>
+                                    ?
+                                    <Tooltip title={"Add user"} className={classes.addButton}>
                                         <IconButton onClick={props.handleOpenAddUser}>
                                             <AddIcon />
                                         </IconButton>
