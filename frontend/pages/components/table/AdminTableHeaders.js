@@ -53,7 +53,7 @@ function AdminTableHeaders(props) {
                             direction={order}
                             onClick={createSortHandler(headCell.id)}
                         >
-                            {headCell.label}
+                            <div style={{ color: 'black' }}>{headCell.label}</div>
                             {orderBy === headCell.id && headCell.id !== 'actions' ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? '' : ''}

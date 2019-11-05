@@ -121,7 +121,10 @@ class NavBar extends React.PureComponent {
                                 <Typography variant="h6" className={classes.title}>
                                     Welcome {currentUser ? currentUser.email : null}
                                 </Typography>
-                                <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
+                                <IconButton
+                                    color="inherit"
+                                    onClick={this.handleClickOpenMenu}
+                                    aria-label='menu button'>
                                     <MenuIcon />
                                 </IconButton>
                             </Toolbar>

@@ -82,8 +82,7 @@ function AdminTableBody(props) {
     return (
         <Table
             className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
+            aria-label="users table"
             stickyHeader
         >
             <AdminTableHeaders
@@ -105,23 +104,22 @@ function AdminTableBody(props) {
                 {stableSort(props.allUsers, getSorting(order, orderBy))
                     .map((row, index) => {
                         const isItemSelected = isSelected(row.id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                             <TableRow
                                 key={index}
                                 hover
                                 // onClick={event => handleClickSelect(event, row.id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
+                                //aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 selected={isItemSelected}
                             >
                                 <StyledTableCell padding="checkbox">
                                     <Checkbox
+                                        type="checkbox"
                                         checked={isItemSelected}
                                         onClick={event => handleClickSelect(event, row.id)}
-                                        inputProps={{ 'aria-labelledby': labelId }}
+                                        inputProps={{ 'aria-label': 'select user' }}
                                     />
                                 </StyledTableCell>
 
