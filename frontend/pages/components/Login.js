@@ -16,14 +16,13 @@ import { withStyles } from "@material-ui/styles";
 import { LOGIN_MUTATION } from "../../lib/gql/mutations";
 import Cookies from "js-cookie";
 import Router from "next/router";
-
-import DialogAlertLogin from './DialogAlertLogin'
 import { loginStyles } from './Styles'
 import Copyright from './Copyright'
 
 import { GoogleLogin } from 'react-google-login';
 
 import getConfig from "next/config";
+import DialogAlertSignUpIn from "./DialogAlertSignUpIn";
 
 const { publicRuntimeConfig } = getConfig();
 const { GOOGLE_CLIENT_ID } = publicRuntimeConfig;
@@ -39,7 +38,7 @@ class Login extends React.Component {
       email: "",
       password: "",
       open: false,
-      errorMsg: undefined,
+      msg: '',
       client: props.client
     };
     // STATE ENDS
@@ -98,11 +97,10 @@ class Login extends React.Component {
         let jwt = res.data.login.jwt
         // asetetaan jwt, jos saadaan response (oikeat nimi ja salasana)
         Cookies.set("jwtToken", jwt)
-        //window.location.href = "/home";
       })
       .catch(e => {
-        this.setState({ errorMsg: e.message.replace("GraphQL error:", "").trim() })
-        this.setState({ open: true })
+        this.setState({ msg: e.message.replace("GraphQL error:", "").trim() })
+        this.handleClickOpen()
       });
 
 
@@ -120,7 +118,7 @@ class Login extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { errorMsg } = this.state;
+    const { msg, open } = this.state;
     return (
 
       < Container component="main" maxWidth="xs" >
@@ -208,7 +206,7 @@ class Login extends React.Component {
           <Copyright />
         </Box>
 
-        {this.state.open ? <DialogAlertLogin errorMsg={errorMsg} /> : null}
+        <DialogAlertSignUpIn open={open} message={msg} handleClose={this.handleClose} />
 
       </Container >
 

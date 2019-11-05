@@ -8,37 +8,39 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { dialogStyle } from './Styles'
 import { withStyles } from '@material-ui/styles';
+import { Link } from '@material-ui/core';
 
 
 function DialogAlert(props) {
-    const [open, setOpen] = React.useState(true);
     const { classes } = props
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     return (
         <Dialog
-            open={open}
-            onClose={handleClose}
+            open={props.open}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-slide-title" className={classes.backgroundNo}>{"ERROR"}</DialogTitle>
+            <DialogTitle id="alert-dialog-slide-title" className={props.ok ? classes.backgroundYes : classes.backgroundNo}>
+                {props.ok ? "" : "Error"}
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description" className={classes.textNo}>
-                    {props.errorMsg}
+                    {props.message}
                 </DialogContentText>
             </DialogContent>
 
             <DialogActions className={classes.contentNo}>
-                <Button onClick={handleClose} autoFocus>
-                    <a className={classes.buttonText}>Close</a>
-                </Button>
+
+                {props.ok ?
+                    <Link href="/" variant="body2" className={classes.textLink}>
+                        {"Move to login page"}
+                    </Link>
+                    :
+                    <Button onClick={props.handleClose} autoFocus>
+                        <a className={classes.buttonText}>Close</a>
+                    </Button>
+                }
             </DialogActions>
         </Dialog>
 

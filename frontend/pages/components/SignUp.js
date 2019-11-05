@@ -12,11 +12,9 @@ import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withApollo } from "react-apollo";
 import { SIGNUP_MUTATION } from "../../lib/gql/mutations";
-
-import DialogAlertSignUp from './DialogAlertSignUp'
 import { signUpStyles } from './Styles'
-
 import Copyright from './Copyright'
+import DialogAlertSignUpIn from "./DialogAlertSignUpIn";
 
 
 class SignUp extends React.Component {
@@ -37,15 +35,12 @@ class SignUp extends React.Component {
 
   setEmail = e => {
     this.setState({ email: e.target.value });
-    this.setState({ open: false })
   };
   setPassword = e => {
     this.setState({ password: e.target.value });
-    this.setState({ open: false })
   };
   setPasswordAgain = e => {
     this.setState({ passwordAgain: e.target.value });
-    this.setState({ open: false })
   };
 
   signIn = async () => {
@@ -57,21 +52,19 @@ class SignUp extends React.Component {
           email: email,
           password: password,
           passwordAgain: passwordAgain,
-          open: false,
-          errorMsg: undefined,
         },
         mutation: SIGNUP_MUTATION
       })
       .then(res => {
         console.log(res)
         this.handleClickOpen(),
-          this.setState({ ok: true })
+          this.setState({ ok: true, msg: " You have now an account! Please go to login page to continue." })
       })
       .catch(e => {
         //console.log(e)
         this.handleClickOpen()
         this.setState({ ok: false })
-        this.setState({ errorMsg: e.message.replace('GraphQL error:', '').trim(), })
+        this.setState({ msg: e.message.replace('GraphQL error:', '').trim(), })
       })
   }
 
@@ -85,7 +78,7 @@ class SignUp extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { ok, errorMsg } = this.state;
+    const { ok, msg, open } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -112,7 +105,7 @@ class SignUp extends React.Component {
                   onKeyPress={async ev => {
                     if (ev.key === "Enter") {
                       this.state.email.length == 0
-                        ? (this.setState({ errorMsg: "Email can't be empty!" }), this.handleClickOpen())
+                        ? (this.setState({ msg: "Email can't be empty!" }), this.handleClickOpen())
                         : document.getElementById("password").focus();
                     }
                   }}
@@ -132,7 +125,7 @@ class SignUp extends React.Component {
                   onKeyPress={async ev => {
                     if (ev.key === "Enter") {
                       this.state.password.length == 0
-                        ? (this.setState({ errorMsg: "Password can't be empty!" }), this.handleClickOpen())
+                        ? (this.setState({ msg: "Password can't be empty!" }), this.handleClickOpen())
                         : document.getElementById("passwordAgain").focus();
                     }
                   }}
@@ -152,7 +145,7 @@ class SignUp extends React.Component {
                   onKeyPress={async ev => {
                     if (ev.key === "Enter") {
                       this.state.passwordAgain.length == 0
-                        ? (this.setState({ errorMsg: "Password can't be empty!" }), this.handleClickOpen())
+                        ? (this.setState({ msg: "Password can't be empty!" }), this.handleClickOpen())
                         : this.signIn()
                     }
                   }}
@@ -187,7 +180,8 @@ class SignUp extends React.Component {
           // välitetään error message ja ok status dialogille
           // ok tarkistaa onnistuiko käyttäjän luonti vai ei
         }
-        {this.state.open ? <DialogAlertSignUp ok={ok} errorMsg={errorMsg} /> : null}
+
+        <DialogAlertSignUpIn open={open} message={msg} handleClose={this.handleClose} ok={ok} />
       </Container>
     );
   }
