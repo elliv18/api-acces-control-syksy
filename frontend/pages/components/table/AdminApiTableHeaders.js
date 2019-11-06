@@ -59,7 +59,7 @@ function AdminApiTableHeaders(props) {
 
                                     ?
                                     <Tooltip title={"Add api"} className={classes.addButton}>
-                                        <IconButton onClick={props.handleOpenAddUser}>
+                                        <IconButton onClick={props.handleOpenAddApi}>
                                             <AddIcon />
                                         </IconButton>
                                     </Tooltip>

@@ -1,0 +1,176 @@
+import React from 'react';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { RemoveRedEye, GestureTwoTone } from '@material-ui/icons';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Select, InputLabel, Typography, Container, FormControl } from '@material-ui/core';
+import { withApollo } from 'react-apollo';
+import AddIcon from '@material-ui/icons/Add'
+
+import { addUserStyle } from './Styles'
+import { CREATE_NEW_API } from '../../lib/gql/mutations';
+
+
+function DialogAddApi(props) {
+    const [name, setName] = React.useState(null);
+    const [api_path, setApi_Path] = React.useState(null);
+    const [api_target, setApi_target] = React.useState(null);
+
+    const [urls, setUrls] = React.useState([]);
+    const [url, setUrl] = React.useState('');
+    const [method, setMethod] = React.useState('');
+
+
+    const { classes } = props
+
+    const handleAddApi = async () => {
+        console.log(name, api_path, api_target, urls)
+        await props.client
+            .mutate({
+                variables: {
+                    name: name,
+                    url_path: api_path,
+                    url_target: api_target,
+                    urls: urls
+                },
+                mutation: CREATE_NEW_API
+            })
+            .then(res => console.log(res))
+            .catch(e => console.log(e))
+    }
+
+    const nameChange = (e) => {
+        setName(e.target.value)
+    }
+    const pathChange = (e) => {
+        setApi_Path(e.target.value)
+    }
+    const targetChange = (e) => {
+        setApi_target(e.target.value)
+    }
+    const urlChange = (e) => {
+        let value = e.target.value
+        setUrl(value)
+    }
+    const methodChange = (e) => {
+        let value = e.target.value
+        setMethod(value)
+    }
+    const urlsToArray = (e) => {
+        let temp = {
+            url: url,
+            methods: method,
+        }
+        console.log(temp)
+        setUrls([temp, ...urls])
+        setUrl('')
+        setMethod('')
+
+    }
+    const test = (e) => {
+        console.log('name', name, 'path', api_path, 'target', api_target)
+        // setUrl('')
+        // urlsToArray()
+        console.log(urls)
+    }
+
+
+    return (
+        <Dialog
+            open={props.open}
+            onClose={props.handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <Container className={classes.main}>
+                <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Create new api</DialogTitle>
+                <DialogContent className={classes.dialogContent}>
+                    <FormControl className={classes.textField}>
+                        <TextField
+                            fullWidth
+                            label={"name"}
+                            type="text"
+                            onChange={nameChange}
+                        />
+                        <TextField
+                            fullWidth
+                            label={"api_path"}
+                            type="text"
+                            onChange={pathChange}
+                        />
+                        <TextField
+                            fullWidth
+                            label={"api_target"}
+                            type="text"
+                            onChange={targetChange}
+                        />
+                        <TextField
+                            fullWidth
+                            onChange={urlChange}
+                            label={"urls"}
+                            autoFocus
+                            value={url}
+
+                            type="text"
+                            //  onChange={handleEmailChange}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <AddIcon
+                                            className={classes.eye}
+                                            onClick={urlsToArray}
+                                        />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+
+                        <TextField
+                            fullWidth
+                            onChange={methodChange}
+                            label={"Methods"}
+                            autoFocus
+                            value={method}
+
+                            type="text"
+                            //  onChange={handleEmailChange}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <AddIcon
+                                            className={classes.eye}
+                                            onClick={urlsToArray}
+                                        />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+
+                    </FormControl>
+
+
+                </DialogContent>
+                <DialogActions className={classes.dialogActions}>
+                    <Button onClick={props.handleClose} color="primary" >
+                        <a className={classes.buttonDialogTextNo}>Cancel</a>
+                    </Button>
+                    <Button onClick={handleAddApi} color="primary" >
+                        <a className={classes.buttonDialogTextYes}>Create</a>
+                    </Button>
+
+                </DialogActions>
+            </Container>
+
+
+        </Dialog>
+
+    )
+}
+
+export default withStyles(addUserStyle)(withApollo(DialogAddApi))
+
+

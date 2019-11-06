@@ -94,8 +94,7 @@ function AdminApiTableBody(props) {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-            //anna apilist
-            //  rowCount={props.allUsers.length}
+                handleOpenAddApi={props.handleOpenAddApi}
             />
             <TableBody>
                 {stableSort(props.apiList, getSorting(order, orderBy))

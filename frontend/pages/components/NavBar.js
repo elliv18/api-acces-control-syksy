@@ -31,7 +31,7 @@ class NavBar extends React.PureComponent {
             openPwReset: false,
             autoHide: null,
             message: '',
-            switch: 'USERS'
+            switch: 'APIS'
             // loggedIn: chekLogIn()
         };
     }

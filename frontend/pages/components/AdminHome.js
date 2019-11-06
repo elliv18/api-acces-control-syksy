@@ -12,6 +12,7 @@ import helpers from "../../src/components/helpers";
 import AdminUsersTableBody from "./table/AdminUsersTableBody";
 import DoneSnackbar from "./SnackBar";
 import AdminApiTableBody from "./table/AdminApiTableBody";
+import DialogAddApi from "./DialogAddApi";
 
 var moment = require('moment');
 
@@ -28,6 +29,7 @@ class AdminHome extends React.PureComponent {
         this.getSelected = this.getSelected.bind(this)
         this.setAutoHide = this.setAutoHide.bind(this)
         this.getMessage = this.getMessage.bind(this)
+        this.handleOpenAddApi = this.handleOpenAddApi.bind(this)
         // table shows filteredUsers array, need allUsers when remove searchfield
         // all components uses allUsers array
         this.state = {
@@ -46,7 +48,8 @@ class AdminHome extends React.PureComponent {
             autoHide: null,
             failed: false,
             value: '',
-            apiList: []
+            apiList: [],
+            openAddApi: false
         };
     }
 
@@ -109,7 +112,7 @@ class AdminHome extends React.PureComponent {
     // Dialog state handlers
     //Basic close
     handleClose = () => {
-        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
+        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false, openAddApi: false })
         //this.getMessage()
         console.log('Close')
     };
@@ -151,6 +154,9 @@ class AdminHome extends React.PureComponent {
         this.handleOpenSnack()
     }
 
+    handleOpenAddApi = () => {
+        this.setState({ openAddApi: true })
+    }
 
     handleFilter = (e) => {
         let value = e.target.value
@@ -199,7 +205,8 @@ class AdminHome extends React.PureComponent {
             autoHide,
             filteredUsers,
             value,
-            apiList
+            apiList,
+            openAddApi
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
@@ -229,13 +236,13 @@ class AdminHome extends React.PureComponent {
                         client={this.state.client}
                     />
                     : <AdminApiTableBody
+                        handleOpenAddApi={this.handleOpenAddApi}
                         apiList={apiList}
                         getSelected={this.getSelected}
 
                     />
 
                 }
-
 
                 <ConfirmDialog
                     open={openConfirm}
@@ -255,6 +262,11 @@ class AdminHome extends React.PureComponent {
                     getMessage={this.getMessage}
                     userType={this.props.userType}
                     title={"Reset user password?"}
+                />
+
+                <DialogAddApi
+                    open={openAddApi}
+                    handleClose={this.handleClose}
                 />
 
                 <DialogAddUser
