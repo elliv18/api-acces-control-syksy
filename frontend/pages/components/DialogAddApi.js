@@ -91,6 +91,7 @@ function DialogAddApi(props) {
                 <DialogContent className={classes.dialogContent}>
                     <FormControl className={classes.textField}>
                         <TextField
+                            autoFocus
                             fullWidth
                             label={"name"}
                             type="text"
@@ -108,47 +109,38 @@ function DialogAddApi(props) {
                             type="text"
                             onChange={targetChange}
                         />
-                        <TextField
-                            fullWidth
-                            onChange={urlChange}
-                            label={"urls"}
-                            autoFocus
-                            value={url}
+                        <div style={{
+                            marginTop: '20px',
+                            bottom: 0,
+                            backgroundColor: '#f0f0f0',
+                            padding: 10
+                        }}>
+                            ADD URLS AND METHODS
+                            <IconButton onClick={urlsToArray} style={{ color: 'green' }}>
+                                <AddIcon />
+                            </IconButton>
+                            <TextField
+                                style={{ marginBottom: 5 }}
+                                fullWidth
+                                onChange={urlChange}
+                                label={"urls"}
 
-                            type="text"
+                                value={url}
+
+                                type="text"
                             //  onChange={handleEmailChange}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <AddIcon
-                                            className={classes.eye}
-                                            onClick={urlsToArray}
-                                        />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                            />
 
-                        <TextField
-                            fullWidth
-                            onChange={methodChange}
-                            label={"Methods"}
-                            autoFocus
-                            value={method}
+                            <TextField
+                                fullWidth
+                                onChange={methodChange}
+                                label={"Methods"}
+                                value={method}
 
-                            type="text"
+                                type="text"
                             //  onChange={handleEmailChange}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <AddIcon
-                                            className={classes.eye}
-                                            onClick={urlsToArray}
-                                        />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                            />
+                        </div>
 
                     </FormControl>
 
