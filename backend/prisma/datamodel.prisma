@@ -8,7 +8,7 @@ type User {
   userType: UserType!
   email: String! @unique
   password: String!
-  apiKey: String
+  api_hash: String
   apis: [Api]! @relation(name: "UserApis")
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
@@ -17,7 +17,8 @@ type User {
 type Api {
   id: ID! @id
   api_id: String @unique
-  api_name: String
+  api_name: String @unique
+  api_root_url: String
   urls: [Url]! @relation(name: "ApiUrls")
   users: [User]! @relation(name: "UserApis")
 }
