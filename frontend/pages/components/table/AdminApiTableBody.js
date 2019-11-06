@@ -42,7 +42,7 @@ function AdminApiTableBody(props) {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelecteds = props.allUsers.map(n => n.id);
+            const newSelecteds = props.apiList.map(n => n.id);
             setSelected(newSelecteds);
             props.getSelected(newSelecteds)
             return;
@@ -89,6 +89,7 @@ function AdminApiTableBody(props) {
                 classes={classes}
                 numSelected={selected.length}
                 setSelected={setSelected}
+                rowCount={props.apiList.length}
                 order={order}
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}

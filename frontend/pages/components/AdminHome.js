@@ -230,6 +230,8 @@ class AdminHome extends React.PureComponent {
                     />
                     : <AdminApiTableBody
                         apiList={apiList}
+                        getSelected={this.getSelected}
+
                     />
 
                 }
