@@ -1,7 +1,7 @@
 import React from "react";
 import { withApollo } from "react-apollo";
 import Cookies from "js-cookie";
-import { Link } from "@material-ui/core";
+import { Link, Switch } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { CURRENTUSER } from "../../lib/gql/mutations";
@@ -30,7 +30,8 @@ class NavBar extends React.PureComponent {
             open: false,
             openPwReset: false,
             autoHide: null,
-            message: ''
+            message: '',
+            switch: 'USERS'
             // loggedIn: chekLogIn()
         };
     }
@@ -108,7 +109,16 @@ class NavBar extends React.PureComponent {
             : Router.push('/')
     }
 
+    handleChangeSwitch = () => {
+        const temp = this.state.switch === 'USERS' ? "APIS" : 'USERS'
+        this.setState({ switch: temp })
+    };
+
+
     render() {
+        const childrenWithProps = React.Children.map(this.props.children, child =>
+            React.cloneElement(child, { switchState: this.state.switch })
+        );
         const { anchorEl, currentUser, open, openPwReset, openSnack, message, autoHide } = this.state;
         const { classes } = this.props;
 
@@ -121,6 +131,16 @@ class NavBar extends React.PureComponent {
                                 <Typography variant="h6" className={classes.title}>
                                     Welcome {currentUser ? currentUser.email : null}
                                 </Typography>
+                                <div style={{ flexGrow: 1, fontSize: '20px' }}>
+                                    {this.state.switch === 'USERS'
+                                        ? "USERS" : null}
+                                    <Switch
+                                        value={this.state.switch}
+                                        onChange={this.handleChangeSwitch}
+                                    />
+                                    {this.state.switch === 'APIS'
+                                        ? "APIS" : null}
+                                </div>
                                 <IconButton
                                     color="inherit"
                                     onClick={this.handleClickOpenMenu}
@@ -133,8 +153,9 @@ class NavBar extends React.PureComponent {
                     }
 
 
-                    <div className={classes.content}>
-                        {this.props.children}
+
+                    <div className={classes.content} >
+                        {childrenWithProps}
                     </div>
                     <Menu
                         id="simple-menu"

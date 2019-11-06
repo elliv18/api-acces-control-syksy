@@ -5,6 +5,7 @@ import { Grid } from "@material-ui/core";
 export const navStyles = theme => ({
     root: {
         flexGrow: 1,
+        minWidth: '350px'
         //backgroundColor: 'lightBlue',
     },
     appBar: {

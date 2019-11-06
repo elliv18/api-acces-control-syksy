@@ -13,14 +13,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 //OMAT
 import { AdminHomeStyles } from '../Styles'
 import helpers from "../../../src/components/helpers";
-import AdminUsersTableHeaders from "./AdminUsersTableHeaders";
+import AdminApiTableHeaders from "./AdminApiTableHeaders";
 import { StyledTableCell, desc, stableSort, getSorting } from './tableFunctions'
 
 var moment = require('moment');
 
 
 
-function AdminUsersTableBody(props) {
+function AdminApiTableBody(props) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
@@ -77,14 +77,13 @@ function AdminUsersTableBody(props) {
     const isSelected = id => selected.indexOf(id) !== -1;
     //********TABLE SORTING & SELECTING ENDS */
 
-
     return (
         <Table
             className={classes.table}
             aria-label="users table"
             stickyHeader
         >
-            <AdminUsersTableHeaders
+            <AdminApiTableHeaders
                 // getSelected={this.getSelected}
                 selected={selected}
                 classes={classes}
@@ -94,16 +93,13 @@ function AdminUsersTableBody(props) {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={props.allUsers.length}
-                handleOpenConfirm={props.handleOpenConfirm}
-                handleOpenAddUser={props.handleOpenAddUser}
-                handleOpenPwReset={props.handleOpenPwReset}
+            //anna apilist
+            //  rowCount={props.allUsers.length}
             />
             <TableBody>
-                {stableSort(props.allUsers, getSorting(order, orderBy))
+                {stableSort(props.apiList, getSorting(order, orderBy))
                     .map((row, index) => {
                         const isItemSelected = isSelected(row.id);
-
                         return (
                             <TableRow
                                 key={index}
@@ -124,7 +120,7 @@ function AdminUsersTableBody(props) {
 
                                 <StyledTableCell align="left" style={{ width: '180px' }}>
                                     <div>
-                                        <Tooltip title={"Delete user & apikey"}
+                                        <Tooltip title={"Delete api"}
                                             style={{ display: selected.length === 0 ? 'initial' : 'none' }}
 
                                         >
@@ -142,7 +138,7 @@ function AdminUsersTableBody(props) {
                                             </IconButton>
                                         </Tooltip>
 
-                                        <Tooltip title={"Reset password"}
+                                        <Tooltip title={"Edit api"}
                                             style={{ display: selected.length === 0 ? 'initial' : 'none' }}
 
                                         >
@@ -177,16 +173,9 @@ function AdminUsersTableBody(props) {
                                     </div>
                                 </StyledTableCell>
 
-                                <StyledTableCell align="center">{row.email}</StyledTableCell>
-                                <StyledTableCell align="center">{row.userType}</StyledTableCell>
+                                <StyledTableCell align="center">{row.name}</StyledTableCell>
+                                <StyledTableCell align="center">{row.path}</StyledTableCell>
                                 <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.createdAt !== 'No results found'
-                                        ? moment(row.createdAt).format('DD.MM.YYYY - HH:mm')
-                                        : row.createdAt
-                                    }
-                                </StyledTableCell>
                             </TableRow>
 
                         );
@@ -196,4 +185,9 @@ function AdminUsersTableBody(props) {
         </Table >
     )
 }
-export default withStyles(AdminHomeStyles)(AdminUsersTableBody)
+export default withStyles(AdminHomeStyles)(AdminApiTableBody)
+
+
+/*
+
+*/

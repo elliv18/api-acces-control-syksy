@@ -1,6 +1,6 @@
 import React from "react";
 import { withApollo } from "react-apollo";
-import { USERS_QUERY } from "../../lib/gql/queries";
+import { USERS_QUERY, API_LIST_QUERY } from "../../lib/gql/queries";
 import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 // omat componentit
@@ -9,8 +9,9 @@ import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
 import helpers from "../../src/components/helpers";
-import AdminTableBody from "./table/AdminUsersTableBody";
+import AdminUsersTableBody from "./table/AdminUsersTableBody";
 import DoneSnackbar from "./SnackBar";
+import AdminApiTableBody from "./table/AdminApiTableBody";
 
 var moment = require('moment');
 
@@ -45,10 +46,12 @@ class AdminHome extends React.PureComponent {
             autoHide: null,
             failed: false,
             value: '',
+            apiList: []
         };
     }
 
     async componentDidMount() {
+        // USERS
         let data = null
         await this.state.client
             .query({
@@ -56,9 +59,21 @@ class AdminHome extends React.PureComponent {
             })
             .then(res => {
                 data = res.data.allUsers
+                console.log(data)
             })
             .catch(e => console.log(e))
         this.setState({ allUsers: data, filteredUsers: data })
+
+        // APILIST
+        await this.state.client
+            .query({
+                query: API_LIST_QUERY
+            })
+            .then(res => {
+                // console.log(res)
+                this.setState({ apiList: res.data.getApiList })
+            })
+            .catch(e => console.log(e))
     }
 
     getSelected = (selected) => {
@@ -183,32 +198,42 @@ class AdminHome extends React.PureComponent {
             message,
             autoHide,
             filteredUsers,
-            value
+            value,
+            apiList
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
-                <TextField
-                    aria-label="search field"
-                    type="text"
-                    fullWidth
-                    label='Search...'
-                    style={{ backgroundColor: '#3c7c9e' }}
-                    variant={'filled'}
-                    onChange={this.handleFilter}
-                    value={value} />
+                <div style={{ minWidth: 722 }}>
+                    <TextField
+                        aria-label="search field"
+                        type="text"
+                        fullWidth
+                        label='Search...'
+                        style={{ backgroundColor: '#3c7c9e' }}
+                        variant={'filled'}
+                        onChange={this.handleFilter}
+                        value={value} />
+                </div>
 
-                <AdminTableBody
-                    allUsers={filteredUsers}
-                    handleOpenConfirm={this.handleOpenConfirm}
-                    handleOpenAddUser={this.handleOpenAddUser}
-                    handleOpenPwReset={this.handleOpenPwReset}
-                    classes={classes}
-                    getSelected={this.getSelected}
-                    client={this.state.client}
-                />
+                {this.props.switchState === 'USERS'
+                    ? <AdminUsersTableBody
+                        allUsers={filteredUsers}
+                        handleOpenConfirm={this.handleOpenConfirm}
+                        handleOpenAddUser={this.handleOpenAddUser}
+                        handleOpenPwReset={this.handleOpenPwReset}
+                        classes={classes}
+                        getSelected={this.getSelected}
+                        client={this.state.client}
+                    />
+                    : <AdminApiTableBody
+                        apiList={apiList}
+                    />
+
+                }
+
 
                 <ConfirmDialog
                     open={openConfirm}
