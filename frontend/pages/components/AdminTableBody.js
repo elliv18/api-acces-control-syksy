@@ -182,7 +182,12 @@ function AdminTableBody(props) {
                                 <StyledTableCell align="center">{row.userType}</StyledTableCell>
                                 <StyledTableCell align="center">{row.id}</StyledTableCell>
                                 <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
-                                <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    {row.createdAt !== 'No results found'
+                                        ? moment(row.createdAt).format('DD.MM.YYYY - HH:mm')
+                                        : row.createdAt
+                                    }
+                                </StyledTableCell>
                             </TableRow>
 
                         );

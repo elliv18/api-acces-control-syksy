@@ -140,10 +140,32 @@ class AdminHome extends React.PureComponent {
     handleFilter = (e) => {
         let value = e.target.value
         let newlist = []
+        let newlistEmails = []
+        let newlistId = []
         let currentList = this.state.allUsers
-        newlist = currentList.filter(filter => {
+        const noData = [
+            { email: 'No results found', id: 'No results found', createdAt: 'No results found' },
+
+        ];
+
+        newlistEmails = currentList.filter(filter => {
             return filter.email.includes(value)
         })
+        newlistId = currentList.filter(filter => {
+            return filter.id.includes(value)
+        })
+
+        //console.log(newlistEmails.length)
+        newlistEmails.length === 0 && newlistId.length === 0
+            ? newlist = [
+                ...noData
+            ]
+            : newlist = [
+                ...newlistEmails,
+                ...newlistId
+            ]
+        //      console.log(newlist)
+
         this.setState({ filteredUsers: newlist, value: value })
         //console.log(this.state.filteredUsers)
     }
@@ -169,9 +191,11 @@ class AdminHome extends React.PureComponent {
                 <CssBaseline />
 
                 <TextField
+                    aria-label="search field"
+                    type="text"
                     fullWidth
                     label='Search...'
-                    style={{ backgroundColor: 'lightBlue' }}
+                    style={{ backgroundColor: '#3c7c9e' }}
                     variant={'filled'}
                     onChange={this.handleFilter}
                     value={value} />
