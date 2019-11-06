@@ -16,7 +16,7 @@ export default `
         id: ID!
         userType: UserType
         email: String
-        apiKey: String
+        api_hash: String
         apis: [Api]!
         createdAt: String!
         updatedAt: String!
@@ -30,6 +30,7 @@ export default `
         id: ID!
         api_id: String
         api_name: String
+        api_root_url: String
         urls: [Url]
         users: [User]
     }

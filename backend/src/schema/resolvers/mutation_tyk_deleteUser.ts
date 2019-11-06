@@ -33,7 +33,7 @@ export default {
         "x-tyk-authorization": TYK_GW_SECRET
       };
 
-      const url = baseUrl + keysPath + userTemp.apiKey + "?hashed=true";
+      const url = baseUrl + keysPath + userTemp.api_hash + "?hashed=true";
 
       await fetch(url, { method: "DELETE", headers: headers });
 

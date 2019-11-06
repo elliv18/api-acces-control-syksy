@@ -15,6 +15,7 @@ import mutation_userPWReset from "./mutation_userPWReset";
 import mutation_tyk_createNewApiKey from "./mutation_tyk_createNewApiKey";
 import mutation_tyk_deleteApiKey from "./mutation_tyk_deleteApiKey";
 import mutation_tyk_deleteUser from "./mutation_tyk_deleteUser";
+import mutation_tyk_createNewAPI from "./mutation_tyk_createNewAPI";
 
 const types = [
   tables,
@@ -28,7 +29,8 @@ const types = [
   mutation_userPWReset,
   mutation_tyk_createNewApiKey,
   mutation_tyk_deleteApiKey,
-  mutation_tyk_deleteUser
+  mutation_tyk_deleteUser,
+  mutation_tyk_createNewAPI
 ];
 
 export default mergeTypes(types, { all: true });
