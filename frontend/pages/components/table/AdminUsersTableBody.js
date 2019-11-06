@@ -11,10 +11,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 //OMAT
-import { AdminHomeStyles } from './Styles'
-import helpers from "../../src/components/helpers";
-import AdminTableHeaders from "./table/AdminTableHeaders";
-import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
+import { AdminHomeStyles } from '../Styles'
+import helpers from "../../../src/components/helpers";
+import AdminTableHeaders from "./AdminUsersTableHeaders";
+import { StyledTableCell, desc, stableSort, getSorting } from './tableFunctions'
 
 var moment = require('moment');
 
@@ -71,7 +71,6 @@ function AdminTableBody(props) {
         setSelected(newSelected);
         props.getSelected(newSelected)
     };
-
 
 
 

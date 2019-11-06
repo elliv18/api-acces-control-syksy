@@ -9,7 +9,7 @@ import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
 import helpers from "../../src/components/helpers";
-import AdminTableBody from "./AdminTableBody";
+import AdminTableBody from "./table/AdminUsersTableBody";
 import DoneSnackbar from "./SnackBar";
 
 var moment = require('moment');
