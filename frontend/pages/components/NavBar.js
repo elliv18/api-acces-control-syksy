@@ -1,31 +1,21 @@
 import React from "react";
-
 import { withApollo } from "react-apollo";
-import { USERS_QUERY } from "../../lib/gql/queries";
 import Cookies from "js-cookie";
-import chekLogIn from "../../src/components/CheckLogIn";
-import { Paper, Link } from "@material-ui/core";
+import { Link } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
-import NotAuth from './NotAuth'
 import { CURRENTUSER } from "../../lib/gql/mutations";
-
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import Router from 'next/router'
-
 import { navStyles } from './Styles'
-import ConfirmDialog from "./ConfirmDialog";
 import DialogResetPw from "./DialogResetPw";
 import App from "./App";
-import NoSsr from '../../src/components/disableSsr'
 import DoneSnackbar from "./SnackBar";
 
 class NavBar extends React.PureComponent {
@@ -61,9 +51,7 @@ class NavBar extends React.PureComponent {
         this.setState({ anchorEl: null })
     };
 
-    handleOpenDialog = () => {
-        this.setState({ anchorEl: null, open: true })
-    };
+
     handleCloseDialog = () => {
         this.setState({ anchorEl: null, open: false })
     };
@@ -133,7 +121,10 @@ class NavBar extends React.PureComponent {
                                 <Typography variant="h6" className={classes.title}>
                                     Welcome {currentUser ? currentUser.email : null}
                                 </Typography>
-                                <IconButton color="inherit" onClick={this.handleClickOpenMenu}>
+                                <IconButton
+                                    color="inherit"
+                                    onClick={this.handleClickOpenMenu}
+                                    aria-label='menu button'>
                                     <MenuIcon />
                                 </IconButton>
                             </Toolbar>

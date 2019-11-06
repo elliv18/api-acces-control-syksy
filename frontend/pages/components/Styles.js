@@ -82,21 +82,20 @@ export const homeStyleUser = theme => ({
 });
 export const AdminHomeStyles = theme => ({
     root: {
-        width: '95%',
+        width: '99%',
         marginRight: 'auto',
         marginLeft: 'auto',
-        maxHeight: '570px',
+        maxHeight: '620px',
         overflow: 'auto',
         paddingBottom: '10px'
 
     },
     table: {
         minWidth: 650,
+        maxHeight: '55%'
         // overflow: 'auto',
     },
-    tableHeader: {
-        backgroundColor: 'red'
-    },
+
     backgroundDialogTitle: {
         backgroundColor: "#a8a0a099",
         textAlign: 'center'
@@ -121,7 +120,7 @@ export const AdminHomeStyles = theme => ({
         //marginBottom: theme.spacing(3),
         backgroundColor: theme.palette.secondary.main,
         // marginLeft: theme.spacing(3)
-        marginRight: theme.spacing(3),
+        // marginRight: theme.spacing(3),
 
     },
     deleteUpButton: {
@@ -302,4 +301,27 @@ export const addUserStyle = theme => ({
     dialogActions: {
         justifyContent: 'center'
     }
+});
+
+export const Confirmstyle = theme => ({
+
+    backgroundDialogTitle: {
+        backgroundColor: "#a8a0a099",
+        textAlign: 'center'
+    },
+    textDialog: {
+        textAlign: 'center',
+        color: 'black',
+        fontSize: 20
+    },
+    contentDialog: {
+        justifyContent: 'center',
+
+    },
+    buttonDialogTextYes: {
+        color: "green",
+    },
+    buttonDialogTextNo: {
+        color: "red",
+    },
 });

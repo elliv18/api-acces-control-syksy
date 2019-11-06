@@ -1,39 +1,17 @@
 import React from "react";
-
-import { withApollo } from "react-apollo";
-import { USERS_QUERY } from "../../lib/gql/queries";
-
-import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar } from "@material-ui/core";
+import { IconButton, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import Button from "@material-ui/core/Button";
-import { homeStyle } from './Styles'
-
+//ICONS
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete';
-
-import ConfirmDialog from "./ConfirmDialog";
-import { USER_DELETE } from "../../lib/gql/mutations";
-
-import { AdminHomeStyles } from './Styles'
-import DialogResetPw from "./DialogResetPw";
-import DialogAddUser from "./DialogAddUser";
-
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+//TABLE
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import FilterListIcon from '@material-ui/icons/FilterList';
+//OMAT
+import { AdminHomeStyles } from './Styles'
 import helpers from "../../src/components/helpers";
 import AdminTableHeaders from "./table/AdminTableHeaders";
 import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
@@ -104,8 +82,7 @@ function AdminTableBody(props) {
     return (
         <Table
             className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
+            aria-label="users table"
             stickyHeader
         >
             <AdminTableHeaders
@@ -119,7 +96,7 @@ function AdminTableBody(props) {
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 rowCount={props.allUsers.length}
-                handleOpenDelete={props.handleOpenDelete}
+                handleOpenConfirm={props.handleOpenConfirm}
                 handleOpenAddUser={props.handleOpenAddUser}
                 handleOpenPwReset={props.handleOpenPwReset}
             />
@@ -127,23 +104,22 @@ function AdminTableBody(props) {
                 {stableSort(props.allUsers, getSorting(order, orderBy))
                     .map((row, index) => {
                         const isItemSelected = isSelected(row.id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                             <TableRow
                                 key={index}
                                 hover
                                 // onClick={event => handleClickSelect(event, row.id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
+                                //aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 selected={isItemSelected}
                             >
                                 <StyledTableCell padding="checkbox">
                                     <Checkbox
+                                        type="checkbox"
                                         checked={isItemSelected}
                                         onClick={event => handleClickSelect(event, row.id)}
-                                        inputProps={{ 'aria-labelledby': labelId }}
+                                        inputProps={{ 'aria-label': 'select user' }}
                                     />
                                 </StyledTableCell>
 
@@ -158,7 +134,7 @@ function AdminTableBody(props) {
                                                 onClick={event => {
                                                     //dialog
                                                     handleClickSelect(event, row.id)
-                                                    props.handleOpenDelete()
+                                                    props.handleOpenConfirm()
                                                     setSelected([])
 
                                                     // this.setState({selectedUserEmail: row.email, selectedUserId: row.id })
@@ -206,7 +182,12 @@ function AdminTableBody(props) {
                                 <StyledTableCell align="center">{row.userType}</StyledTableCell>
                                 <StyledTableCell align="center">{row.id}</StyledTableCell>
                                 <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
-                                <StyledTableCell align="center">{moment(row.createdAt).format('DD.MM.YYYY - HH:mm')}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    {row.createdAt !== 'No results found'
+                                        ? moment(row.createdAt).format('DD.MM.YYYY - HH:mm')
+                                        : row.createdAt
+                                    }
+                                </StyledTableCell>
                             </TableRow>
 
                         );

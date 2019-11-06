@@ -1,42 +1,14 @@
 import React from "react";
-
 import { withApollo } from "react-apollo";
 import { USERS_QUERY } from "../../lib/gql/queries";
-
-import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import Button from "@material-ui/core/Button";
-import { homeStyle } from './Styles'
-
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import EditIcon from '@material-ui/icons/Edit'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete';
-
+// omat componentit
 import ConfirmDialog from "./ConfirmDialog";
-import { USER_DELETE } from "../../lib/gql/mutations";
-
 import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
-
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import helpers from "../../src/components/helpers";
-import AdminTableHeaders from "./table/AdminTableHeaders";
-import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
 import AdminTableBody from "./AdminTableBody";
 import DoneSnackbar from "./SnackBar";
 
@@ -55,6 +27,8 @@ class AdminHome extends React.PureComponent {
         this.getSelected = this.getSelected.bind(this)
         this.setAutoHide = this.setAutoHide.bind(this)
         this.getMessage = this.getMessage.bind(this)
+        // table shows filteredUsers array, need allUsers when remove searchfield
+        // all components uses allUsers array
         this.state = {
             client: props.client,
             email: undefined,
@@ -63,24 +37,28 @@ class AdminHome extends React.PureComponent {
             openAddUser: false,
             openSnack: false,
             allUsers: [],
+            filteredUsers: [],
             addedRow: null,
             selectedEmails: [],
             selected: [],
             message: '',
             autoHide: null,
             failed: false,
+            value: '',
         };
     }
 
     async componentDidMount() {
+        let data = null
         await this.state.client
             .query({
                 query: USERS_QUERY
             })
             .then(res => {
-                this.setState({ allUsers: res.data.allUsers })
+                data = res.data.allUsers
             })
             .catch(e => console.log(e))
+        this.setState({ allUsers: data, filteredUsers: data })
     }
 
     getSelected = (selected) => {
@@ -125,18 +103,18 @@ class AdminHome extends React.PureComponent {
         let temp = null;
         this.setState({ addedRow: added })
 
-        console.log('Added', this.state.addedRow, 'index', this.state.allUsers.length)
+        // console.log('Added', this.state.addedRow, 'index', this.state.allUsers.length)
 
         temp = [
             ...this.state.allUsers,
             added.user
         ]
-        this.setState({ allUsers: temp })
+        this.setState({ allUsers: temp, filteredUsers: temp, value: '' })
         //console.log('edit', temp)
     }
 
     //handle opens
-    handleOpenDelete = () => {
+    handleOpenConfirm = () => {
         this.setState({ openConfirm: true })
     };
 
@@ -154,11 +132,43 @@ class AdminHome extends React.PureComponent {
         let data = null
         await helpers.deleteUser(this.state.selected, this.state.client);
         data = await helpers.deleteRows(this.state.selected, this.state.allUsers)
-        this.setState({ openConfirm: false, allUsers: data, autoHide: 6000 })
+        this.setState({ openConfirm: false, allUsers: data, autoHide: 6000, filteredUsers: data, value: '' })
         this.handleOpenSnack()
     }
 
 
+    handleFilter = (e) => {
+        let value = e.target.value
+        let newlist = []
+        let newlistEmails = []
+        let newlistId = []
+        let currentList = this.state.allUsers
+        const noData = [
+            { email: 'No results found', id: 'No results found', createdAt: 'No results found' },
+
+        ];
+
+        newlistEmails = currentList.filter(filter => {
+            return filter.email.includes(value)
+        })
+        newlistId = currentList.filter(filter => {
+            return filter.id.includes(value)
+        })
+
+        //console.log(newlistEmails.length)
+        newlistEmails.length === 0 && newlistId.length === 0
+            ? newlist = [
+                ...noData
+            ]
+            : newlist = [
+                ...newlistEmails,
+                ...newlistId
+            ]
+        //      console.log(newlist)
+
+        this.setState({ filteredUsers: newlist, value: value })
+        //console.log(this.state.filteredUsers)
+    }
 
 
     render() {
@@ -171,16 +181,28 @@ class AdminHome extends React.PureComponent {
             openAddUser,
             selected,
             message,
-            autoHide
+            autoHide,
+            filteredUsers,
+            value
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
+                <TextField
+                    aria-label="search field"
+                    type="text"
+                    fullWidth
+                    label='Search...'
+                    style={{ backgroundColor: '#3c7c9e' }}
+                    variant={'filled'}
+                    onChange={this.handleFilter}
+                    value={value} />
+
                 <AdminTableBody
-                    allUsers={allUsers}
-                    handleOpenDelete={this.handleOpenDelete}
+                    allUsers={filteredUsers}
+                    handleOpenConfirm={this.handleOpenConfirm}
                     handleOpenAddUser={this.handleOpenAddUser}
                     handleOpenPwReset={this.handleOpenPwReset}
                     classes={classes}

@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { RemoveRedEye } from '@material-ui/icons';
-
 import { withStyles, Button, TextField, InputAdornment, IconButton, Grid } from '@material-ui/core';
 import { withApollo } from 'react-apollo';
+
 import { ADMIN_RESET_PW, CURRENTUSER_UPDATE_PW } from '../../lib/gql/mutations';
-import Snackbar from './SnackBar';
-import DoneSnackbar from './SnackBar';
 import helpers from '../../src/components/helpers';
 import { dialogResetPwstyle } from './Styles';
 
@@ -191,14 +188,14 @@ function DialogResetPw(props) {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.handleClose} color="primary" disabled={buttonDisabled}>
+                <Button onClick={props.handleClose} color="primary" >
                     <a className={classes.buttonDialogTextNo}>Cancel</a>
                 </Button>
                 {props.userType === 'ADMIN'
-                    ? <Button onClick={handlePwReset} color="primary" disabled={buttonDisabled}>
+                    ? <Button onClick={handlePwReset} color="primary" >
                         <a className={classes.buttonDialogTextYes}>Reset pasword</a>
                     </Button>
-                    : <Button onClick={handleChangePw} color="primary" disabled={buttonDisabled}>
+                    : <Button onClick={handleChangePw} color="primary">
                         <a className={classes.buttonDialogTextYes}>Reset pasword</a>
                     </Button>}
             </DialogActions>

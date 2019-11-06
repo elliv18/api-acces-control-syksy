@@ -1,35 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { RemoveRedEye, GestureTwoTone } from '@material-ui/icons';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Select, InputLabel, Typography, Container, FormControl } from '@material-ui/core';
 import { withApollo } from 'react-apollo';
-import { ADMIN_RESET_PW, ADD_USER } from '../../lib/gql/mutations';
-import DoneSnackbar from './SnackBar';
+import { ADD_USER } from '../../lib/gql/mutations';
 
 import { addUserStyle } from './Styles'
+import { USERS_QUERY } from '../../lib/gql/queries';
 
 
 function DialogAddUser(props) {
     const [isMasked, setMask] = React.useState(true);
     const [pw, setPw] = React.useState(null)
-    const [openSnack, setOpenSnack] = React.useState(props.openSnack)
     const [buttonDisabled, setButtonDisabled] = React.useState(props.openSnack)
     const [userType, setUserType] = React.useState('')
     const [email, setEmail] = React.useState(null)
-    const [message, setMessage] = React.useState('')
-    const [autoHide, setAutoHide] = React.useState(null)
-
-
 
     const { classes } = props
-    let users = null;
 
     // RESET PW LOGIC
     const handleAddUser = async () => {
@@ -41,7 +34,8 @@ function DialogAddUser(props) {
                     email: email,
                     password: pw
                 },
-                mutation: ADD_USER
+                mutation: ADD_USER,
+                refetchQueries: [{ query: USERS_QUERY }]
             })
             .then(res => {
                 //  console.log(res)
@@ -55,8 +49,8 @@ function DialogAddUser(props) {
                 console.log(e)
                 let temp = e.message.replace("GraphQL error:", "").trim()
                 // email exist error too long
-                temp.length > 20 ? props.getMessage('Email alreydy exist!') : props.getMessage(temp)
-                setAutoHide(null)
+                props.getMessage(temp)
+                props.setAutoHide(null)
             })
     };
 
@@ -80,7 +74,6 @@ function DialogAddUser(props) {
         setUserType(event.target.value)
     };
 
-    // console.log(userType)
 
 
     return (
