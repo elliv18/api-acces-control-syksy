@@ -54,18 +54,30 @@ export const homeStyle = theme => ({
 });
 
 export const homeStyleUser = theme => ({
-
+    grid: {
+        width: '90%',
+        // backgroundColor: theme.palette.primary.main
+    },
 
     paper: {
         marginTop: 0,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        margin: 50,
+        width: '80%',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        maxHeight: '620px',
+        overflow: 'auto',
+        paddingBottom: '10px',
+        backgroundColor: theme.palette.secondary.main
+
+
     },
     card: {
         margin: 10,
-        width: '60%',
+        width: '90%',
+        borderRadius: 10
         //background: 'lightGray',
         // borderStyle: 'solid',
         //borderColor: 'black'
@@ -74,7 +86,9 @@ export const homeStyleUser = theme => ({
     title1: {
         textAlign: 'center',
         backgroundColor: "#a8a0a099",
-        fontSize: 20
+        fontSize: 20,
+        borderRadius: 10
+
     },
     title2: {
         padding: 10
@@ -150,6 +164,20 @@ export const AdminHomeStyles = theme => ({
                 display: 'none',
             },
         },
+    },
+
+    '@global': {
+        '*::-webkit-scrollbar': {
+            width: '0.2em'
+        },
+        '*::-webkit-scrollbar-track': {
+            '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)',
+            backgroundColor: theme.palette.secondary.main
+        },
+        '*::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.primary.main,
+            // outline: '1px solid slategrey'
+        }
     }
 
 });
@@ -168,7 +196,7 @@ export const loginStyles = theme => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.secondary.main
     },
     form: {
         width: "100%", // Fix IE 11 issue.
@@ -186,7 +214,7 @@ export const loginStyles = theme => ({
 export const signUpStyles = theme => ({
     "@global": {
         body: {
-            backgroundColor: theme.palette.common.white
+            backgroundColor: theme.palette.secondary.main
         }
     },
     paper: {
@@ -326,3 +354,69 @@ export const Confirmstyle = theme => ({
         color: "red",
     },
 });
+
+export const DialogUserAskNewApisStyle = theme => ({
+
+    dialogContent: {
+        backgroundColor: theme.palette.secondary.main,
+        width: 530,
+        height: 500,
+    },
+    expansionPanelSummary: {
+        width: 490,
+        marginTop: 10,
+        borderRadius: 15
+
+        // marginBottom: 10
+    },
+    expansionPanel: {
+        borderRadius: 10
+    },
+    dialogActions: {
+        width: 530,
+        justifyContent: 'center',
+        backgroundColor: 'lightGray'
+    },
+    buttonYes: {
+        color: 'green'
+    },
+    buttonNo: {
+        color: 'red'
+    },
+    dialogTitle: {
+        width: 530,
+        height: 70,
+
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white
+    },
+
+    divider: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderBottomStyle: 'solid',
+        borderWidth: '0.5px',
+        borderColor: theme.palette.secondary.main
+    },
+    textField: {
+        color: 'white'
+    },
+    padding: {
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
+    '@global': {
+        '*::-webkit-scrollbar': {
+            width: '0.2em'
+        },
+        '*::-webkit-scrollbar-track': {
+            '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)',
+            backgroundColor: theme.palette.secondary.main
+        },
+        '*::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.primary.main,
+            // outline: '1px solid slategrey'
+        }
+    }
+})
+

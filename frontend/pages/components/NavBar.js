@@ -131,16 +131,21 @@ class NavBar extends React.PureComponent {
                                 <Typography variant="h6" className={classes.title}>
                                     Welcome {currentUser ? currentUser.email : null}
                                 </Typography>
-                                <div style={{ flexGrow: 1, fontSize: '20px' }}>
-                                    {this.state.switch === 'USERS'
-                                        ? "USERS" : null}
-                                    <Switch
-                                        value={this.state.switch}
-                                        onChange={this.handleChangeSwitch}
-                                    />
-                                    {this.state.switch === 'APIS'
-                                        ? "APIS" : null}
-                                </div>
+
+                                {//Näytetään vain adminille switch Users/apis
+                                    currentUser ? currentUser.userType === 'ADMIN' ?
+                                        <div style={{ flexGrow: 1, fontSize: '20px' }}>
+                                            {this.state.switch === 'USERS'
+                                                ? "USERS" : null}
+                                            <Switch
+                                                value={this.state.switch}
+                                                onChange={this.handleChangeSwitch}
+                                            />
+                                            {this.state.switch === 'APIS'
+                                                ? "APIS" : null}
+                                        </div>
+                                        : null
+                                        : null}
                                 <IconButton
                                     color="inherit"
                                     onClick={this.handleClickOpenMenu}

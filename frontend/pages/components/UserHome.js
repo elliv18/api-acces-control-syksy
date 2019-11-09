@@ -1,10 +1,12 @@
 import React from "react";
 import { withApollo } from "react-apollo";
-import { Paper } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Typography from '@material-ui/core/Typography';
 import { homeStyleUser } from './Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
+import AddIcon from '@material-ui/icons/Add'
+import DialogUserAskNewApis from "./DialogUserAskNewApis";
 
 class HomeUser extends React.PureComponent {
     constructor(props) {
@@ -12,7 +14,8 @@ class HomeUser extends React.PureComponent {
 
         this.state = {
             client: props.client,
-            apiList: []
+            apiList: [],
+            openNewApis: false
         };
     }
 
@@ -27,13 +30,35 @@ class HomeUser extends React.PureComponent {
             .catch(e => console.log(e))
     }
 
+    handleOpenNewApis = () => {
+        this.setState({ openNewApis: true })
+    }
+    handleClose = () => {
+        this.setState({ openNewApis: false })
+    }
+
     render() {
-        const { apiList } = this.state;
+        const { apiList, openNewApis, client } = this.state;
         const { classes } = this.props;
 
         return (
-            <div className={classes.paper}>
-                <h1>Avaible apis</h1> ,
+            <Paper className={classes.paper} elevation={7}>
+                <Grid container spacing={0} className={classes.grid}>
+                    <Grid item xs={6}>
+                        <h1 >Your apis: </h1>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div style={{ textAlign: 'right' }}>
+                            <Tooltip title="Get new apis">
+                                <IconButton
+                                    onClick={this.handleOpenNewApis}
+                                >
+                                    <AddIcon style={{ color: 'green', height: 50, width: 50 }} />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                    </Grid>
+                </Grid>
 
                 {apiList.map((row, index) => {
                     //    console.log('row', row)
@@ -51,10 +76,31 @@ class HomeUser extends React.PureComponent {
                         </Paper>
                     )
                 })}
-            </div>
+
+                <DialogUserAskNewApis
+                    open={openNewApis}
+                    handleClose={this.handleClose}
+                    apiList={apiList}
+                    client={client}
+                />
+            </Paper>
         )
 
     }
 }
 
 export default withStyles(homeStyleUser)(withApollo(HomeUser));
+
+/*
+<Grid container spacing={0} style={{ width: '60%' }}>
+                    <Grid item xs={12}>
+                        <h1 className={classes.paper}>Your apis: </h1>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Paper className={classes.paper}>xs=6</Paper>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Paper className={classes.paper}>xs=6</Paper>
+                    </Grid>
+
+                </Grid>*/
