@@ -1,10 +1,11 @@
 import React from "react";
 import { withApollo } from "react-apollo";
-import { Paper } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Typography from '@material-ui/core/Typography';
 import { homeStyleUser } from './Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
+import AddIcon from '@material-ui/icons/Add'
 
 class HomeUser extends React.PureComponent {
     constructor(props) {
@@ -33,7 +34,21 @@ class HomeUser extends React.PureComponent {
 
         return (
             <div className={classes.paper}>
-                <h1>Avaible apis</h1> ,
+                <Grid container spacing={0} style={{ width: '60%', }}>
+
+                    <Grid item xs={6}>
+                        <h1 >Your apis: </h1>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div style={{ textAlign: 'right' }}>
+                            <Tooltip title="Get new apis">
+                                <IconButton>
+                                    <AddIcon style={{ color: 'green', height: 50, width: 50 }} />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                    </Grid>
+                </Grid>
 
                 {apiList.map((row, index) => {
                     //    console.log('row', row)
@@ -58,3 +73,17 @@ class HomeUser extends React.PureComponent {
 }
 
 export default withStyles(homeStyleUser)(withApollo(HomeUser));
+
+/*
+<Grid container spacing={0} style={{ width: '60%' }}>
+                    <Grid item xs={12}>
+                        <h1 className={classes.paper}>Your apis: </h1>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Paper className={classes.paper}>xs=6</Paper>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Paper className={classes.paper}>xs=6</Paper>
+                    </Grid>
+
+                </Grid>*/
