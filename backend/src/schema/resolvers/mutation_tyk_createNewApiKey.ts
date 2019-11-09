@@ -13,7 +13,6 @@ export default {
     createNewApiKey: async (obj, { input }, { currentUser }) => {
       if (!DEBUG) {
         mustBeLoggedIn(currentUser);
-        mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
 
         logger.log(
           "info",
