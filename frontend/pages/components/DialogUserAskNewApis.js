@@ -63,6 +63,7 @@ function DialogUserAskNewApis(props) {
                     return (
                         <div key={index} >
                             <ExpansionPanel
+                                className={classes.expansionPanel}
                                 square expanded={expanded === 'panel' + index}
                                 onChange={handleChange('panel' + index)}
                             >

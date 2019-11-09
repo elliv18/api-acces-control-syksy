@@ -54,7 +54,10 @@ export const homeStyle = theme => ({
 });
 
 export const homeStyleUser = theme => ({
-
+    grid: {
+        width: '60%',
+        // backgroundColor: theme.palette.primary.main
+    },
 
     paper: {
         marginTop: 0,
@@ -66,6 +69,7 @@ export const homeStyleUser = theme => ({
     card: {
         margin: 10,
         width: '60%',
+        borderRadius: 10
         //background: 'lightGray',
         // borderStyle: 'solid',
         //borderColor: 'black'
@@ -74,7 +78,9 @@ export const homeStyleUser = theme => ({
     title1: {
         textAlign: 'center',
         backgroundColor: "#a8a0a099",
-        fontSize: 20
+        fontSize: 20,
+        borderRadius: 10
+
     },
     title2: {
         padding: 10
@@ -168,7 +174,7 @@ export const loginStyles = theme => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.secondary.main
     },
     form: {
         width: "100%", // Fix IE 11 issue.
@@ -186,7 +192,7 @@ export const loginStyles = theme => ({
 export const signUpStyles = theme => ({
     "@global": {
         body: {
-            backgroundColor: theme.palette.common.white
+            backgroundColor: theme.palette.secondary.main
         }
     },
     paper: {
@@ -332,12 +338,17 @@ export const DialogUserAskNewApisStyle = theme => ({
     dialogContent: {
         backgroundColor: theme.palette.secondary.main,
         width: 530,
-        height: 500
+        height: 500,
     },
     expansionPanelSummary: {
         width: 490,
-        marginTop: 10
+        marginTop: 10,
+        borderRadius: 15
+
         // marginBottom: 10
+    },
+    expansionPanel: {
+        borderRadius: 10
     },
     dialogActions: {
         justifyContent: 'center',
@@ -364,5 +375,19 @@ export const DialogUserAskNewApisStyle = theme => ({
     padding: {
         paddingTop: 10,
         paddingBottom: 10,
+    },
+    '@global': {
+        '*::-webkit-scrollbar': {
+            width: '0.2em'
+        },
+        '*::-webkit-scrollbar-track': {
+            '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)',
+            backgroundColor: theme.palette.secondary.main
+        },
+        '*::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.primary.main,
+            // outline: '1px solid slategrey'
+        }
     }
 })
+

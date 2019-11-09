@@ -43,8 +43,7 @@ class HomeUser extends React.PureComponent {
 
         return (
             <div className={classes.paper}>
-                <Grid container spacing={0} style={{ width: '60%', }}>
-
+                <Grid container spacing={0} className={classes.grid}>
                     <Grid item xs={6}>
                         <h1 >Your apis: </h1>
                     </Grid>
