@@ -29,54 +29,34 @@ export default {
         "x-tyk-authorization": TYK_GW_SECRET
       };
 
+      // get apis data and make body field
+
       var access_rights = {};
 
-      /*  Example input: array of APIs that each can have multiple endpoints each with multiple methods
-            
-                   access: [
-                    {
-                      id: "1", name: "api 1", urls:                                     // API 1
-                      [
-                        {
-                        url: "/todos(/.*)?", methods: ["GET", "PUT", "DELETE"]          // API 1 url 1
-                        },
-                        {
-                        url: "/users(/.*)?", methods: ["GET", "POST"]                   // API 1 url 2
-                          }
-                      ]
-                    }, 
-                    {
-                      id: "2", name: "api 2", urls:                                     // API 2
-                      {
-                        url: "url 2", methods: ["GET", "PUT"]                           // API 2 url 1
-                      }
-                    }
-                  ]
-            
-            
-            
-                  */
+      // Map not work, it needs nested await... aka. await hell...
+      for (var i = 0; i < input.api_keys.length; i++) {
+        const api_data = await prisma.api({ api_id: input.api_keys[i] });
+        const urls_data = await prisma
+          .api({ api_id: input.api_keys[i] })
+          .urls();
 
-      input.access.map(api => {
-        var apiTemp = {
-          api_id: api.id,
-          api_name: api.name,
+        var temp = {
+          api_id: api_data.api_id,
+          api_name: api_data.api_name,
           allowed_urls: []
         };
-        api.urls.map(url => {
-          var urlTemp = {
-            // Temporary helper to parse single url with all its methods
 
-            url: url.url,
-            methods: []
+        urls_data.map(x => {
+          var temp2 = {
+            url: x.url,
+            methods: JSON.parse(x.methods) // needs to be array!
           };
-          url.methods.map(method => {
-            urlTemp.methods.push(method);
-          });
-          apiTemp.allowed_urls.push(urlTemp);
+
+          temp.allowed_urls.push(temp2);
         });
-        access_rights[api.id] = apiTemp;
-      });
+
+        access_rights[input.api_keys[i]] = temp;
+      }
 
       // jsonstring only for debugging
       const jsonString = JSON.stringify(access_rights);
@@ -96,9 +76,21 @@ export default {
 
       const data = await res.json(); // data is object
       console.log(data);
-      // TODO key and hash save prisma?
 
-      return { key: data.key, keyHash: data.key_hash };
+      console.log(currentUser.id);
+      console.log(data.key_hash);
+
+      // adding hash to current user table line
+      await prisma.updateUser({
+        data: {
+          api_hash: data.key_hash
+        },
+        where: {
+          id: currentUser.id
+        }
+      });
+
+      return { hash: data.key_hash };
     }
   }
 };
