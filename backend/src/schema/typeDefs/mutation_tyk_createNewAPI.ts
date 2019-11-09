@@ -5,7 +5,7 @@ export default `
 
     input Urls {
         url: String
-        methods: String
+        methods: [String]
     }
 
     input CreateNewAPIInput {
