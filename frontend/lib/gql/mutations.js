@@ -106,3 +106,28 @@ export const CREATE_NEW_APIKEY = gql`
   }
 `;
 
+//************************ CREATE NEW API ****************** */
+export const CREATE_NEW_API = gql`
+
+  mutation createApiMutation(
+    $name: String!,
+    $url_path: String!,
+    $url_target: String!,
+    $urls: [Urls]!,
+    ) 
+  {
+    createNewAPI(input: {
+      name: $name,
+      url_path: $url_path,
+      url_target: $url_target,
+      urls: $urls
+     } )
+    {
+      key
+    }
+  }
+`;
+
+
+
+

@@ -11,16 +11,16 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 //OMAT
-import { AdminHomeStyles } from './Styles'
-import helpers from "../../src/components/helpers";
-import AdminTableHeaders from "./table/AdminTableHeaders";
-import { StyledTableCell, desc, stableSort, getSorting } from './table/tableFunctions'
+import { AdminHomeStyles } from '../Styles'
+import helpers from "../../../src/components/helpers";
+import AdminUsersTableHeaders from "./AdminUsersTableHeaders";
+import { StyledTableCell, desc, stableSort, getSorting } from './tableFunctions'
 
 var moment = require('moment');
 
 
 
-function AdminTableBody(props) {
+function AdminUsersTableBody(props) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('email');
     const [selected, setSelected] = React.useState([]);
@@ -74,7 +74,6 @@ function AdminTableBody(props) {
 
 
 
-
     const isSelected = id => selected.indexOf(id) !== -1;
     //********TABLE SORTING & SELECTING ENDS */
 
@@ -85,7 +84,7 @@ function AdminTableBody(props) {
             aria-label="users table"
             stickyHeader
         >
-            <AdminTableHeaders
+            <AdminUsersTableHeaders
                 // getSelected={this.getSelected}
                 selected={selected}
                 classes={classes}
@@ -197,4 +196,4 @@ function AdminTableBody(props) {
         </Table >
     )
 }
-export default withStyles(AdminHomeStyles)(AdminTableBody)
+export default withStyles(AdminHomeStyles)(AdminUsersTableBody)

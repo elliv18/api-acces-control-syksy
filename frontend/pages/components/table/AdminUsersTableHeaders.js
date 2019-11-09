@@ -23,7 +23,7 @@ const headCells = [
 
 ];
 
-function AdminTableHeaders(props) {
+function AdminUsersTableHeaders(props) {
     const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = property => event => {
         property !== 'actions' ? onRequestSort(event, property) : null
@@ -99,4 +99,4 @@ function AdminTableHeaders(props) {
     );
 }
 
-export default AdminTableHeaders
+export default AdminUsersTableHeaders

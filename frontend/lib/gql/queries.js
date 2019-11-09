@@ -5,7 +5,7 @@ export const USERS_QUERY = gql`
     allUsers {
       id,
       email,
-      apiKey,
+      api_hash,
       userType,
       createdAt
     }

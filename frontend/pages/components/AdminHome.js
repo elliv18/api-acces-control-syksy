@@ -1,6 +1,6 @@
 import React from "react";
 import { withApollo } from "react-apollo";
-import { USERS_QUERY } from "../../lib/gql/queries";
+import { USERS_QUERY, API_LIST_QUERY } from "../../lib/gql/queries";
 import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, TextField } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 // omat componentit
@@ -9,8 +9,10 @@ import { AdminHomeStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
 import helpers from "../../src/components/helpers";
-import AdminTableBody from "./AdminTableBody";
+import AdminUsersTableBody from "./table/AdminUsersTableBody";
 import DoneSnackbar from "./SnackBar";
+import AdminApiTableBody from "./table/AdminApiTableBody";
+import DialogAddApi from "./DialogAddApi";
 
 var moment = require('moment');
 
@@ -27,6 +29,7 @@ class AdminHome extends React.PureComponent {
         this.getSelected = this.getSelected.bind(this)
         this.setAutoHide = this.setAutoHide.bind(this)
         this.getMessage = this.getMessage.bind(this)
+        this.handleOpenAddApi = this.handleOpenAddApi.bind(this)
         // table shows filteredUsers array, need allUsers when remove searchfield
         // all components uses allUsers array
         this.state = {
@@ -45,10 +48,13 @@ class AdminHome extends React.PureComponent {
             autoHide: null,
             failed: false,
             value: '',
+            apiList: [],
+            openAddApi: false
         };
     }
 
     async componentDidMount() {
+        // USERS
         let data = null
         await this.state.client
             .query({
@@ -56,9 +62,21 @@ class AdminHome extends React.PureComponent {
             })
             .then(res => {
                 data = res.data.allUsers
+                console.log(data)
             })
             .catch(e => console.log(e))
         this.setState({ allUsers: data, filteredUsers: data })
+
+        // APILIST
+        await this.state.client
+            .query({
+                query: API_LIST_QUERY
+            })
+            .then(res => {
+                // console.log(res)
+                this.setState({ apiList: res.data.getApiList })
+            })
+            .catch(e => console.log(e))
     }
 
     getSelected = (selected) => {
@@ -94,7 +112,7 @@ class AdminHome extends React.PureComponent {
     // Dialog state handlers
     //Basic close
     handleClose = () => {
-        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false })
+        this.setState({ openConfirm: false, openPwReset: false, openAddUser: false, openAddApi: false })
         //this.getMessage()
         console.log('Close')
     };
@@ -136,6 +154,9 @@ class AdminHome extends React.PureComponent {
         this.handleOpenSnack()
     }
 
+    handleOpenAddApi = () => {
+        this.setState({ openAddApi: true })
+    }
 
     handleFilter = (e) => {
         let value = e.target.value
@@ -183,32 +204,45 @@ class AdminHome extends React.PureComponent {
             message,
             autoHide,
             filteredUsers,
-            value
+            value,
+            apiList,
+            openAddApi
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
-                <TextField
-                    aria-label="search field"
-                    type="text"
-                    fullWidth
-                    label='Search...'
-                    style={{ backgroundColor: '#3c7c9e' }}
-                    variant={'filled'}
-                    onChange={this.handleFilter}
-                    value={value} />
+                <div style={{ minWidth: 722 }}>
+                    <TextField
+                        aria-label="search field"
+                        type="text"
+                        fullWidth
+                        label='Search...'
+                        style={{ backgroundColor: '#3c7c9e' }}
+                        variant={'filled'}
+                        onChange={this.handleFilter}
+                        value={value} />
+                </div>
 
-                <AdminTableBody
-                    allUsers={filteredUsers}
-                    handleOpenConfirm={this.handleOpenConfirm}
-                    handleOpenAddUser={this.handleOpenAddUser}
-                    handleOpenPwReset={this.handleOpenPwReset}
-                    classes={classes}
-                    getSelected={this.getSelected}
-                    client={this.state.client}
-                />
+                {this.props.switchState === 'USERS'
+                    ? <AdminUsersTableBody
+                        allUsers={filteredUsers}
+                        handleOpenConfirm={this.handleOpenConfirm}
+                        handleOpenAddUser={this.handleOpenAddUser}
+                        handleOpenPwReset={this.handleOpenPwReset}
+                        classes={classes}
+                        getSelected={this.getSelected}
+                        client={this.state.client}
+                    />
+                    : <AdminApiTableBody
+                        handleOpenAddApi={this.handleOpenAddApi}
+                        apiList={apiList}
+                        getSelected={this.getSelected}
+
+                    />
+
+                }
 
                 <ConfirmDialog
                     open={openConfirm}
@@ -228,6 +262,11 @@ class AdminHome extends React.PureComponent {
                     getMessage={this.getMessage}
                     userType={this.props.userType}
                     title={"Reset user password?"}
+                />
+
+                <DialogAddApi
+                    open={openAddApi}
+                    handleClose={this.handleClose}
                 />
 
                 <DialogAddUser
