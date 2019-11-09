@@ -8,6 +8,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import { DialogUserAskNewApisStyle } from './Styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { CREATE_NEW_API_KEY } from '../../lib/gql/mutations';
 
 
 function DialogUserAskNewApis(props) {
@@ -56,10 +57,24 @@ function DialogUserAskNewApis(props) {
         setValue(value)
         setShowData(newlist)
     }
+
+    const handleGetApiKey = async () => {
+        console.log(checked)
+        await props.client
+            .mutate({
+                variables: {
+                    api_keys: checked
+                },
+                mutation: CREATE_NEW_API_KEY
+            }).then(res => console.log(res))
+            .catch(e => console.log(e))
+    }
+
     const noData = [
         { name: 'No results found' },
     ];
 
+    // gets correct data
     const data = showData.length > 0 ? showData :
         showData.length === 0 && searched ? noData : props.apiList
     return (
@@ -171,7 +186,7 @@ function DialogUserAskNewApis(props) {
                     className={classes.buttonYes}
                     variant="outlined"
                     onClick={() => {
-                        handleClick()
+                        handleGetApiKey()
                         props.handleClose()
                     }}
                 >

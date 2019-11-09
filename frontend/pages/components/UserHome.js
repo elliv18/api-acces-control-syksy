@@ -38,7 +38,7 @@ class HomeUser extends React.PureComponent {
     }
 
     render() {
-        const { apiList, openNewApis } = this.state;
+        const { apiList, openNewApis, client } = this.state;
         const { classes } = this.props;
 
         return (
@@ -81,6 +81,7 @@ class HomeUser extends React.PureComponent {
                     open={openNewApis}
                     handleClose={this.handleClose}
                     apiList={apiList}
+                    client={client}
                 />
             </Paper>
         )
