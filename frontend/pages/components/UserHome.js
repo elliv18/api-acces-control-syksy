@@ -42,7 +42,7 @@ class HomeUser extends React.PureComponent {
         const { classes } = this.props;
 
         return (
-            <div className={classes.paper}>
+            <Paper className={classes.paper} elevation={7}>
                 <Grid container spacing={0} className={classes.grid}>
                     <Grid item xs={6}>
                         <h1 >Your apis: </h1>
@@ -82,7 +82,7 @@ class HomeUser extends React.PureComponent {
                     handleClose={this.handleClose}
                     apiList={apiList}
                 />
-            </div>
+            </Paper>
         )
 
     }

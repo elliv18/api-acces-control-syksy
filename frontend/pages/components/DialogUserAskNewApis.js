@@ -1,11 +1,8 @@
+import React, { useEffect } from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { withStyles, Button, DialogContent, Typography, Checkbox, IconButton, Grid, FormControlLabel, Divider } from '@material-ui/core';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { withStyles, Button, DialogContent, Typography, Checkbox, Grid, FormControlLabel, TextField } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -15,9 +12,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 function DialogUserAskNewApis(props) {
     const { classes } = props
-    const [open, setOpen] = React.useState(false);
+    const [searched, setSearched] = React.useState(false);
     const [checked, setChecked] = React.useState([]);
     const [expanded, setExpanded] = React.useState('');
+    const [value, setValue] = React.useState('');
+    const [showData, setShowData] = React.useState([]);
+
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -38,7 +38,30 @@ function DialogUserAskNewApis(props) {
     const handleClick = () => {
         console.log(checked)
     };
+    const handleFilter = (e) => {
+        let value = e.target.value
+        let newlist = []
 
+        let currentList = props.apiList
+        value = value.toLowerCase()
+
+        newlist = currentList.filter(filter => {
+            if (filter.name) {
+                return filter.name.toLowerCase().includes(value)
+            }
+            //  console.log(filter.name)
+        })
+
+        setSearched(true)
+        setValue(value)
+        setShowData(newlist)
+    }
+    const noData = [
+        { name: 'No results found' },
+    ];
+
+    const data = showData.length > 0 ? showData :
+        showData.length === 0 && searched ? noData : props.apiList
     return (
         <Dialog
             open={props.open}
@@ -51,14 +74,33 @@ function DialogUserAskNewApis(props) {
                 id="alert-dialog-slide-title"
                 className={classes.dialogTitle}
             >
-                Select apis you want:
+                <Grid container>
+                    <Grid item xs={6}>
+                        <p style={{ marginTop: '5%', marginBottom: '5%' }}>Select apis you want:</p>
+                    </Grid>
+                    <Grid item xs={6} >
+                        <TextField
+                            aria-label="search field"
+                            type="text"
+                            margin="dense"
+                            fullWidth
+                            label='Search...'
+                            InputProps={{
+                                className: classes.textField
+                            }}
+                            variant={'outlined'}
+                            onChange={handleFilter}
+                            value={value} />
+                    </Grid>
+                </Grid>
             </DialogTitle>
 
             <DialogContent
                 className={classes.dialogContent}
             >
 
-                {props.apiList.map((row, index) => {
+
+                {data.map((row, index) => {
                     const labelId = `checkbox-list-label-${row.id}`;
                     return (
                         <div key={index} >
@@ -128,7 +170,10 @@ function DialogUserAskNewApis(props) {
                 <Button
                     className={classes.buttonYes}
                     variant="outlined"
-                    onClick={handleClick}
+                    onClick={() => {
+                        handleClick()
+                        props.handleClose()
+                    }}
                 >
                     Get apis
                 </Button>
@@ -136,7 +181,6 @@ function DialogUserAskNewApis(props) {
                     className={classes.buttonNo}
                     variant="outlined"
                     onClick={props.handleClose}
-                    autoFocus
                 >
                     Cancel
                 </Button>
@@ -147,26 +191,3 @@ function DialogUserAskNewApis(props) {
 
 
 export default withStyles(DialogUserAskNewApisStyle)(DialogUserAskNewApis)
-
-
-
-
-
-
-
-
-/*
- <List >
-                                            <ListItem>
-                                                <ListItemText
-                                                    primary={'Path:  ' + row.path} />
-                                            </ListItem>
-                                            <ListItem>
-                                                <ListItemText primary="Single-line item" />
-                                            </ListItem>
-                                        </List>
-
-
-
-*/
-

@@ -55,7 +55,7 @@ export const homeStyle = theme => ({
 
 export const homeStyleUser = theme => ({
     grid: {
-        width: '60%',
+        width: '90%',
         // backgroundColor: theme.palette.primary.main
     },
 
@@ -64,11 +64,19 @@ export const homeStyleUser = theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        margin: 50,
+        width: '80%',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        maxHeight: '620px',
+        overflow: 'auto',
+        paddingBottom: '10px',
+        backgroundColor: theme.palette.secondary.main
+
+
     },
     card: {
         margin: 10,
-        width: '60%',
+        width: '90%',
         borderRadius: 10
         //background: 'lightGray',
         // borderStyle: 'solid',
@@ -156,6 +164,20 @@ export const AdminHomeStyles = theme => ({
                 display: 'none',
             },
         },
+    },
+
+    '@global': {
+        '*::-webkit-scrollbar': {
+            width: '0.2em'
+        },
+        '*::-webkit-scrollbar-track': {
+            '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)',
+            backgroundColor: theme.palette.secondary.main
+        },
+        '*::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.primary.main,
+            // outline: '1px solid slategrey'
+        }
     }
 
 });
@@ -351,6 +373,7 @@ export const DialogUserAskNewApisStyle = theme => ({
         borderRadius: 10
     },
     dialogActions: {
+        width: 530,
         justifyContent: 'center',
         backgroundColor: 'lightGray'
     },
@@ -361,6 +384,9 @@ export const DialogUserAskNewApisStyle = theme => ({
         color: 'red'
     },
     dialogTitle: {
+        width: 530,
+        height: 70,
+
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white
     },
@@ -371,6 +397,9 @@ export const DialogUserAskNewApisStyle = theme => ({
         borderBottomStyle: 'solid',
         borderWidth: '0.5px',
         borderColor: theme.palette.secondary.main
+    },
+    textField: {
+        color: 'white'
     },
     padding: {
         paddingTop: 10,
