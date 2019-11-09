@@ -81,14 +81,23 @@ export default {
 
       const urlsTemp = [];
 
-      input.urls.map(x => {
+      for (var i = 0; i < input.urls.length; i++) {
+        var temp = {
+          url: input.urls[i].url,
+          methods: await JSON.stringify(input.urls[i].methods)
+        };
+
+        urlsTemp.push(temp);
+      }
+
+      /*input.urls.map(x => {
         var temp = {
           url: x.url,
           methods: x.methods
         };
 
         urlsTemp.push(temp);
-      });
+      });*/
 
       await prisma.createApi({
         api_id: api_id_uuid,
