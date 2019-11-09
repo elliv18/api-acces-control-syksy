@@ -326,3 +326,43 @@ export const Confirmstyle = theme => ({
         color: "red",
     },
 });
+
+export const DialogUserAskNewApisStyle = theme => ({
+
+    dialogContent: {
+        backgroundColor: theme.palette.secondary.main,
+        width: 530,
+        height: 500
+    },
+    expansionPanelSummary: {
+        width: 490,
+        marginTop: 10
+        // marginBottom: 10
+    },
+    dialogActions: {
+        justifyContent: 'center',
+        backgroundColor: 'lightGray'
+    },
+    buttonYes: {
+        color: 'green'
+    },
+    buttonNo: {
+        color: 'red'
+    },
+    dialogTitle: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white
+    },
+
+    divider: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderBottomStyle: 'solid',
+        borderWidth: '0.5px',
+        borderColor: theme.palette.secondary.main
+    },
+    padding: {
+        paddingTop: 10,
+        paddingBottom: 10,
+    }
+})

@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { homeStyleUser } from './Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
 import AddIcon from '@material-ui/icons/Add'
+import DialogUserAskNewApis from "./DialogUserAskNewApis";
 
 class HomeUser extends React.PureComponent {
     constructor(props) {
@@ -13,7 +14,8 @@ class HomeUser extends React.PureComponent {
 
         this.state = {
             client: props.client,
-            apiList: []
+            apiList: [],
+            openNewApis: false
         };
     }
 
@@ -28,8 +30,15 @@ class HomeUser extends React.PureComponent {
             .catch(e => console.log(e))
     }
 
+    handleOpenNewApis = () => {
+        this.setState({ openNewApis: true })
+    }
+    handleClose = () => {
+        this.setState({ openNewApis: false })
+    }
+
     render() {
-        const { apiList } = this.state;
+        const { apiList, openNewApis } = this.state;
         const { classes } = this.props;
 
         return (
@@ -42,7 +51,9 @@ class HomeUser extends React.PureComponent {
                     <Grid item xs={6}>
                         <div style={{ textAlign: 'right' }}>
                             <Tooltip title="Get new apis">
-                                <IconButton>
+                                <IconButton
+                                    onClick={this.handleOpenNewApis}
+                                >
                                     <AddIcon style={{ color: 'green', height: 50, width: 50 }} />
                                 </IconButton>
                             </Tooltip>
@@ -66,6 +77,12 @@ class HomeUser extends React.PureComponent {
                         </Paper>
                     )
                 })}
+
+                <DialogUserAskNewApis
+                    open={openNewApis}
+                    handleClose={this.handleClose}
+                    apiList={apiList}
+                />
             </div>
         )
 
