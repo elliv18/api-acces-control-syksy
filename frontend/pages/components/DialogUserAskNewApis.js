@@ -59,6 +59,10 @@ function DialogUserAskNewApis(props) {
     }
 
     const handleGetApiKey = async () => {
+        let temp = []
+        temp = checked.map(row => {
+            return ({ id: row })
+        })
         console.log(checked)
         await props.client
             .mutate({
@@ -66,8 +70,10 @@ function DialogUserAskNewApis(props) {
                     api_keys: checked
                 },
                 mutation: CREATE_NEW_API_KEY
-            }).then(res => console.log(res))
+            }).then(res => console.log(res.data.createNewApiKey))
             .catch(e => console.log(e))
+
+
     }
 
     const noData = [

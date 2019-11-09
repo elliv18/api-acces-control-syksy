@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add'
 
 import { addUserStyle } from './Styles'
 import { CREATE_NEW_API } from '../../lib/gql/mutations';
+import { API_LIST_QUERY } from '../../lib/gql/queries';
 
 
 function DialogAddApi(props) {
@@ -37,7 +38,9 @@ function DialogAddApi(props) {
                     url_target: api_target,
                     urls: urls
                 },
-                mutation: CREATE_NEW_API
+                mutation: CREATE_NEW_API,
+                refetchQueries: [{ query: API_LIST_QUERY }],
+
             })
             .then(res => console.log(res))
             .catch(e => console.log(e))
