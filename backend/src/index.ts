@@ -10,9 +10,13 @@ import {
 import { typeDefs, resolvers } from "./schema";
 import createRootAdmin from "./misc/rootAdmin";
 import logger from "./misc/logger";
+import cleanup_tyk from "./misc/cleanup_tyk";
 
 // Creating root admin if db is empty...
 createRootAdmin();
+
+// reset tyk apis
+cleanup_tyk();
 
 const server = new GraphQLServer({
   typeDefs,
