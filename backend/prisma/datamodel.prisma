@@ -19,7 +19,7 @@ type Api {
   api_id: String @unique
   api_name: String @unique
   api_root_url: String
-  urls: [Url]! @relation(name: "ApiUrls")
+  urls: [Url]! @relation(name: "ApiUrls" onDelete: CASCADE)
   users: [User]! @relation(name: "UserApis")
 }
 

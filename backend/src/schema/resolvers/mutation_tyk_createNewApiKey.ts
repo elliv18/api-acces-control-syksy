@@ -32,6 +32,9 @@ export default {
 
       var access_rights = {};
 
+      // linked apis id array to make right relations
+      var relations_api_ids = [];
+
       // Map not work, it needs nested await... aka. await hell...
       for (var i = 0; i < input.api_keys.length; i++) {
         const api_data = await prisma.api({ api_id: input.api_keys[i] });
@@ -55,17 +58,19 @@ export default {
         });
 
         access_rights[input.api_keys[i]] = temp;
+
+        relations_api_ids.push(api_data.id);
       }
 
       // jsonstring only for debugging
-      const jsonString = JSON.stringify(access_rights);
-      console.log("access_rights passed to gateway", jsonString);
+      //const jsonString = JSON.stringify(access_rights);
+      //console.log("access_rights passed to gateway", jsonString);
 
       const body = {
         access_rights: access_rights
       };
 
-      console.log(body);
+      //console.log(body);
 
       const res = await fetch(tykURL, {
         method: "POST",
@@ -74,10 +79,10 @@ export default {
       });
 
       const data = await res.json(); // data is object
-      console.log(data);
+      //console.log(data);
 
-      console.log(currentUser.id);
-      console.log(data.key_hash);
+      //console.log(currentUser.id);
+      //console.log(data.key_hash);
 
       // adding hash to current user table line
       await prisma.updateUser({
@@ -88,6 +93,22 @@ export default {
           id: currentUser.id
         }
       });
+
+      // adding relations
+      for (var i = 0; i < input.api_keys.length; i++) {
+        await prisma.updateUser({
+          data: {
+            apis: {
+              connect: {
+                api_id: input.api_keys[i]
+              }
+            }
+          },
+          where: {
+            id: currentUser.id
+          }
+        });
+      }
 
       return { hash: data.key_hash };
     }
