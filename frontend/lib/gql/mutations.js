@@ -82,6 +82,14 @@ export const CURRENTUSER = gql`
       id,
       email,
       userType
+      apis {
+        api_id,
+        api_name,
+        urls {
+          url,
+          methods
+        }
+    }
     }
   }
 `;

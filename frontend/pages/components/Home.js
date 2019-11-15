@@ -49,7 +49,9 @@ class Home extends React.PureComponent {
       return <AdminHome userType={userType} switchState={this.props.switchState} />
     }
     else if (userType === 'USER') {
-      return <UserHome />
+      return <UserHome
+        currentUser={this.props.currentUser}
+      />
     }
     else {
       return null

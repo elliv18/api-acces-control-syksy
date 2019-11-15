@@ -7,6 +7,12 @@ import { homeStyleUser } from './Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
 import AddIcon from '@material-ui/icons/Add'
 import DialogUserAskNewApis from "./DialogUserAskNewApis";
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import { DialogUserAskNewApisStyle } from './Styles';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 class HomeUser extends React.PureComponent {
     constructor(props) {
@@ -15,30 +21,27 @@ class HomeUser extends React.PureComponent {
         this.state = {
             client: props.client,
             apiList: [],
-            openNewApis: false
+            openNewApis: false,
+            expanded: ''
         };
     }
 
-    async componentDidMount() {
-        await this.state.client
-            .query({
-                query: API_LIST_QUERY
-            })
-            .then(res => {
-                this.setState({ apiList: res.data.getApiList })
-            })
-            .catch(e => console.log(e))
-    }
 
+    handleChange = panel => (event, newExpanded) => {
+        //setExpanded(newExpanded ? panel : false);
+        newExpanded ? this.setState({ expanded: panel }) : this.setState({ expanded: false })
+    };
     handleOpenNewApis = () => {
         this.setState({ openNewApis: true })
+        console.log('CU', this.props.currentUser)
+
     }
     handleClose = () => {
         this.setState({ openNewApis: false })
     }
 
     render() {
-        const { apiList, openNewApis, client } = this.state;
+        const { apiList, openNewApis, client, expanded } = this.state;
         const { classes } = this.props;
 
         return (
@@ -59,28 +62,74 @@ class HomeUser extends React.PureComponent {
                         </div>
                     </Grid>
                 </Grid>
+                {console.log(this.props.currentUser.apis)}
+                {
 
-                {apiList.map((row, index) => {
-                    //    console.log('row', row)
-                    return (
-                        <Paper elevation={10} className={classes.card} key={index}>
-                            <Typography className={classes.title1}>
-                                <b>{row.name}</b>
-                            </Typography>
-                            <Typography className={classes.title2}>
-                                <b>Path:</b>  {row.path}
-                            </Typography>
-                            <Typography className={classes.title2}>
-                                <b>Blah:</b>  blah blah
-                            </Typography>
-                        </Paper>
-                    )
-                })}
+                    this.props.currentUser.apis !== undefined ?
+                        this.props.currentUser.apis.map((row, index) => {
+                            //    console.log('row', ...row.urls)
+                            return (
+                                <div className={classes.expansionPanelDiv} key={index}>
+                                    <ExpansionPanel
+                                        className={classes.expansionPanel}
+
+                                        square expanded={expanded === 'panel' + index}
+                                        onChange={this.handleChange('panel' + index)}
+                                    >
+                                        <ExpansionPanelSummary
+                                            className={classes.expansionPanelSummary}
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-label="Expand"
+                                            aria-controls="additional-actions1-content"
+                                            id="additional-actions1-header"
+                                        >
+                                            <h3>{row.api_name}</h3>
+                                        </ExpansionPanelSummary>
+
+                                        <ExpansionPanelDetails>
+                                            <Grid container>
+                                                <Grid item xs={6} className={classes.padding}>
+                                                    <Typography>
+                                                        <b>Urls: </b>
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6} className={classes.padding}>
+                                                    <Typography>
+                                                        <b>Methods: </b>
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6}  >
+                                                    {row.urls.map(url => {
+                                                        return (
+                                                            <Typography key={url.url} className={classes.divider}>
+                                                                {url.url}
+                                                            </Typography>
+                                                        )
+                                                    })}
+                                                </Grid>
+
+                                                <Grid item xs={6} >
+                                                    {row.urls.map(url => {
+                                                        return (
+                                                            <Typography key={url.url} className={classes.divider}>
+                                                                {url.methods}
+                                                            </Typography>
+                                                        )
+                                                    })}
+                                                </Grid>
+                                            </Grid>
+                                        </ExpansionPanelDetails>
+                                    </ExpansionPanel>
+                                </div>
+                            )
+                        })
+                        : null
+                }
+
 
                 <DialogUserAskNewApis
                     open={openNewApis}
                     handleClose={this.handleClose}
-                    apiList={apiList}
                     client={client}
                 />
             </Paper>

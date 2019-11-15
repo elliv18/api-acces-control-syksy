@@ -92,7 +92,29 @@ export const homeStyleUser = theme => ({
     },
     title2: {
         padding: 10
-    }
+    },
+    expansionPanelSummary: {
+        width: '100%',
+        marginTop: 10,
+        borderRadius: 15
+    },
+    expansionPanelDiv: {
+        width: '90%'
+    },
+    expansionPanel: {
+        borderRadius: 10
+    },
+    divider: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderBottomStyle: 'solid',
+        borderWidth: '0.5px',
+        borderColor: theme.palette.secondary.main
+    },
+    padding: {
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
 
 });
 export const AdminHomeStyles = theme => ({

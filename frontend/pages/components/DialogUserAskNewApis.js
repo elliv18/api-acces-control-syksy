@@ -9,6 +9,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import { DialogUserAskNewApisStyle } from './Styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CREATE_NEW_API_KEY } from '../../lib/gql/mutations';
+import { API_LIST_QUERY } from '../../lib/gql/queries';
 
 
 function DialogUserAskNewApis(props) {
@@ -18,7 +19,20 @@ function DialogUserAskNewApis(props) {
     const [expanded, setExpanded] = React.useState('');
     const [value, setValue] = React.useState('');
     const [showData, setShowData] = React.useState([]);
+    const [apiList, setApiList] = React.useState([]);
 
+
+
+    useEffect(() => {
+        props.client
+            .query({
+                query: API_LIST_QUERY
+            })
+            .then(res => {
+                setApiList(res.data.getApiList)
+            })
+            .catch(e => console.log(e))
+    })
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -43,7 +57,7 @@ function DialogUserAskNewApis(props) {
         let value = e.target.value
         let newlist = []
 
-        let currentList = props.apiList
+        let currentList = apiList
         value = value.toLowerCase()
 
         newlist = currentList.filter(filter => {
@@ -69,7 +83,8 @@ function DialogUserAskNewApis(props) {
                 variables: {
                     api_keys: checked
                 },
-                mutation: CREATE_NEW_API_KEY
+                mutation: CREATE_NEW_API_KEY,
+
             }).then(res => console.log(res.data.createNewApiKey))
             .catch(e => console.log(e))
 
@@ -82,7 +97,7 @@ function DialogUserAskNewApis(props) {
 
     // gets correct data
     const data = showData.length > 0 ? showData :
-        showData.length === 0 && searched ? noData : props.apiList
+        showData.length === 0 && searched ? noData : apiList
     return (
         <Dialog
             open={props.open}
