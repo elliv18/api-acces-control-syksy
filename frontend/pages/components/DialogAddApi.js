@@ -60,7 +60,7 @@ function DialogAddApi(props) {
         setUrl(value)
     }
     const methodChange = (e) => {
-        let value = e.target.value
+        let value = e.target.value.split(',')
         setMethod(value)
     }
     const urlsToArray = (e) => {

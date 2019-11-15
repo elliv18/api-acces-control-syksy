@@ -83,7 +83,7 @@ function DialogUserAskNewApis(props) {
                 variables: {
                     api_keys: checked
                 },
-                mutation: CREATE_NEW_API_KEY,
+                mutation: CREATE_NEW_API_KEY
 
             }).then(res => console.log(res.data.createNewApiKey))
             .catch(e => console.log(e))

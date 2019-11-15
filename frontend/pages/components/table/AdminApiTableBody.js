@@ -125,6 +125,7 @@ function AdminApiTableBody(props) {
 
                                         >
                                             <IconButton
+                                                disabled={true}
                                                 color="primary"
                                                 onClick={event => {
                                                     //dialog
@@ -143,6 +144,8 @@ function AdminApiTableBody(props) {
 
                                         >
                                             <IconButton
+                                                disabled={true}
+
                                                 color="primary"
                                                 onClick={event => {
                                                     //dialog
@@ -159,6 +162,8 @@ function AdminApiTableBody(props) {
                                             style={{ display: selected.length === 0 ? 'initial' : 'none' }}
                                         >
                                             <IconButton
+                                                disabled={true}
+
                                                 color="primary"
                                                 onClick={event => {
                                                     //dialog

@@ -69,11 +69,14 @@ function AdminApiTableHeaders(props) {
                                         ?
                                         <div >
                                             <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
-                                                <IconButton onClick={() => {
-                                                    props.handleOpenConfirm()
+                                                <IconButton
+                                                    disabled={true}
 
-                                                    props.setSelected([])
-                                                }}>
+                                                    onClick={() => {
+                                                        props.handleOpenConfirm()
+
+                                                        props.setSelected([])
+                                                    }}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </Tooltip>

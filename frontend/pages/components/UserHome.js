@@ -131,6 +131,7 @@ class HomeUser extends React.PureComponent {
                     open={openNewApis}
                     handleClose={this.handleClose}
                     client={client}
+                    userApis={this.props.currentUser.apis}
                 />
             </Paper>
         )
