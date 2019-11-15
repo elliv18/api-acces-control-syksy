@@ -24,8 +24,8 @@ mutation signInMutation($email: String!, $password: String!, $passwordAgain: Str
 /*********************** USERS EDIT ****************************/
 
 export const USER_DELETE = gql`
-  mutation deleteMutation($id: ID!) {
-    deleteUser(input: { id: $id }) {
+  mutation deleteMutation($user_ids: [String]!) {
+    deleteUser(input: { user_ids: $user_ids}) {
       user{
         id
       }
@@ -132,5 +132,12 @@ export const CREATE_NEW_API = gql`
 
 
 
-
-
+export const APIS_DELETE = gql`
+  mutation deleteMutation($api_ids: [String]!) {
+    deleteApis(input: { api_ids: $api_ids}) {
+      deleted_apis{
+        api_id
+      }
+    }
+  }
+`;

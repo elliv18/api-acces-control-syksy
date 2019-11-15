@@ -15,10 +15,13 @@ export const USERS_QUERY = gql`
 export const API_LIST_QUERY = gql`
   query {
     getApiList {
-      id,
-      name,
-      path,
-      tags,
+      api_id,
+      api_name,
+      api_root_url
+      urls{
+        url,
+        methods
+      }
     }
   }
 `;

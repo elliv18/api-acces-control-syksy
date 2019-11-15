@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { StyledTableCell } from './tableFunctions'
 import EditIcon from '@material-ui/icons/Edit'
+import { APIS_DELETE } from '../../../lib/gql/mutations';
 
 
 
@@ -16,6 +17,7 @@ const headCells = [
     { id: 'actions' },
     { id: 'name', label: 'Name' },
     { id: 'path', label: 'Path' },
+    { id: 'urls', label: 'Urls & Methods' },
     { id: 'id', label: 'ID' },
 
 ];
@@ -25,6 +27,17 @@ function AdminApiTableHeaders(props) {
     const createSortHandler = property => event => {
         property !== 'actions' ? onRequestSort(event, property) : null
     };
+
+    const handleDeleteApis = async (ids, client) => {
+        console.log(ids)
+        await client
+            .mutate({
+                variables: {
+                    api_ids: ids
+                },
+                mutation: APIS_DELETE
+            })
+    }
 
     return (
         <TableHead>
@@ -70,11 +83,10 @@ function AdminApiTableHeaders(props) {
                                         <div >
                                             <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
                                                 <IconButton
-                                                    disabled={true}
+                                                    //disabled={true}
 
                                                     onClick={() => {
-                                                        props.handleOpenConfirm()
-
+                                                        handleDeleteApis(props.selected, props.client)
                                                         props.setSelected([])
                                                     }}>
                                                     <DeleteIcon />

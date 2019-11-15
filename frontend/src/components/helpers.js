@@ -4,20 +4,19 @@ import { USER_DELETE } from "../../lib/gql/mutations"
 let data = null
 const helpers = {
 
-    deleteUser: function (selected, client) {
+    deleteUser: async function (selected, client) {
 
         // can't delete ROOT_ADMIN
-        return selected.map((async (row) => {
-            await client
-                .mutate({
-                    variables: { id: row },
-                    mutation: USER_DELETE,
-                })
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => console.log(error))
-        }))
+        console.log(selected)
+        await client
+            .mutate({
+                variables: { user_ids: selected },
+                mutation: USER_DELETE,
+            })
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => console.log(error))
         // return data
     },
     deleteRows: function (deletedIds, users) {

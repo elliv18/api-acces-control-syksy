@@ -239,6 +239,7 @@ class AdminHome extends React.PureComponent {
                         handleOpenAddApi={this.handleOpenAddApi}
                         apiList={apiList}
                         getSelected={this.getSelected}
+                        client={this.state.client}
 
                     />
 
