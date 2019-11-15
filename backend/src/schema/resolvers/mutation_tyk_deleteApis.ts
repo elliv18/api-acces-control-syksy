@@ -10,7 +10,7 @@ import { DEBUG, TYK_GW_SECRET } from "../../environment";
 
 export default {
   Mutation: {
-    deleteUser: async (obj, { input }, { currentUser }) => {
+    deleteApis: async (obj, { input }, { currentUser }) => {
       if (!DEBUG) {
         mustBeLoggedIn(currentUser);
         mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
@@ -30,29 +30,25 @@ export default {
         });
       }
 
-      var user = [];
+      const baseUrl = "http://gateway:8080/tyk/";
+      const keysPath = "apis/";
 
-      for (var i = 0; i < input.user_ids.length; i++) {
-        const userTemp = await prisma.user({ id: input.user_ids[i] });
+      const headers = {
+        "Content-Type": "application/json",
+        "x-tyk-authorization": TYK_GW_SECRET
+      };
 
-        const baseUrl = "http://gateway:8080/tyk/";
-        const keysPath = "keys/";
+      var deleted_apis = [];
 
-        const headers = {
-          "Content-Type": "application/json",
-          "x-tyk-authorization": TYK_GW_SECRET
-        };
+      for (var i = 0; i < input.api_ids.length; i++) {
+        const url = baseUrl + keysPath + input.api_ids[i];
 
-        const url = baseUrl + keysPath + userTemp.api_hash + "?hashed=true";
+        const x = await fetch(url, { method: "DELETE", headers: headers });
 
-        await fetch(url, { method: "DELETE", headers: headers });
-
-        const u = await prisma.deleteUser({ id: input.user_ids[i] });
-
-        user.push(u);
+        deleted_apis.push(await prisma.deleteApi({ api_id: input.api_ids[i] }));
       }
 
-      return { user };
+      return { deleted_apis };
     }
   }
 };

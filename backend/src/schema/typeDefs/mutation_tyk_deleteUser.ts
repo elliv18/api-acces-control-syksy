@@ -4,9 +4,9 @@ export default `
     }
 
     input DeleteUserInput {
-        id: ID!
+        user_ids: [String]
     }
     type DeleteUserPayload {
-        user: User
+        user: [User]
     }
 `;
