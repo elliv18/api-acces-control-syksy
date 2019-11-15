@@ -115,6 +115,9 @@ export const homeStyleUser = theme => ({
         paddingTop: 10,
         paddingBottom: 10,
     },
+    infoText: {
+        textAlign: 'center'
+    }
 
 });
 export const AdminHomeStyles = theme => ({

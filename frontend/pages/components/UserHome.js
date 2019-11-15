@@ -114,7 +114,7 @@ class HomeUser extends React.PureComponent {
                                                         <b>Methods: </b>
                                                     </Typography>
                                                 </Grid>
-                                                <Grid item xs={6}  >
+                                                <Grid item xs={6} className={classes.infoText} >
                                                     {row.urls.map(url => {
                                                         return (
                                                             <Typography key={url.url} className={classes.divider}>
@@ -124,7 +124,7 @@ class HomeUser extends React.PureComponent {
                                                     })}
                                                 </Grid>
 
-                                                <Grid item xs={6} >
+                                                <Grid item xs={6} className={classes.infoText}>
                                                     {row.urls.map(url => {
                                                         return (
                                                             <Typography key={url.url} className={classes.divider}>
