@@ -77,7 +77,7 @@ function DialogUserAskNewApis(props) {
         temp = checked.map(row => {
             return ({ id: row })
         })
-        console.log(checked)
+        // console.log(checked)
         await props.client
             .mutate({
                 variables: {
@@ -85,7 +85,10 @@ function DialogUserAskNewApis(props) {
                 },
                 mutation: CREATE_NEW_API_KEY
 
-            }).then(res => console.log(res.data.createNewApiKey))
+            }).then(res => {
+                console.log(res.data.createNewApiKey)
+                props.setApiHash(res.data.createNewApiKey.hash)
+            })
             .catch(e => console.log(e))
 
 

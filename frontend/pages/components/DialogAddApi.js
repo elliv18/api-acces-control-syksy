@@ -44,6 +44,8 @@ function DialogAddApi(props) {
             })
             .then(res => console.log(res))
             .catch(e => console.log(e))
+
+        setUrls([])
     }
 
     const nameChange = (e) => {
@@ -61,6 +63,7 @@ function DialogAddApi(props) {
     }
     const methodChange = (e) => {
         let value = e.target.value.split(',')
+        console.log(value)
         setMethod(value)
     }
     const urlsToArray = (e) => {

@@ -17,15 +17,20 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 class HomeUser extends React.PureComponent {
     constructor(props) {
         super(props);
-
+        this.setApiHash = this.setApiHash.bind(this)
         this.state = {
             client: props.client,
             apiList: [],
             openNewApis: false,
-            expanded: ''
+            expanded: '',
+            apiHash: '',
         };
     }
 
+    setApiHash = (hash) => {
+        this.setState({ apiHash: hash })
+        console.log(this.state.apiHash)
+    }
 
     handleChange = panel => (event, newExpanded) => {
         //setExpanded(newExpanded ? panel : false);
@@ -33,7 +38,7 @@ class HomeUser extends React.PureComponent {
     };
     handleOpenNewApis = () => {
         this.setState({ openNewApis: true })
-        console.log('CU', this.props.currentUser)
+        // console.log('CU', this.props.currentUser)
 
     }
     handleClose = () => {
@@ -47,10 +52,20 @@ class HomeUser extends React.PureComponent {
         return (
             <Paper className={classes.paper} elevation={7}>
                 <Grid container spacing={0} className={classes.grid}>
-                    <Grid item xs={6}>
+                    <Grid item xs={3}>
                         <h1 >Your apis: </h1>
                     </Grid>
-                    <Grid item xs={6}>
+                    {this.state.apiHash !== '' ?
+                        <Grid item xs={6} style={{ textAlign: 'center' }} >
+                            <Typography>
+                                <b>Your api hash: </b>{this.state.apiHash}
+                            </Typography>
+
+                        </Grid>
+                        : <Grid item xs={6}></Grid>
+                    }
+
+                    <Grid item xs={3}>
                         <div style={{ textAlign: 'right' }}>
                             <Tooltip title="Get new apis">
                                 <IconButton
@@ -61,6 +76,7 @@ class HomeUser extends React.PureComponent {
                             </Tooltip>
                         </div>
                     </Grid>
+
                 </Grid>
                 {console.log(this.props.currentUser.apis)}
                 {
@@ -132,6 +148,7 @@ class HomeUser extends React.PureComponent {
                     handleClose={this.handleClose}
                     client={client}
                     userApis={this.props.currentUser.apis}
+                    setApiHash={this.setApiHash}
                 />
             </Paper>
         )
