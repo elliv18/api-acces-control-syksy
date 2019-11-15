@@ -10,36 +10,49 @@ import { DEBUG, TYK_GW_SECRET } from "../../environment";
 
 export default {
   Mutation: {
-    deleteUser: async (obj, { input: { id } }, { currentUser }) => {
+    deleteUser: async (obj, { input }, { currentUser }) => {
       if (!DEBUG) {
         mustBeLoggedIn(currentUser);
         mustBeAtleastLevel(currentUser, UserLevels.ADMIN);
 
         logger.log(
           "info",
-          "[M DELETE USER] User %s - Delete user - %s ",
-          currentUser.id,
-          id
+          "[M DELETE USERS] Admin %s - Delete users",
+          currentUser.id
         );
+        input.user_ids.map(x => {
+          logger.log(
+            "info",
+            "[M DELETE USER] Admin %s - Deleting user %s",
+            currentUser.id,
+            x
+          );
+        });
       }
 
-      const userTemp = await prisma.user({ id: id });
+      var user = [];
 
-      const baseUrl = "http://gateway:8080/tyk/";
-      const keysPath = "keys/";
+      for (var i = 0; i < input.user_ids.length; i++) {
+        const userTemp = await prisma.user({ id: input.user_ids[i] });
 
-      const headers = {
-        "Content-Type": "application/json",
-        "x-tyk-authorization": TYK_GW_SECRET
-      };
+        const baseUrl = "http://gateway:8080/tyk/";
+        const keysPath = "keys/";
 
-      const url = baseUrl + keysPath + userTemp.api_hash + "?hashed=true";
+        const headers = {
+          "Content-Type": "application/json",
+          "x-tyk-authorization": TYK_GW_SECRET
+        };
 
-      await fetch(url, { method: "DELETE", headers: headers });
+        const url = baseUrl + keysPath + userTemp.api_hash + "?hashed=true";
 
-      const user = await prisma.deleteUser({ id: id });
+        await fetch(url, { method: "DELETE", headers: headers });
 
-      return user;
+        const u = await prisma.deleteUser({ id: input.user_ids[i] });
+
+        user.push(u);
+      }
+
+      return { user };
     }
   }
 };
