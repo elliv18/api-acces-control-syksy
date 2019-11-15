@@ -7,6 +7,6 @@ export default `
         api_keys: [String]
     }
     type CreateNewApiKeyPayload {
-        hash: String
+        user: User
     }
 `;

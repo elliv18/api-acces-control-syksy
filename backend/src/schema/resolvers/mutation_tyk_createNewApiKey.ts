@@ -62,15 +62,9 @@ export default {
         relations_api_ids.push(api_data.id);
       }
 
-      // jsonstring only for debugging
-      //const jsonString = JSON.stringify(access_rights);
-      //console.log("access_rights passed to gateway", jsonString);
-
       const body = {
         access_rights: access_rights
       };
-
-      //console.log(body);
 
       const res = await fetch(tykURL, {
         method: "POST",
@@ -79,10 +73,6 @@ export default {
       });
 
       const data = await res.json(); // data is object
-      //console.log(data);
-
-      //console.log(currentUser.id);
-      //console.log(data.key_hash);
 
       // adding hash to current user table line
       await prisma.updateUser({
@@ -110,7 +100,10 @@ export default {
         });
       }
 
-      return { hash: data.key_hash };
+      // getting updated currentUser data
+      const user = await prisma.user({ id: currentUser.id });
+
+      return { user };
     }
   }
 };
