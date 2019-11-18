@@ -13,6 +13,7 @@ import AdminUsersTableBody from "./table/AdminUsersTableBody";
 import DoneSnackbar from "./SnackBar";
 import AdminApiTableBody from "./table/AdminApiTableBody";
 import DialogAddApi from "./DialogAddApi";
+import { APIS_DELETE } from "../../lib/gql/mutations";
 
 var moment = require('moment');
 
@@ -41,6 +42,7 @@ class AdminHome extends React.PureComponent {
             openSnack: false,
             allUsers: [],
             filteredUsers: [],
+            filteredApis: [],
             addedRow: null,
             selectedEmails: [],
             selected: [],
@@ -49,7 +51,8 @@ class AdminHome extends React.PureComponent {
             failed: false,
             value: '',
             apiList: [],
-            openAddApi: false
+            openAddApi: false,
+            isUsersConfirm: true
         };
     }
 
@@ -61,11 +64,11 @@ class AdminHome extends React.PureComponent {
                 query: USERS_QUERY
             })
             .then(res => {
-                data = res.data.allUsers
-                console.log(data)
+
+                this.setState({ allUsers: res.data.allUsers, filteredUsers: res.data.allUsers })
             })
             .catch(e => console.log(e))
-        this.setState({ allUsers: data, filteredUsers: data })
+
 
         // APILIST
         await this.state.client
@@ -74,9 +77,10 @@ class AdminHome extends React.PureComponent {
             })
             .then(res => {
                 // console.log(res)
-                this.setState({ apiList: res.data.getApiList })
+                this.setState({ apiList: res.data.getApiList, filteredApis: res.data.getApiList })
             })
             .catch(e => console.log(e))
+
     }
 
     getSelected = (selected) => {
@@ -135,6 +139,9 @@ class AdminHome extends React.PureComponent {
     handleOpenConfirm = () => {
         this.setState({ openConfirm: true })
     };
+    handleOpenConfirmApis = () => {
+        this.setState({ isUsersConfirm: false, openConfirm: true })
+    };
 
     handleOpenPwReset = () => {
         console.log('OPEN')
@@ -154,6 +161,23 @@ class AdminHome extends React.PureComponent {
         this.handleOpenSnack()
     }
 
+    handleDeleteApis = async (ids) => {
+        let data = null
+
+        console.log(ids)
+        await this.state.client
+            .mutate({
+                variables: {
+                    api_ids: ids
+                },
+                mutation: APIS_DELETE
+            })
+        data = await helpers.deleteApiRows(ids, this.state.apiList)
+        console.log(data)
+        this.setState({ apiList: data })
+        this.handleClose()
+    }
+
     handleOpenAddApi = () => {
         this.setState({ openAddApi: true })
     }
@@ -162,33 +186,45 @@ class AdminHome extends React.PureComponent {
         let value = e.target.value
         let newlist = []
         let newlistEmails = []
-        let newlistId = []
-        let currentList = this.state.allUsers
-        const noData = [
-            { email: 'No results found', id: 'No results found', createdAt: 'No results found' },
+        let newlistApis = []
+        //  console.log(this.state.allUsers)
+        let currentListUsers = this.state.allUsers
+        let currentListApis = this.state.apiList
 
+        const noUsersData = [
+            { email: 'No results found', createdAt: 'No results found' },
+        ];
+        const noApisData = [
+            { api_name: 'No results found', api_id: 'No results found' },
         ];
 
-        newlistEmails = currentList.filter(filter => {
-            return filter.email.includes(value)
-        })
-        newlistId = currentList.filter(filter => {
-            return filter.id.includes(value)
-        })
+        this.props.switchState === 'USERS'
+            ? (
+                newlist = currentListUsers.filter(filter => {
+                    return filter.email.includes(value)
+                }),
 
-        //console.log(newlistEmails.length)
-        newlistEmails.length === 0 && newlistId.length === 0
-            ? newlist = [
-                ...noData
-            ]
-            : newlist = [
-                ...newlistEmails,
-                ...newlistId
-            ]
+                newlist.length > 0
+                    ? this.setState({ filteredUsers: newlist })
+                    : this.setState({ filteredUsers: noUsersData })
+            )
+            : (
+                newlist = currentListApis.filter(filter => {
+
+                    return filter.api_name.includes(value)
+                }),
+
+                newlist.length > 0
+                    ? this.setState({ filteredApis: newlist })
+                    : this.setState({ filteredApis: noApisData })
+            )
+
+        newlist = [...newlist]
+        this.setState({ value: value })
+
         //      console.log(newlist)
+        // console.log(this.state.filteredApis, this.state.filteredUsers)
 
-        this.setState({ filteredUsers: newlist, value: value })
-        //console.log(this.state.filteredUsers)
     }
 
 
@@ -206,19 +242,20 @@ class AdminHome extends React.PureComponent {
             filteredUsers,
             value,
             apiList,
-            openAddApi
+            openAddApi,
+            filteredApis
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
-                <div style={{ minWidth: 722 }}>
+                <div className={classes.table}>
                     <TextField
                         aria-label="search field"
                         type="text"
                         fullWidth
-                        label='Search...'
+                        label={this.props.switchState === 'USERS' ? 'Search by email ...' : 'Search by name ...'}
                         style={{ backgroundColor: '#3c7c9e' }}
                         variant={'filled'}
                         onChange={this.handleFilter}
@@ -236,9 +273,11 @@ class AdminHome extends React.PureComponent {
                         client={this.state.client}
                     />
                     : <AdminApiTableBody
+                        handleOpenConfirm={this.handleOpenConfirmApis}
                         handleOpenAddApi={this.handleOpenAddApi}
-                        apiList={apiList}
+                        apiList={filteredApis}
                         getSelected={this.getSelected}
+                        client={this.state.client}
 
                     />
 
@@ -251,6 +290,8 @@ class AdminHome extends React.PureComponent {
                     handleClose={this.handleClose}
                     handleCloseYes={this.handleCloseDeleteYes}
                     getMessage={this.getMessage}
+                    handleDeleteApis={this.handleDeleteApis}
+                    isUsersConfirm={this.state.isUsersConfirm}
                 />
                 <DialogResetPw
                     open={openPwReset}

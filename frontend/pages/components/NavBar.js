@@ -117,7 +117,7 @@ class NavBar extends React.PureComponent {
 
     render() {
         const childrenWithProps = React.Children.map(this.props.children, child =>
-            React.cloneElement(child, { switchState: this.state.switch })
+            React.cloneElement(child, { switchState: this.state.switch, currentUser: this.state.currentUser })
         );
         const { anchorEl, currentUser, open, openPwReset, openSnack, message, autoHide } = this.state;
         const { classes } = this.props;

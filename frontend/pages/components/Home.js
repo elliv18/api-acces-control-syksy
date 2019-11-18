@@ -22,34 +22,20 @@ class Home extends React.PureComponent {
   }
 
 
-  async componentDidMount() {
 
-    let CU = undefined
-    await this.state.client
-      .mutate({
-        mutation: CURRENTUSER
-      }).then(res => {
-        //console.log(res)
-        CU = res.data.currentUser
-      })
-      .catch(e => null)
-
-    // check cu if backend is down
-    CU
-      ? this.setState({ userType: CU.userType })
-      : null
-  }
 
 
   render() {
     const { userType } = this.state;
     const { classes } = this.props;
 
-    if (userType === 'ADMIN') {
+    if (this.props.currentUser.userType === 'ADMIN') {
       return <AdminHome userType={userType} switchState={this.props.switchState} />
     }
-    else if (userType === 'USER') {
-      return <UserHome />
+    else if (this.props.currentUser.userType === 'USER') {
+      return <UserHome
+        currentUser={this.props.currentUser}
+      />
     }
     else {
       return null

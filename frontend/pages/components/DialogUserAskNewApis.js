@@ -9,6 +9,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import { DialogUserAskNewApisStyle } from './Styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CREATE_NEW_API_KEY } from '../../lib/gql/mutations';
+import { API_LIST_QUERY } from '../../lib/gql/queries';
 
 
 function DialogUserAskNewApis(props) {
@@ -18,7 +19,20 @@ function DialogUserAskNewApis(props) {
     const [expanded, setExpanded] = React.useState('');
     const [value, setValue] = React.useState('');
     const [showData, setShowData] = React.useState([]);
+    const [apiList, setApiList] = React.useState([]);
 
+
+
+    useEffect(() => {
+        props.client
+            .query({
+                query: API_LIST_QUERY
+            })
+            .then(res => {
+                setApiList(res.data.getApiList)
+            })
+            .catch(e => console.log(e))
+    })
 
     const handleChange = panel => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -43,7 +57,7 @@ function DialogUserAskNewApis(props) {
         let value = e.target.value
         let newlist = []
 
-        let currentList = props.apiList
+        let currentList = apiList
         value = value.toLowerCase()
 
         newlist = currentList.filter(filter => {
@@ -64,13 +78,18 @@ function DialogUserAskNewApis(props) {
             return ({ id: row })
         })
         console.log(checked)
+        // console.log(checked)
         await props.client
             .mutate({
                 variables: {
                     api_keys: checked
                 },
                 mutation: CREATE_NEW_API_KEY
-            }).then(res => console.log(res.data.createNewApiKey))
+
+            }).then(res => {
+                let apis = res.data.createNewApiKey.user.apis
+                props.setApiData(apis)
+            })
             .catch(e => console.log(e))
 
 
@@ -82,7 +101,7 @@ function DialogUserAskNewApis(props) {
 
     // gets correct data
     const data = showData.length > 0 ? showData :
-        showData.length === 0 && searched ? noData : props.apiList
+        showData.length === 0 && searched ? noData : apiList
     return (
         <Dialog
             open={props.open}
@@ -122,7 +141,7 @@ function DialogUserAskNewApis(props) {
 
 
                 {data.map((row, index) => {
-                    const labelId = `checkbox-list-label-${row.id}`;
+                    const labelId = `checkbox-list-label-${row.api_id}`;
                     return (
                         <div key={index} >
                             <ExpansionPanel
@@ -145,39 +164,46 @@ function DialogUserAskNewApis(props) {
                                             <Checkbox
                                                 // edge="start"
                                                 onChange={() => setExpanded('')}
-                                                checked={checked.indexOf(row.id) !== -1}
+                                                checked={checked.indexOf(row.api_id) !== -1}
                                                 tabIndex={-1}
                                                 disableRipple
                                                 inputProps={{ 'aria-labelledby': labelId }}
-                                                onClick={handleToggle(row.id)}
+                                                onClick={handleToggle(row.api_id)}
                                             />
                                         }
-                                        label={row.name}
+                                        label={row.api_name}
                                     />
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <Grid container>
-                                        <Grid item xs={3} className={classes.divider}>
+                                        <Grid item xs={6} className={classes.padding}>
                                             <Typography>
-                                                <b>Path: </b>
+                                                <b>Urls: </b>
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={9} className={classes.divider}>
+                                        <Grid item xs={6} className={classes.padding}>
                                             <Typography>
-                                                {row.path}
+                                                <b>Methods: </b>
                                             </Typography>
+                                        </Grid>
+                                        <Grid item xs={6} className={classes.infoText} >
+                                            {row.urls.map(url => {
+                                                return (
+                                                    <Typography key={url.url} className={classes.divider}>
+                                                        {url.url}
+                                                    </Typography>
+                                                )
+                                            })}
                                         </Grid>
 
-
-                                        <Grid item xs={3} className={classes.padding}>
-                                            <Typography>
-                                                <b>ID: </b>
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={9} className={classes.padding}>
-                                            <Typography>
-                                                {row.id}
-                                            </Typography>
+                                        <Grid item xs={6} className={classes.infoText}>
+                                            {row.urls.map(url => {
+                                                return (
+                                                    <Typography key={url.url} className={classes.divider}>
+                                                        {url.methods}
+                                                    </Typography>
+                                                )
+                                            })}
                                         </Grid>
                                     </Grid>
                                 </ExpansionPanelDetails>

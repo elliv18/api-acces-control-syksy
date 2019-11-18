@@ -18,7 +18,7 @@ const headCells = [
     { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
     { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
     { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
-    { id: 'apikey', numeric: false, disablePadding: false, label: 'Apikey' },
+    { id: 'api_hash', numeric: false, disablePadding: false, label: 'Apihash' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created' },
 
 ];
@@ -46,6 +46,7 @@ function AdminUsersTableHeaders(props) {
                         key={headCell.id}
                         align={'center'}
                         sortDirection={orderBy === headCell.id ? order : false}
+
                     >
                         <TableSortLabel
                             hideSortIcon={true}

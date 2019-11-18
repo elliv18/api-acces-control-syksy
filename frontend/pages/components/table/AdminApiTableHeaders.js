@@ -9,14 +9,15 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { StyledTableCell } from './tableFunctions'
 import EditIcon from '@material-ui/icons/Edit'
+import { APIS_DELETE } from '../../../lib/gql/mutations';
 
 
 
 const headCells = [
     { id: 'actions' },
-    { id: 'name', label: 'Name' },
-    { id: 'path', label: 'Path' },
-    { id: 'id', label: 'ID' },
+    { id: 'api_name', label: 'Name' },
+    { id: 'api_root_url', label: 'Path' },
+    { id: 'urls', label: 'Urls & Methods' },
 
 ];
 
@@ -25,6 +26,8 @@ function AdminApiTableHeaders(props) {
     const createSortHandler = property => event => {
         property !== 'actions' ? onRequestSort(event, property) : null
     };
+
+
 
     return (
         <TableHead>
@@ -43,6 +46,8 @@ function AdminApiTableHeaders(props) {
                         key={headCell.id}
                         align={'center'}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        style={{ position: 'relative' }}
+
                     >
                         <TableSortLabel
                             hideSortIcon={true}
@@ -59,7 +64,7 @@ function AdminApiTableHeaders(props) {
 
                                     ?
                                     <Tooltip title={"Add api"} className={classes.addButton}>
-                                        <IconButton onClick={props.handleOpenAddApi}>
+                                        <IconButton onClick={props.handleOpenAddApi} >
                                             <AddIcon />
                                         </IconButton>
                                     </Tooltip>
@@ -69,11 +74,13 @@ function AdminApiTableHeaders(props) {
                                         ?
                                         <div >
                                             <Tooltip title={"Delete selected"} className={classes.deleteUpButton}>
-                                                <IconButton onClick={() => {
-                                                    props.handleOpenConfirm()
+                                                <IconButton
+                                                    //disabled={true}
 
-                                                    props.setSelected([])
-                                                }}>
+                                                    onClick={() => {
+                                                        props.handleOpenConfirm()
+                                                        props.setSelected([])
+                                                    }}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </Tooltip>

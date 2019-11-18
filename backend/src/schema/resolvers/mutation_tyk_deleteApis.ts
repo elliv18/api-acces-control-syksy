@@ -20,7 +20,7 @@ export default {
           "[M DELETE USERS] Admin %s - Delete users",
           currentUser.id
         );
-        input.user_ids.map(x => {
+        input.api_ids.map(x => {
           logger.log(
             "info",
             "[M DELETE USER] Admin %s - Deleting user %s",
