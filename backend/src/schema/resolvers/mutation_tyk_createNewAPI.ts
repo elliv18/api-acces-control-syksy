@@ -69,13 +69,11 @@ export default {
         active: true
       };
 
-      const res = await fetch(tykURL, {
+      await fetch(tykURL, {
         method: "POST",
         body: JSON.stringify(body),
         headers: headers
       });
-
-      const data = await res.json(); // data is object
 
       // add data to prisma tables
 
@@ -90,16 +88,7 @@ export default {
         urlsTemp.push(temp);
       }
 
-      /*input.urls.map(x => {
-        var temp = {
-          url: x.url,
-          methods: x.methods
-        };
-
-        urlsTemp.push(temp);
-      });*/
-
-      await prisma.createApi({
+      const api = await prisma.createApi({
         api_id: api_id_uuid,
         api_name: input.name,
         api_root_url: input.url_path,
@@ -120,7 +109,7 @@ export default {
         headers: tyk_reload_header
       });
 
-      return { key: data.key };
+      return { api };
     }
   }
 };

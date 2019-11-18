@@ -15,6 +15,6 @@ export default `
         urls: [Urls]!
     }
     type CreateNewAPIPayload {
-        key: String
+        api: Api
     }
 `;
