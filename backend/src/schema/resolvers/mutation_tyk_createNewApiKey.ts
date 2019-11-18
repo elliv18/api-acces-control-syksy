@@ -1,8 +1,4 @@
-import {
-  mustBeLoggedIn,
-  mustBeAtleastLevel,
-  UserLevels
-} from "../../misc/auth";
+import { mustBeLoggedIn } from "../../misc/auth";
 import { prisma } from "../../generated/prisma-client";
 import logger from "../../misc/logger";
 import fetch from "node-fetch";
@@ -84,24 +80,38 @@ export default {
         }
       });
 
-      // adding relations
-      for (var i = 0; i < input.api_keys.length; i++) {
-        await prisma.updateUser({
-          data: {
-            apis: {
-              connect: {
-                api_id: input.api_keys[i]
-              }
-            }
-          },
-          where: {
-            id: currentUser.id
+      // deleting old relations
+      const userTemp = await prisma.user({ id: currentUser.id }).apis();
+      var oldApiIds = []; // temp
+      userTemp.map(x => {
+        oldApiIds.push({ id: x.id });
+      });
+      await prisma.updateUser({
+        data: {
+          apis: {
+            disconnect: oldApiIds
           }
-        });
-      }
+        },
+        where: {
+          id: currentUser.id
+        }
+      });
 
-      // getting updated currentUser data
-      const user = await prisma.user({ id: currentUser.id });
+      // adding relations
+      var newApiIds = []; // temp
+      input.api_keys.map(x => {
+        newApiIds.push({ api_id: x });
+      });
+      const user = await prisma.updateUser({
+        data: {
+          apis: {
+            connect: newApiIds
+          }
+        },
+        where: {
+          id: currentUser.id
+        }
+      });
 
       return { user };
     }
