@@ -6,10 +6,12 @@ enum UserType {
 type User {
   id: ID! @id
   userType: UserType!
+  google_account: Boolean
   email: String! @unique
-  password: String!
+  password: String
   api_hash: String
   apis: [Api]! @relation(name: "UserApis")
+  google: Google @relation(name: "GoogleStuff", link: INLINE, onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
@@ -28,4 +30,10 @@ type Url {
   url: String
   methods: String
   api: Api @relation(name: "ApiUrls")
+}
+
+type Google {
+  id: ID! @id
+  google_id: String @unique
+  user: User @relation(name: "GoogleStuff")
 }

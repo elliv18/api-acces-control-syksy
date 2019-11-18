@@ -9,6 +9,7 @@ import mutation_createNewUser from "./mutation_createNewUser";
 import mutation_currentUser from "./mutation_currentUser";
 import mutation_currentUserUpdatePW from "./mutation_currentUserUpdatePW";
 import mutation_login from "./mutation_login";
+import mutation_login_google from "./mutation_login_google";
 import mutation_signup from "./mutation_signup";
 import mutation_userPWReset from "./mutation_userPWReset";
 
@@ -26,6 +27,7 @@ const types = [
   mutation_currentUser,
   mutation_currentUserUpdatePW,
   mutation_login,
+  mutation_login_google,
   mutation_signup,
   mutation_userPWReset,
   mutation_tyk_createNewApiKey,
