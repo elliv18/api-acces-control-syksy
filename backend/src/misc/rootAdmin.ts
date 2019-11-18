@@ -14,6 +14,7 @@ export default async () => {
   ) {
     await prisma.createUser({
       userType: "ADMIN",
+      google_account: false,
       email: ROOT_ADMIN_EMAIL,
       password: await bcrypt.hash(ROOT_ADMIN_PASS, SALT_ROUNDS)
     });
