@@ -15,6 +15,7 @@ export default `
     type User {
         id: ID!
         userType: UserType
+        google_account: Boolean
         email: String
         api_hash: String
         apis: [Api]!

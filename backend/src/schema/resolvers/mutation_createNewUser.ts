@@ -69,6 +69,7 @@ export default {
 
       const user = await prisma.createUser({
         userType: userType,
+        google_account: false,
         email: email,
         password: await bcrypt.hash(password, SALT_ROUNDS)
       });

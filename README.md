@@ -94,6 +94,7 @@ All code has to pass `yarn lint` or it fails the CI.
 - PostgreSQL
 - Winston + daily rotate logs
 - JWT
+- google-auth-library
 
 ### Frontend
 
