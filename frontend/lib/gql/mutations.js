@@ -153,3 +153,11 @@ export const APIS_DELETE = gql`
     }
   }
 `;
+
+export const GOOGLE_LOGIN = gql`
+  mutation googleMutation($token: String!) {
+    loginGoogle(input: { token: $token}) {
+      jwt
+    }
+  }
+`;

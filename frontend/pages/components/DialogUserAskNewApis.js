@@ -61,8 +61,8 @@ function DialogUserAskNewApis(props) {
         value = value.toLowerCase()
 
         newlist = currentList.filter(filter => {
-            if (filter.name) {
-                return filter.name.toLowerCase().includes(value)
+            if (filter.api_name) {
+                return filter.api_name.toLowerCase().includes(value)
             }
             //  console.log(filter.name)
         })
@@ -77,7 +77,7 @@ function DialogUserAskNewApis(props) {
         temp = checked.map(row => {
             return ({ id: row })
         })
-        console.log(checked)
+        // console.log(checked)
         // console.log(checked)
         await props.client
             .mutate({
@@ -187,23 +187,27 @@ function DialogUserAskNewApis(props) {
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6} className={classes.infoText} >
-                                            {row.urls.map(url => {
-                                                return (
-                                                    <Typography key={url.url} className={classes.divider}>
-                                                        {url.url}
-                                                    </Typography>
-                                                )
-                                            })}
+                                            {row.urls ?
+                                                row.urls.map(url => {
+                                                    return (
+                                                        <Typography key={url.url} className={classes.divider}>
+                                                            {url.url}
+                                                        </Typography>
+                                                    )
+                                                })
+                                                : null}
                                         </Grid>
 
                                         <Grid item xs={6} className={classes.infoText}>
-                                            {row.urls.map(url => {
-                                                return (
-                                                    <Typography key={url.url} className={classes.divider}>
-                                                        {url.methods}
-                                                    </Typography>
-                                                )
-                                            })}
+                                            {row.urls ?
+                                                row.urls.map(url => {
+                                                    return (
+                                                        <Typography key={url.url} className={classes.divider}>
+                                                            {JSON.parse(url.methods)}
+                                                        </Typography>
+                                                    )
+                                                })
+                                                : null}
                                         </Grid>
                                     </Grid>
                                 </ExpansionPanelDetails>
@@ -220,6 +224,9 @@ function DialogUserAskNewApis(props) {
                     onClick={() => {
                         handleGetApiKey()
                         props.handleClose()
+                        setChecked([])
+                        setValue('')
+                        setShowData(apiList)
                     }}
                 >
                     Get apis

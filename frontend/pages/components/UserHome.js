@@ -123,7 +123,7 @@ class HomeUser extends React.PureComponent {
                                                     {row.urls.map(url => {
                                                         return (
                                                             <Typography key={url.url} className={classes.divider}>
-                                                                {url.methods}
+                                                                {JSON.parse(url.methods)}
                                                             </Typography>
                                                         )
                                                     })}

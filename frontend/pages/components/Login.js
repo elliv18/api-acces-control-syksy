@@ -13,7 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { withApollo } from "react-apollo";
 import { withStyles } from "@material-ui/styles";
-import { LOGIN_MUTATION } from "../../lib/gql/mutations";
+import { LOGIN_MUTATION, GOOGLE_LOGIN } from "../../lib/gql/mutations";
 import Cookies from "js-cookie";
 import Router from "next/router";
 import { loginStyles } from './Styles'
@@ -76,7 +76,24 @@ class Login extends React.Component {
 
   googleResponse = (response) => {
 
-    console.log(response);
+    // console.log(response.tokenId);
+    this.state.client
+      .mutate({
+        variables: {
+          token: response.tokenId
+        },
+        mutation: GOOGLE_LOGIN
+      })
+      .then(res => {
+        let googleJWT = res.data.loginGoogle.jwt
+        //    console.log(googleJWT)
+        Cookies.set("jwtToken", googleJWT)
+
+        googleJWT ? Router.push({
+          pathname: "/home"
+        }) : console.log('Google auth failed')
+      })
+      .catch(e => console.log(e))
   };
   // Kirjautumis logiikka
 

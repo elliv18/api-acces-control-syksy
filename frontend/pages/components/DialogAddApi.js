@@ -63,7 +63,6 @@ function DialogAddApi(props) {
     }
     const methodChange = (e) => {
         let value = e.target.value.split(',')
-        console.log(value)
         setMethod(value)
     }
     const urlsToArray = (e) => {
