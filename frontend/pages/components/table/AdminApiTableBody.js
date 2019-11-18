@@ -22,7 +22,7 @@ var moment = require('moment');
 
 function AdminApiTableBody(props) {
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('email');
+    const [orderBy, setOrderBy] = React.useState('name');
     const [selected, setSelected] = React.useState([]);
     const [apikey, setApikey] = React.useState(null);
 
@@ -78,7 +78,6 @@ function AdminApiTableBody(props) {
     //********TABLE SORTING & SELECTING ENDS */
 
     return (
-        console.log(props.apiList),
         <Table
             className={classes.table}
             aria-label="users table"

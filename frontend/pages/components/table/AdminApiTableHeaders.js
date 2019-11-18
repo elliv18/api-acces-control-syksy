@@ -15,8 +15,8 @@ import { APIS_DELETE } from '../../../lib/gql/mutations';
 
 const headCells = [
     { id: 'actions' },
-    { id: 'name', label: 'Name' },
-    { id: 'path', label: 'Path' },
+    { id: 'api_name', label: 'Name' },
+    { id: 'api_root_url', label: 'Path' },
     { id: 'urls', label: 'Urls & Methods' },
 
 ];
