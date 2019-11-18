@@ -1,9 +1,13 @@
 # FRONTEND
 
-## testattu kesällä tehdyllä backendillä
+This is Project API access control service frontend. Frontend requires .env file (look root readme).
 
-Tokenin voi nollata home sivulla logout
+## Development environment setup
 
-login sivulle laitettu window.location.href = "/home", jotta ei tule not auth
+look root readme.
 
-nextConfig toimmii
+## Developing url
+
+Frontend devoloping url: http://localhost:3000
+
+
