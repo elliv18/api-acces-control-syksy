@@ -185,27 +185,29 @@ function AdminApiTableBody(props) {
 
                                 <StyledTableCell align="center">{row.api_name}</StyledTableCell>
                                 <StyledTableCell align="center">{row.api_root_url}</StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.urls.map((urls, index) => {
-                                        return (
-                                            <Grid container key={index}>
-                                                <Grid item xs={6}>
-                                                    <Typography>
-                                                        {urls.url}
-                                                    </Typography>
+                                {row.urls ?
+                                    <StyledTableCell align="center">
+                                        {row.urls.map((urls, index) => {
+                                            return (
+                                                <Grid container key={index}>
+                                                    <Grid item xs={6}>
+                                                        <Typography>
+                                                            {urls.url}
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <Typography>
+                                                            {urls.methods}
+                                                        </Typography>
+                                                    </Grid>
                                                 </Grid>
-                                                <Grid item xs={6}>
-                                                    <Typography>
-                                                        {urls.methods}
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        )
-                                    })}
-                                </StyledTableCell>
+                                            )
+                                        })}
+                                    </StyledTableCell>
+                                    : null
+                                }
 
 
-                                <StyledTableCell align="center">{row.api_id}</StyledTableCell>
                             </TableRow>
 
                         );

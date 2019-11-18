@@ -18,7 +18,6 @@ const headCells = [
     { id: 'name', label: 'Name' },
     { id: 'path', label: 'Path' },
     { id: 'urls', label: 'Urls & Methods' },
-    { id: 'id', label: 'ID' },
 
 ];
 

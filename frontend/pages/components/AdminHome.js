@@ -42,6 +42,7 @@ class AdminHome extends React.PureComponent {
             openSnack: false,
             allUsers: [],
             filteredUsers: [],
+            filteredApis: [],
             addedRow: null,
             selectedEmails: [],
             selected: [],
@@ -63,11 +64,11 @@ class AdminHome extends React.PureComponent {
                 query: USERS_QUERY
             })
             .then(res => {
-                data = res.data.allUsers
-                console.log(data)
+
+                this.setState({ allUsers: res.data.allUsers, filteredUsers: res.data.allUsers })
             })
             .catch(e => console.log(e))
-        this.setState({ allUsers: data, filteredUsers: data })
+
 
         // APILIST
         await this.state.client
@@ -76,9 +77,10 @@ class AdminHome extends React.PureComponent {
             })
             .then(res => {
                 // console.log(res)
-                this.setState({ apiList: res.data.getApiList })
+                this.setState({ apiList: res.data.getApiList, filteredApis: res.data.getApiList })
             })
             .catch(e => console.log(e))
+
     }
 
     getSelected = (selected) => {
@@ -184,33 +186,45 @@ class AdminHome extends React.PureComponent {
         let value = e.target.value
         let newlist = []
         let newlistEmails = []
-        let newlistId = []
-        let currentList = this.state.allUsers
-        const noData = [
-            { email: 'No results found', id: 'No results found', createdAt: 'No results found' },
+        let newlistApis = []
+        //  console.log(this.state.allUsers)
+        let currentListUsers = this.state.allUsers
+        let currentListApis = this.state.apiList
 
+        const noUsersData = [
+            { email: 'No results found', createdAt: 'No results found' },
+        ];
+        const noApisData = [
+            { api_name: 'No results found', api_id: 'No results found' },
         ];
 
-        newlistEmails = currentList.filter(filter => {
-            return filter.email.includes(value)
-        })
-        newlistId = currentList.filter(filter => {
-            return filter.id.includes(value)
-        })
+        this.props.switchState === 'USERS'
+            ? (
+                newlist = currentListUsers.filter(filter => {
+                    return filter.email.includes(value)
+                }),
 
-        //console.log(newlistEmails.length)
-        newlistEmails.length === 0 && newlistId.length === 0
-            ? newlist = [
-                ...noData
-            ]
-            : newlist = [
-                ...newlistEmails,
-                ...newlistId
-            ]
+                newlist.length > 0
+                    ? this.setState({ filteredUsers: newlist })
+                    : this.setState({ filteredUsers: noUsersData })
+            )
+            : (
+                newlist = currentListApis.filter(filter => {
+
+                    return filter.api_name.includes(value)
+                }),
+
+                newlist.length > 0
+                    ? this.setState({ filteredApis: newlist })
+                    : this.setState({ filteredApis: noApisData })
+            )
+
+        newlist = [...newlist]
+        this.setState({ value: value })
+
         //      console.log(newlist)
+        // console.log(this.state.filteredApis, this.state.filteredUsers)
 
-        this.setState({ filteredUsers: newlist, value: value })
-        //console.log(this.state.filteredUsers)
     }
 
 
@@ -228,7 +242,8 @@ class AdminHome extends React.PureComponent {
             filteredUsers,
             value,
             apiList,
-            openAddApi
+            openAddApi,
+            filteredApis
         } = this.state
         return (
             //  console.log(helpers.getEmailFromId(selected, allUsers)),
@@ -240,7 +255,7 @@ class AdminHome extends React.PureComponent {
                         aria-label="search field"
                         type="text"
                         fullWidth
-                        label='Search...'
+                        label={this.props.switchState === 'USERS' ? 'Search by email ...' : 'Search by name ...'}
                         style={{ backgroundColor: '#3c7c9e' }}
                         variant={'filled'}
                         onChange={this.handleFilter}
@@ -260,7 +275,7 @@ class AdminHome extends React.PureComponent {
                     : <AdminApiTableBody
                         handleOpenConfirm={this.handleOpenConfirmApis}
                         handleOpenAddApi={this.handleOpenAddApi}
-                        apiList={apiList}
+                        apiList={filteredApis}
                         getSelected={this.getSelected}
                         client={this.state.client}
 
