@@ -131,7 +131,7 @@ export const AdminHomeStyles = theme => ({
 
     },
     table: {
-        minWidth: 650,
+        minWidth: 750,
         maxHeight: '55%'
         // overflow: 'auto',
     },
@@ -158,6 +158,7 @@ export const AdminHomeStyles = theme => ({
     addButton: {
         color: 'green',
         //marginBottom: theme.spacing(3),
+
         backgroundColor: theme.palette.secondary.main,
         // marginLeft: theme.spacing(3)
         // marginRight: theme.spacing(3),

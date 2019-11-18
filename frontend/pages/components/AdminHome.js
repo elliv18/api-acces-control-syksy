@@ -250,7 +250,7 @@ class AdminHome extends React.PureComponent {
             <Paper className={classes.root} elevation={5}>
                 <CssBaseline />
 
-                <div style={{ minWidth: 722 }}>
+                <div className={classes.table}>
                     <TextField
                         aria-label="search field"
                         type="text"

@@ -46,6 +46,8 @@ function AdminApiTableHeaders(props) {
                         key={headCell.id}
                         align={'center'}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        style={{ position: 'relative' }}
+
                     >
                         <TableSortLabel
                             hideSortIcon={true}
@@ -62,7 +64,7 @@ function AdminApiTableHeaders(props) {
 
                                     ?
                                     <Tooltip title={"Add api"} className={classes.addButton}>
-                                        <IconButton onClick={props.handleOpenAddApi}>
+                                        <IconButton onClick={props.handleOpenAddApi} >
                                             <AddIcon />
                                         </IconButton>
                                     </Tooltip>

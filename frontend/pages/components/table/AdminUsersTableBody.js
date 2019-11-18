@@ -159,28 +159,25 @@ function AdminUsersTableBody(props) {
                                             </IconButton>
                                         </Tooltip>
 
-                                        <Tooltip title={"Create new apikey"}
-                                            style={{ display: selected.length === 0 ? 'initial' : 'none' }}
-                                        >
-                                            <IconButton
-                                                color="primary"
-                                                onClick={event => {
-                                                    //dialog
-                                                    handleClickSelect(event, row.id)
-                                                    helpers.createNewApikey(props.client)
-                                                    setSelected([])
-                                                    //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                                }}>
-                                                <AddIcon />
-                                            </IconButton>
-                                        </Tooltip>
+
+                                        <IconButton
+                                            disabled={true}
+                                            color="primary"
+                                            onClick={event => {
+                                                //dialog
+                                                handleClickSelect(event, row.id)
+                                                helpers.createNewApikey(props.client)
+                                                setSelected([])
+                                                //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
+                                            <AddIcon />
+                                        </IconButton>
                                     </div>
                                 </StyledTableCell>
-
                                 <StyledTableCell align="center">{row.email}</StyledTableCell>
                                 <StyledTableCell align="center">{row.userType}</StyledTableCell>
                                 <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                <StyledTableCell align="center">{row.apiKey}</StyledTableCell>
+                                <StyledTableCell align="center">{row.api_hash}</StyledTableCell>
                                 <StyledTableCell align="center">
                                     {row.createdAt !== 'No results found'
                                         ? moment(row.createdAt).format('DD.MM.YYYY - HH:mm')
