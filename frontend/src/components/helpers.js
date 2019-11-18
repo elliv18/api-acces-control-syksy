@@ -32,6 +32,19 @@ const helpers = {
 
         return data;
     },
+    deleteApiRows: function (deletedIds, apis) {
+        // console.log(users, 'users')
+        const data = apis
+        deletedIds.forEach(rowId => {
+            const index = data.findIndex(row => row.api_id === rowId);
+            if (index > -1) {
+                data.splice(index, 1);
+            }
+        });
+        //  console.log(data, 'apis')
+
+        return data;
+    },
     getEmailFromId: function (selectedIds, allUsers, test) {
         let emails = []
         //   console.log(selectedIds, allUsers)

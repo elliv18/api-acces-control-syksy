@@ -77,6 +77,7 @@ function DialogUserAskNewApis(props) {
         temp = checked.map(row => {
             return ({ id: row })
         })
+        console.log(checked)
         // console.log(checked)
         await props.client
             .mutate({
@@ -86,8 +87,8 @@ function DialogUserAskNewApis(props) {
                 mutation: CREATE_NEW_API_KEY
 
             }).then(res => {
-                console.log(res.data.createNewApiKey)
-                props.setApiHash(res.data.createNewApiKey.hash)
+                let apis = res.data.createNewApiKey.user.apis
+                props.setApiData(apis)
             })
             .catch(e => console.log(e))
 
@@ -140,7 +141,7 @@ function DialogUserAskNewApis(props) {
 
 
                 {data.map((row, index) => {
-                    const labelId = `checkbox-list-label-${row.id}`;
+                    const labelId = `checkbox-list-label-${row.api_id}`;
                     return (
                         <div key={index} >
                             <ExpansionPanel
@@ -163,39 +164,46 @@ function DialogUserAskNewApis(props) {
                                             <Checkbox
                                                 // edge="start"
                                                 onChange={() => setExpanded('')}
-                                                checked={checked.indexOf(row.id) !== -1}
+                                                checked={checked.indexOf(row.api_id) !== -1}
                                                 tabIndex={-1}
                                                 disableRipple
                                                 inputProps={{ 'aria-labelledby': labelId }}
-                                                onClick={handleToggle(row.id)}
+                                                onClick={handleToggle(row.api_id)}
                                             />
                                         }
-                                        label={row.name}
+                                        label={row.api_name}
                                     />
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <Grid container>
-                                        <Grid item xs={3} className={classes.divider}>
+                                        <Grid item xs={6} className={classes.padding}>
                                             <Typography>
-                                                <b>Path: </b>
+                                                <b>Urls: </b>
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={9} className={classes.divider}>
+                                        <Grid item xs={6} className={classes.padding}>
                                             <Typography>
-                                                {row.path}
+                                                <b>Methods: </b>
                                             </Typography>
+                                        </Grid>
+                                        <Grid item xs={6} className={classes.infoText} >
+                                            {row.urls.map(url => {
+                                                return (
+                                                    <Typography key={url.url} className={classes.divider}>
+                                                        {url.url}
+                                                    </Typography>
+                                                )
+                                            })}
                                         </Grid>
 
-
-                                        <Grid item xs={3} className={classes.padding}>
-                                            <Typography>
-                                                <b>ID: </b>
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={9} className={classes.padding}>
-                                            <Typography>
-                                                {row.id}
-                                            </Typography>
+                                        <Grid item xs={6} className={classes.infoText}>
+                                            {row.urls.map(url => {
+                                                return (
+                                                    <Typography key={url.url} className={classes.divider}>
+                                                        {url.methods}
+                                                    </Typography>
+                                                )
+                                            })}
                                         </Grid>
                                     </Grid>
                                 </ExpansionPanelDetails>

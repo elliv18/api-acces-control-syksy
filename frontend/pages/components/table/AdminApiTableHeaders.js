@@ -28,16 +28,7 @@ function AdminApiTableHeaders(props) {
         property !== 'actions' ? onRequestSort(event, property) : null
     };
 
-    const handleDeleteApis = async (ids, client) => {
-        console.log(ids)
-        await client
-            .mutate({
-                variables: {
-                    api_ids: ids
-                },
-                mutation: APIS_DELETE
-            })
-    }
+
 
     return (
         <TableHead>
@@ -86,7 +77,7 @@ function AdminApiTableHeaders(props) {
                                                     //disabled={true}
 
                                                     onClick={() => {
-                                                        handleDeleteApis(props.selected, props.client)
+                                                        props.handleOpenConfirm('test')
                                                         props.setSelected([])
                                                     }}>
                                                     <DeleteIcon />

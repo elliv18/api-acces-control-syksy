@@ -78,6 +78,7 @@ function AdminApiTableBody(props) {
     //********TABLE SORTING & SELECTING ENDS */
 
     return (
+        console.log(props.apiList),
         <Table
             className={classes.table}
             aria-label="users table"
@@ -96,6 +97,9 @@ function AdminApiTableBody(props) {
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 handleOpenAddApi={props.handleOpenAddApi}
+                handleDeleteApis={props.handleDeleteApis}
+                handleOpenConfirm={props.handleOpenConfirm}
+
             />
             <TableBody>
                 {stableSort(props.apiList, getSorting(order, orderBy))

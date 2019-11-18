@@ -11,7 +11,7 @@ function ConfirmDialog(props) {
     const emails = helpers.getEmailFromId(props.selected, props.allUsers)
 
     let msg = ''
-
+    let title = props.isUsersConfirm ? "Delete users: " : "Delete apis?"
     return (
         <Dialog
             open={props.open}
@@ -21,20 +21,31 @@ function ConfirmDialog(props) {
         >
 
             <DialogTitle id="alert-dialog-slide-title" className={classes.backgroundDialogTitle}>
-                Delete users: {emails.map(row => (
-                    <div key={row}>{
-                        row}<br />
-                    </div>
-                ))}
+                {title}
+                {
+                    props.isUsersConfirm ?
+                        emails.map(row => (
+                            <div key={row}>{
+                                row}<br />
+                            </div>
+                        ))
+                        : null
+                }
             </DialogTitle>
 
             <DialogActions className={classes.contentDialog}>
                 <Button variant="outlined" onClick={() => {
-                    props.handleCloseYes()
-                    emails.map(row => (
-                        msg += (row + ", ")
-                    ))
-                    props.getMessage('Users:' + msg + ' deleted!')
+                    props.isUsersConfirm ?
+                        (
+                            props.handleCloseYes(),
+                            emails.map(row => (
+                                msg += (row + ", ")
+                            )),
+                            props.getMessage('Users:' + msg + ' deleted!')
+                        )
+                        :
+                        props.handleDeleteApis(props.selected)
+
 
                 }}>
                     <a className={classes.buttonDialogTextYes}>Yes</a>

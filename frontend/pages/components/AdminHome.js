@@ -13,6 +13,7 @@ import AdminUsersTableBody from "./table/AdminUsersTableBody";
 import DoneSnackbar from "./SnackBar";
 import AdminApiTableBody from "./table/AdminApiTableBody";
 import DialogAddApi from "./DialogAddApi";
+import { APIS_DELETE } from "../../lib/gql/mutations";
 
 var moment = require('moment');
 
@@ -49,7 +50,8 @@ class AdminHome extends React.PureComponent {
             failed: false,
             value: '',
             apiList: [],
-            openAddApi: false
+            openAddApi: false,
+            isUsersConfirm: true
         };
     }
 
@@ -135,6 +137,9 @@ class AdminHome extends React.PureComponent {
     handleOpenConfirm = () => {
         this.setState({ openConfirm: true })
     };
+    handleOpenConfirmApis = () => {
+        this.setState({ isUsersConfirm: false, openConfirm: true })
+    };
 
     handleOpenPwReset = () => {
         console.log('OPEN')
@@ -152,6 +157,23 @@ class AdminHome extends React.PureComponent {
         data = await helpers.deleteRows(this.state.selected, this.state.allUsers)
         this.setState({ openConfirm: false, allUsers: data, autoHide: 6000, filteredUsers: data, value: '' })
         this.handleOpenSnack()
+    }
+
+    handleDeleteApis = async (ids) => {
+        let data = null
+
+        console.log(ids)
+        await this.state.client
+            .mutate({
+                variables: {
+                    api_ids: ids
+                },
+                mutation: APIS_DELETE
+            })
+        data = await helpers.deleteApiRows(ids, this.state.apiList)
+        console.log(data)
+        this.setState({ apiList: data })
+        this.handleClose()
     }
 
     handleOpenAddApi = () => {
@@ -236,6 +258,7 @@ class AdminHome extends React.PureComponent {
                         client={this.state.client}
                     />
                     : <AdminApiTableBody
+                        handleOpenConfirm={this.handleOpenConfirmApis}
                         handleOpenAddApi={this.handleOpenAddApi}
                         apiList={apiList}
                         getSelected={this.getSelected}
@@ -252,6 +275,8 @@ class AdminHome extends React.PureComponent {
                     handleClose={this.handleClose}
                     handleCloseYes={this.handleCloseDeleteYes}
                     getMessage={this.getMessage}
+                    handleDeleteApis={this.handleDeleteApis}
+                    isUsersConfirm={this.state.isUsersConfirm}
                 />
                 <DialogResetPw
                     open={openPwReset}

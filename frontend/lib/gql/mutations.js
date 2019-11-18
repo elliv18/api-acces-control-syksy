@@ -102,7 +102,19 @@ export const CREATE_NEW_API_KEY = gql`
   {
     createNewApiKey(input: {api_keys: $api_keys} )
     {
-      hash
+      user{
+        id,
+        email,
+        api_hash,
+        apis{
+          api_id,
+          api_name
+          urls{
+            url,
+            methods
+          }
+        }
+      }
     }
   }
 `;

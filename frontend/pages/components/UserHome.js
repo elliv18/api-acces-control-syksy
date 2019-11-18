@@ -17,19 +17,23 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 class HomeUser extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.setApiHash = this.setApiHash.bind(this)
+        this.setApiData = this.setApiData.bind(this)
         this.state = {
             client: props.client,
             apiList: [],
             openNewApis: false,
             expanded: '',
-            apiHash: '',
+            apiData: [],
         };
     }
 
-    setApiHash = (hash) => {
-        this.setState({ apiHash: hash })
-        console.log(this.state.apiHash)
+    componentDidMount() {
+        this.setState({ apiList: this.props.currentUser.apis })
+    }
+    setApiData = (data) => {
+        this.setState({ apiList: data })
+        //console.log(data)
+
     }
 
     handleChange = panel => (event, newExpanded) => {
@@ -52,20 +56,12 @@ class HomeUser extends React.PureComponent {
         return (
             <Paper className={classes.paper} elevation={7}>
                 <Grid container spacing={0} className={classes.grid}>
-                    <Grid item xs={3}>
+                    <Grid item xs={6}>
                         <h1 >Your apis: </h1>
                     </Grid>
-                    {this.state.apiHash !== '' ?
-                        <Grid item xs={6} style={{ textAlign: 'center' }} >
-                            <Typography>
-                                <b>Your api hash: </b>{this.state.apiHash}
-                            </Typography>
 
-                        </Grid>
-                        : <Grid item xs={6}></Grid>
-                    }
 
-                    <Grid item xs={3}>
+                    <Grid item xs={6}>
                         <div style={{ textAlign: 'right' }}>
                             <Tooltip title="Get new apis">
                                 <IconButton
@@ -78,11 +74,10 @@ class HomeUser extends React.PureComponent {
                     </Grid>
 
                 </Grid>
-                {console.log(this.props.currentUser.apis)}
                 {
 
-                    this.props.currentUser.apis !== undefined ?
-                        this.props.currentUser.apis.map((row, index) => {
+                    apiList !== undefined ?
+                        apiList.map((row, index) => {
                             //    console.log('row', ...row.urls)
                             return (
                                 <div className={classes.expansionPanelDiv} key={index}>
@@ -148,7 +143,7 @@ class HomeUser extends React.PureComponent {
                     handleClose={this.handleClose}
                     client={client}
                     userApis={this.props.currentUser.apis}
-                    setApiHash={this.setApiHash}
+                    setApiData={this.setApiData}
                 />
             </Paper>
         )
