@@ -1,35 +1,13 @@
-### Backend
+# Backend
 
+This is Project API access control service backend. Backend requires `.env` file (look root readme).
 
+## Development environment setup
 
-## Creating Api key:
+Look root readme.
 
-```
-mutation {
-    createNewApiKey(input: {
-              access: [
-                {
-                  id: "1", name: "api 1", urls: 
-                  [
-                    {
-                    url: "/todos(/.*)?", methods: ["GET", "PUT", "DELETE"]
-                    },
-                    {
-                    url: "/users(/.*)?", methods: ["GET", "POST"]
-                  	}
-                  ]
-                }, 
-                {
-                  id: "2", name: "api 2", urls: 
-                  {
-                    url: "url 2", methods: ["GET", "PUT"]
-                  }
-                }
-              ]
-    }) {
-        key,
-        keyHash
-    }
-}
+## Developing urls (in production this urls is disabled)
 
-```
+Graphql playground: http://localhost:3050/
+Prisma playground: http://localhost:3060/
+Postgres database admin UI: http://localhost:3060/_admin
