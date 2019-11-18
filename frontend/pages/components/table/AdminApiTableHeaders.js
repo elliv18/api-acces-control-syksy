@@ -76,7 +76,7 @@ function AdminApiTableHeaders(props) {
                                                     //disabled={true}
 
                                                     onClick={() => {
-                                                        props.handleOpenConfirm('test')
+                                                        props.handleOpenConfirm()
                                                         props.setSelected([])
                                                     }}>
                                                     <DeleteIcon />

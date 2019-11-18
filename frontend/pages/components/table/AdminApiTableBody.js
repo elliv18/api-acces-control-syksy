@@ -130,11 +130,11 @@ function AdminApiTableBody(props) {
 
                                         >
                                             <IconButton
-                                                disabled={true}
+
                                                 color="primary"
                                                 onClick={event => {
                                                     //dialog
-                                                    handleClickSelect(event, row.id)
+                                                    handleClickSelect(event, row.api_id)
                                                     props.handleOpenConfirm()
                                                     setSelected([])
 
@@ -144,42 +144,35 @@ function AdminApiTableBody(props) {
                                             </IconButton>
                                         </Tooltip>
 
-                                        <Tooltip title={"Edit api"}
-                                            style={{ display: selected.length === 0 ? 'initial' : 'none' }}
 
-                                        >
-                                            <IconButton
-                                                disabled={true}
+                                        <IconButton
+                                            disabled={true}
 
-                                                color="primary"
-                                                onClick={event => {
-                                                    //dialog
-                                                    handleClickSelect(event, row.api_id)
-                                                    props.handleOpenPwReset()
-                                                    setSelected([])
-                                                    //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                                }}>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Tooltip>
+                                            color="primary"
+                                            onClick={event => {
+                                                //dialog
+                                                handleClickSelect(event, row.api_id)
+                                                props.handleOpenPwReset()
+                                                setSelected([])
+                                                //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
+                                            <EditIcon />
+                                        </IconButton>
 
-                                        <Tooltip title={"Create new apikey"}
-                                            style={{ display: selected.length === 0 ? 'initial' : 'none' }}
-                                        >
-                                            <IconButton
-                                                disabled={true}
 
-                                                color="primary"
-                                                onClick={event => {
-                                                    //dialog
-                                                    handleClickSelect(event, row.api_id)
-                                                    helpers.createNewApikey(props.client)
-                                                    setSelected([])
-                                                    //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
-                                                }}>
-                                                <AddIcon />
-                                            </IconButton>
-                                        </Tooltip>
+                                        <IconButton
+                                            disabled={true}
+
+                                            color="primary"
+                                            onClick={event => {
+                                                //dialog
+                                                handleClickSelect(event, row.api_id)
+                                                helpers.createNewApikey(props.client)
+                                                setSelected([])
+                                                //this.setState({ selectedUserEmail: row.email, selectedUserId: row.id })
+                                            }}>
+                                            <AddIcon />
+                                        </IconButton>
                                     </div>
                                 </StyledTableCell>
 
@@ -197,7 +190,7 @@ function AdminApiTableBody(props) {
                                                     </Grid>
                                                     <Grid item xs={6}>
                                                         <Typography>
-                                                            {urls.methods}
+                                                            {JSON.parse(urls.methods)}
                                                         </Typography>
                                                     </Grid>
                                                 </Grid>
