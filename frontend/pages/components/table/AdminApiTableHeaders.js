@@ -46,7 +46,6 @@ function AdminApiTableHeaders(props) {
                         key={headCell.id}
                         align={'center'}
                         sortDirection={orderBy === headCell.id ? order : false}
-                        style={{ position: 'relative' }}
 
                     >
                         <TableSortLabel

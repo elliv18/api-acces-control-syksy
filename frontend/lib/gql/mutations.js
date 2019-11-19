@@ -136,7 +136,15 @@ export const CREATE_NEW_API = gql`
       urls: $urls
      } )
     {
-      key
+      api{
+        api_id,
+        api_name,
+        api_root_url
+        urls{
+          url,
+          methods
+        }
+      }
     }
   }
 `;
