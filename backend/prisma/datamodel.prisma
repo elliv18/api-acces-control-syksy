@@ -10,6 +10,7 @@ type User {
   email: String! @unique
   password: String
   api_hash: String
+  api_key: String
   apis: [Api]! @relation(name: "UserApis")
   google: Google @relation(name: "GoogleStuff", link: INLINE, onDelete: CASCADE)
   createdAt: DateTime! @createdAt

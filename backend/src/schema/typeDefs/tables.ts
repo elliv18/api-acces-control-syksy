@@ -18,6 +18,7 @@ export default `
         google_account: Boolean
         email: String
         api_hash: String
+        api_key: String
         apis: [Api]!
         createdAt: String!
         updatedAt: String!

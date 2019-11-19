@@ -73,7 +73,8 @@ export default {
       // adding hash to current user table line
       await prisma.updateUser({
         data: {
-          api_hash: data.key_hash
+          api_hash: data.key_hash,
+          api_key: data.key
         },
         where: {
           id: currentUser.id
