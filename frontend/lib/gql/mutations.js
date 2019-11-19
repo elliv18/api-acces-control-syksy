@@ -110,6 +110,7 @@ export const CREATE_NEW_API_KEY = gql`
         api_hash,
         apis{
           api_id,
+          api_root_url,
           api_name
           urls{
             url,

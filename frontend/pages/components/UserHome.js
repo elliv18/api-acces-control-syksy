@@ -32,7 +32,7 @@ class HomeUser extends React.PureComponent {
     }
     setApiData = (data) => {
         this.setState({ apiList: data })
-        //console.log(data)
+        console.log(data)
 
     }
 
