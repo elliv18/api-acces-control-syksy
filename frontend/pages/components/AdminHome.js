@@ -31,6 +31,7 @@ class AdminHome extends React.PureComponent {
         this.setAutoHide = this.setAutoHide.bind(this)
         this.getMessage = this.getMessage.bind(this)
         this.handleOpenAddApi = this.handleOpenAddApi.bind(this)
+        this.getAddedApiData = this.getAddedApiData.bind(this)
         // table shows filteredUsers array, need allUsers when remove searchfield
         // all components uses allUsers array
         this.state = {
@@ -133,6 +134,18 @@ class AdminHome extends React.PureComponent {
         ]
         this.setState({ allUsers: temp, filteredUsers: temp, value: '' })
         //console.log('edit', temp)
+    }
+
+    getAddedApiData = (data) => {
+        let temp = null;
+        // console.log('data', this.state.apiList)
+
+        temp = [
+            ...this.state.apiList,
+            data
+        ]
+        //     console.log(temp)
+        this.setState({ apiList: temp, filteredApis: temp })
     }
 
     //handle opens
@@ -278,6 +291,7 @@ class AdminHome extends React.PureComponent {
                         apiList={filteredApis}
                         getSelected={this.getSelected}
                         client={this.state.client}
+                        getAddedApiData={this.getAddedApiData}
 
                     />
 
@@ -308,6 +322,8 @@ class AdminHome extends React.PureComponent {
                 <DialogAddApi
                     open={openAddApi}
                     handleClose={this.handleClose}
+                    getAddedApiData={this.getAddedApiData}
+
                 />
 
                 <DialogAddUser

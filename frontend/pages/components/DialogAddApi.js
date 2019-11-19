@@ -42,10 +42,14 @@ function DialogAddApi(props) {
                 refetchQueries: [{ query: API_LIST_QUERY }],
 
             })
-            .then(res => console.log(res))
+            .then(res => {
+                // console.log(res.data.createNewAPI.api)
+                props.getAddedApiData(res.data.createNewAPI.api)
+            })
             .catch(e => console.log(e))
 
         setUrls([])
+        props.handleClose()
     }
 
     const nameChange = (e) => {
