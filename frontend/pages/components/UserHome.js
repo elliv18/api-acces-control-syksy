@@ -57,9 +57,8 @@ class HomeUser extends React.PureComponent {
             <Paper className={classes.paper} elevation={7}>
                 <Grid container spacing={0} className={classes.grid}>
                     <Grid item xs={6}>
-                        <h1 >Your apis: </h1>
+                        <h1 >Your apis </h1>
                     </Grid>
-
 
                     <Grid item xs={6}>
                         <div style={{ textAlign: 'right' }}>
@@ -72,6 +71,12 @@ class HomeUser extends React.PureComponent {
                             </Tooltip>
                         </div>
                     </Grid>
+                    {this.props.currentUser.api_hash
+                        ? <Grid item xs={12}>
+                            <h3>Your api hash: {this.props.currentUser.api_hash}</h3>
+                        </Grid>
+                        : null
+                    }
 
                 </Grid>
                 {

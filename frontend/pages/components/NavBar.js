@@ -1,7 +1,7 @@
 import React from "react";
 import { withApollo } from "react-apollo";
 import Cookies from "js-cookie";
-import { Link, Switch } from "@material-ui/core";
+import { Link, Switch, Fab } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { CURRENTUSER } from "../../lib/gql/mutations";
@@ -17,6 +17,7 @@ import { navStyles } from './Styles'
 import DialogResetPw from "./DialogResetPw";
 import App from "./App";
 import DoneSnackbar from "./SnackBar";
+import LogOutIcon from '@material-ui/icons/ExitToAppSharp';
 
 class NavBar extends React.PureComponent {
     constructor(props) {
@@ -129,7 +130,7 @@ class NavBar extends React.PureComponent {
                         ? <AppBar position="sticky" className={classes.appBar}>
                             <Toolbar>
                                 <Typography variant="h6" className={classes.title}>
-                                    Welcome {currentUser ? currentUser.email : null}
+                                    {currentUser ? currentUser.userType + ": " + currentUser.email : null}
                                 </Typography>
 
                                 {//Näytetään vain adminille switch Users/apis
@@ -146,12 +147,26 @@ class NavBar extends React.PureComponent {
                                         </div>
                                         : null
                                         : null}
-                                <IconButton
-                                    color="inherit"
-                                    onClick={this.handleClickOpenMenu}
-                                    aria-label='menu button'>
-                                    <MenuIcon />
-                                </IconButton>
+                                {currentUser.userType === 'USER'
+                                    ?
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={this.handleClickOpenMenu}
+                                        aria-label='menu button'>
+                                        <MenuIcon />
+                                    </IconButton>
+                                    :
+                                    <Fab
+                                        variant="extended"
+                                        size="small"
+                                        aria-label="like"
+                                        color="secondary"
+                                        onClick={this.handleLogOut}
+                                    >
+                                        <LogOutIcon />
+                                        Logout
+                                    </Fab>
+                                }
                             </Toolbar>
                         </AppBar>
                         : <div style={{ height: '64px', backgroundColor: '#B9CCD0' }} />
@@ -162,6 +177,7 @@ class NavBar extends React.PureComponent {
                     <div className={classes.content} >
                         {childrenWithProps}
                     </div>
+
                     <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}
@@ -169,17 +185,10 @@ class NavBar extends React.PureComponent {
                         open={Boolean(anchorEl)}
                         onClose={this.handleCloseMenu}
                     >
-                        <MenuItem onClick={this.handleCloseMenu}>
-                            <Link href={'/home'} style={{ width: '100%' }}>
-                                Home
-                            </Link>
 
-                        </MenuItem>
-                        {currentUser.userType === 'USER'
-                            ? <MenuItem>
-                                <Button onClick={this.handleOpenPwReset}>Change password</Button>
+                        <MenuItem onClick={this.handleOpenPwReset}>
+                            Change password
                             </MenuItem>
-                            : null}
                         <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
                     </Menu>
 

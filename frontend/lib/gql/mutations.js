@@ -81,6 +81,7 @@ export const CURRENTUSER = gql`
     currentUser {
       id,
       email,
+      api_hash,
       userType
       apis {
         api_id,
