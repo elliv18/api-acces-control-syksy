@@ -86,6 +86,7 @@ export const CURRENTUSER = gql`
       apis {
         api_id,
         api_name,
+        api_root_url,
         urls {
           url,
           methods

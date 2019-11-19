@@ -176,6 +176,11 @@ function DialogUserAskNewApis(props) {
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <Grid container>
+                                        <Grid item xs={12} className={classes.padding}>
+                                            <Typography>
+                                                <b>Root path:  </b> {row.api_root_url}
+                                            </Typography>
+                                        </Grid>
                                         <Grid item xs={6} className={classes.padding}>
                                             <Typography>
                                                 <b>Urls: </b>
