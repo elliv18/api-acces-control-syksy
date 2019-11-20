@@ -1,6 +1,6 @@
 import React from "react";
 import { withApollo } from "react-apollo";
-import { Paper, Grid, IconButton, Tooltip } from "@material-ui/core";
+import { Paper, Grid, IconButton, Tooltip, DialogTitle, Dialog, DialogActions, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Typography from '@material-ui/core/Typography';
 import { homeStyleUser } from './Styles'
@@ -24,12 +24,18 @@ class HomeUser extends React.PureComponent {
             openNewApis: false,
             expanded: '',
             apiData: [],
-            apiKey: ''
+            apiKey: '',
+            openGoogle: false
         };
     }
 
     componentDidMount() {
-        this.setState({ apiList: this.props.currentUser.apis, apiKey: this.props.currentUser.api_key })
+        this.setState({
+            apiList: this.props.currentUser.apis,
+            apiKey: this.props.currentUser.api_key,
+
+            openGoogle: this.props.currentUser.google_account
+        })
 
     }
     setApiData = (data) => {
@@ -52,7 +58,7 @@ class HomeUser extends React.PureComponent {
     }
 
     render() {
-        const { apiList, openNewApis, client, expanded } = this.state;
+        const { apiList, openNewApis, client, expanded, openGoogle } = this.state;
         const { classes } = this.props;
 
         return (
@@ -157,6 +163,8 @@ class HomeUser extends React.PureComponent {
                     userApis={this.props.currentUser.apis}
                     setApiData={this.setApiData}
                 />
+
+
             </Paper>
         )
 
@@ -167,14 +175,14 @@ export default withStyles(homeStyleUser)(withApollo(HomeUser));
 
 /*
 <Grid container spacing={0} style={{ width: '60%' }}>
-                    <Grid item xs={12}>
-                        <h1 className={classes.paper}>Your apis: </h1>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Paper className={classes.paper}>xs=6</Paper>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Paper className={classes.paper}>xs=6</Paper>
-                    </Grid>
+            <Grid item xs={12}>
+                <h1 className={classes.paper}>Your apis: </h1>
+            </Grid>
+            <Grid item xs={6}>
+                <Paper className={classes.paper}>xs=6</Paper>
+            </Grid>
+            <Grid item xs={6}>
+                <Paper className={classes.paper}>xs=6</Paper>
+            </Grid>
 
-                </Grid>*/
+        </Grid>*/

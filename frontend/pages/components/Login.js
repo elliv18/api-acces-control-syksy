@@ -23,6 +23,7 @@ import { GoogleLogin } from 'react-google-login';
 
 import getConfig from "next/config";
 import DialogAlertSignUpIn from "./DialogAlertSignUpIn";
+import { USERS_QUERY } from "../../lib/gql/queries";
 
 const { publicRuntimeConfig } = getConfig();
 const { GOOGLE_CLIENT_ID } = publicRuntimeConfig;
@@ -82,7 +83,8 @@ class Login extends React.Component {
         variables: {
           token: response.tokenId
         },
-        mutation: GOOGLE_LOGIN
+        mutation: GOOGLE_LOGIN,
+
       })
       .then(res => {
         let googleJWT = res.data.loginGoogle.jwt

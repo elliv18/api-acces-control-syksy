@@ -6,6 +6,7 @@ export const USERS_QUERY = gql`
       id,
       email,
       api_hash,
+      api_key,
       userType,
       createdAt
     }

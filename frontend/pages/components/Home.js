@@ -17,11 +17,9 @@ class Home extends React.PureComponent {
 
     this.state = {
       client: props.client,
-      userType: null
+      userType: null,
     };
   }
-
-
 
 
 
@@ -33,6 +31,7 @@ class Home extends React.PureComponent {
       return <AdminHome userType={userType} switchState={this.props.switchState} />
     }
     else if (this.props.currentUser.userType === 'USER') {
+      <AdminHome currentUser={this.props.currentUser} />
       return <UserHome
         currentUser={this.props.currentUser}
       />

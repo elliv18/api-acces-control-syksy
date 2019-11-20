@@ -41,6 +41,8 @@ class NavBar extends React.PureComponent {
     handleLogOut = () => {
         Cookies.remove("jwtToken");
         Router.push('/')
+        //adds google account rightaway
+        window.location.reload('/')
     };
 
     // menu handlers

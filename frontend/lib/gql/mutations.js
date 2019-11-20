@@ -83,6 +83,7 @@ export const CURRENTUSER = gql`
       email,
       api_hash,
       api_key,
+      google_account,
       userType
       apis {
         api_id,

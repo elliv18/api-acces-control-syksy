@@ -22,7 +22,7 @@ var moment = require('moment');
 
 function AdminApiTableBody(props) {
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('name');
+    const [orderBy, setOrderBy] = React.useState('api_name');
     const [selected, setSelected] = React.useState([]);
     const [apikey, setApikey] = React.useState(null);
 
