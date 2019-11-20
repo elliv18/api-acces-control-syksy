@@ -24,14 +24,16 @@ class HomeUser extends React.PureComponent {
             openNewApis: false,
             expanded: '',
             apiData: [],
+            apiKey: ''
         };
     }
 
     componentDidMount() {
-        this.setState({ apiList: this.props.currentUser.apis })
+        this.setState({ apiList: this.props.currentUser.apis, apiKey: this.props.currentUser.api_key })
+
     }
     setApiData = (data) => {
-        this.setState({ apiList: data })
+        this.setState({ apiList: data.apis, apiKey: data.api_key })
         console.log(data)
 
     }
@@ -71,9 +73,9 @@ class HomeUser extends React.PureComponent {
                             </Tooltip>
                         </div>
                     </Grid>
-                    {this.props.currentUser.api_hash
+                    {this.state.apiKey
                         ? <Grid item xs={12}>
-                            <h3>Your api hash: {this.props.currentUser.api_hash}</h3>
+                            <h3>Your api key: {this.state.apiKey}</h3>
                         </Grid>
                         : null
                     }

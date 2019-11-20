@@ -87,7 +87,7 @@ function DialogUserAskNewApis(props) {
                 mutation: CREATE_NEW_API_KEY
 
             }).then(res => {
-                let apis = res.data.createNewApiKey.user.apis
+                let apis = res.data.createNewApiKey.user
                 props.setApiData(apis)
             })
             .catch(e => console.log(e))

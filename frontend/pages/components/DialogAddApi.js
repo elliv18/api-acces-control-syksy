@@ -24,6 +24,15 @@ function DialogAddApi(props) {
     const [urls, setUrls] = React.useState([]);
     const [url, setUrl] = React.useState('');
     const [method, setMethod] = React.useState('');
+    const [errorStatusRoot, setErrorStatusRoot] = React.useState(false);
+    const [errorStatusTarget, setErrorStatusTarget] = React.useState(false);
+    const [disabled, setDisabled] = React.useState(true);
+
+    const [helpMsgRoot, setHelpMsgRoot] = React.useState('');
+    const [helpMsgTarget, setHelpMsgTarget] = React.useState('');
+
+
+
 
 
     const { classes } = props
@@ -56,10 +65,38 @@ function DialogAddApi(props) {
         setName(e.target.value)
     }
     const pathChange = (e) => {
-        setApi_Path(e.target.value)
+        let value = e.target.value;
+        console.log(value.slice(0, 1))
+        value.slice(0, 1) === '/' && value.slice(-1) === '/'
+            ? (
+                setApi_Path(e.target.value),
+                setErrorStatusRoot(false),
+                setHelpMsgRoot('')
+            )
+            : (
+                setErrorStatusRoot(true),
+                setHelpMsgRoot('Must start and end /')
+            )
     }
     const targetChange = (e) => {
-        setApi_target(e.target.value)
+        let value = e.target.value;
+        let httpHttps = value.slice(0, 8);
+        console.log(httpHttps)
+        httpHttps.includes('http://') || httpHttps.includes('https://')
+            ? value.slice(-1) === '/' ?
+                (
+                    setApi_target(e.target.value),
+                    setErrorStatusTarget(false),
+                    setHelpMsgTarget('')
+                )
+                : (
+                    setErrorStatusTarget(true),
+                    setHelpMsgTarget('Must end /')
+                )
+            : (
+                setErrorStatusTarget(true),
+                setHelpMsgTarget('Must start with http:// or https://')
+            )
     }
     const urlChange = (e) => {
         let value = e.target.value
@@ -98,7 +135,7 @@ function DialogAddApi(props) {
             <Container className={classes.main}>
                 <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Create new api</DialogTitle>
                 <DialogContent className={classes.dialogContent}>
-                    <FormControl className={classes.textField}>
+                    <FormControl className={classes.textField} >
                         <TextField
                             autoFocus
                             fullWidth
@@ -107,16 +144,26 @@ function DialogAddApi(props) {
                             onChange={nameChange}
                         />
                         <TextField
+
+                            id="root_url"
                             fullWidth
-                            label={"api_path"}
+                            label={"exp: /test/"}
+                            helperText={helpMsgRoot}
+                            error={errorStatusRoot}
+                            required
                             type="text"
                             onChange={pathChange}
+
+
                         />
                         <TextField
                             fullWidth
                             label={"api_target"}
                             type="text"
                             onChange={targetChange}
+                            required
+                            error={errorStatusTarget}
+                            helperText={helpMsgTarget}
                         />
                         <div style={{
                             marginTop: '20px',
@@ -159,7 +206,11 @@ function DialogAddApi(props) {
                     <Button onClick={props.handleClose} color="primary" >
                         <a className={classes.buttonDialogTextNo}>Cancel</a>
                     </Button>
-                    <Button onClick={handleAddApi} color="primary" >
+                    <Button
+                        onClick={handleAddApi}
+                        color="primary"
+                        disabled={errorStatusTarget || errorStatusRoot ? true : false}
+                    >
                         <a className={classes.buttonDialogTextYes}>Create</a>
                     </Button>
 
@@ -168,7 +219,6 @@ function DialogAddApi(props) {
 
 
         </Dialog>
-
     )
 }
 
