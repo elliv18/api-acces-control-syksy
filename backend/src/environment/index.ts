@@ -30,3 +30,11 @@ export const TYK_GW_SECRET = process.env.TYK_GW_SECRET || "holomoloo";
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
+
+export const APIKEY_EXPIRY_NU_TIME = parseInt(
+  process.env.APIKEY_EXPIRY_NU_TIME
+);
+
+export const APIKEY_EXPIRY_GU_TIME = parseInt(
+  process.env.APIKEY_EXPIRY_GU_TIME
+);

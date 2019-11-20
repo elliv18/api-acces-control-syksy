@@ -2,7 +2,12 @@ import { mustBeLoggedIn } from "../../misc/auth";
 import { prisma } from "../../generated/prisma-client";
 import logger from "../../misc/logger";
 import fetch from "node-fetch";
-import { DEBUG, TYK_GW_SECRET } from "../../environment";
+import {
+  DEBUG,
+  TYK_GW_SECRET,
+  APIKEY_EXPIRY_NU_TIME,
+  APIKEY_EXPIRY_GU_TIME
+} from "../../environment";
 
 export default {
   Mutation: {
@@ -15,6 +20,16 @@ export default {
           "[Q ALLUSERS] User %s - Create new api key %s",
           currentUser.id
         );
+      }
+
+      // make apikey expiry time
+      var time = Date.now();
+      const cuTemp = prisma.user({ id: currentUser.id });
+
+      if (cuTemp.google_account) {
+        time += APIKEY_EXPIRY_GU_TIME;
+      } else {
+        time += APIKEY_EXPIRY_NU_TIME;
       }
 
       const tykURL = "http://gateway:8080/tyk/keys/create";
@@ -59,6 +74,7 @@ export default {
       }
 
       const body = {
+        expires: time,
         access_rights: access_rights
       };
 
@@ -74,7 +90,8 @@ export default {
       await prisma.updateUser({
         data: {
           api_hash: data.key_hash,
-          api_key: data.key
+          api_key: data.key,
+          api_expiry: time.toString()
         },
         where: {
           id: currentUser.id
