@@ -69,9 +69,16 @@ function DialogAddApi(props) {
         console.log(value.slice(0, 1))
         value.slice(0, 1) === '/' && value.slice(-1) === '/'
             ? (
-                setApi_Path(e.target.value),
-                setErrorStatusRoot(false),
-                setHelpMsgRoot('')
+                value.length > 2 ?
+                    (
+                        setApi_Path(e.target.value),
+                        setErrorStatusRoot(false),
+                        setHelpMsgRoot('')
+                    )
+                    : (
+                        setErrorStatusRoot(true),
+                        setHelpMsgRoot('Api path too short')
+                    )
             )
             : (
                 setErrorStatusRoot(true),
@@ -81,13 +88,20 @@ function DialogAddApi(props) {
     const targetChange = (e) => {
         let value = e.target.value;
         let httpHttps = value.slice(0, 8);
-        console.log(httpHttps)
         httpHttps.includes('http://') || httpHttps.includes('https://')
             ? value.slice(-1) === '/' ?
                 (
-                    setApi_target(e.target.value),
-                    setErrorStatusTarget(false),
-                    setHelpMsgTarget('')
+                    value.length > 8 ?
+                        (
+                            setApi_target(e.target.value),
+                            setErrorStatusTarget(false),
+                            setHelpMsgTarget('')
+                        )
+                        : (
+                            setErrorStatusTarget(true,
+                                setHelpMsgTarget('Target url is too short')
+                            )
+                        )
                 )
                 : (
                     setErrorStatusTarget(true),
