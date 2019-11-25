@@ -176,7 +176,13 @@ function AdminApiTableBody(props) {
                                 </StyledTableCell>
 
                                 <StyledTableCell align="center">{row.api_name}</StyledTableCell>
-                                <StyledTableCell align="center">{row.api_root_url}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    http://
+                                    {props.TYK.TYK_HOST}
+                                    :
+                                    {props.TYK.TYK_PORT}
+                                    {row.api_root_url}
+                                </StyledTableCell>
                                 {row.urls ?
                                     <StyledTableCell align="center">
                                         {row.urls.map((urls, index) => {

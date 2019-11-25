@@ -10,7 +10,8 @@ import { createHttpLink } from 'apollo-link-http';
 
 
 const { publicRuntimeConfig } = getConfig();
-const { BACKEND_HOST, BACKEND_PORT, PUBLIC_API_URL } = publicRuntimeConfig;
+const { BACKEND_HOST, BACKEND_PORT, PUBLIC_API_URL, TYK_HOST, TYK_PORT } = publicRuntimeConfig;
+//console.log(publicRuntimeConfig)
 
 let apolloClient = null;
 
@@ -27,7 +28,10 @@ function create(initialState) {
     NODE_ENV: ${NODE_ENV}
     BACKEND_HOST: ${BACKEND_HOST}
     BACKEND_PORT: ${BACKEND_PORT}
+    TYK_HOST: ${TYK_HOST}
+    TYK_PORT: ${TYK_PORT}
     PUBLIC_API_URL: ${PUBLIC_API_URL}
+
   `);
 
     URL = `http://${BACKEND_HOST}:${BACKEND_PORT}`;

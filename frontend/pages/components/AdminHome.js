@@ -290,7 +290,6 @@ class AdminHome extends React.PureComponent {
                         onChange={this.handleFilter}
                         value={value} />
                 </div>
-
                 {this.props.switchState === 'USERS'
                     ? <AdminUsersTableBody
                         allUsers={filteredUsers}
@@ -308,6 +307,7 @@ class AdminHome extends React.PureComponent {
                         getSelected={this.getSelected}
                         client={this.state.client}
                         getAddedApiData={this.getAddedApiData}
+                        TYK={this.props.TYK}
 
                     />
 

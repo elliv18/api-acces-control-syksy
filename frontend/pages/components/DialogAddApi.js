@@ -17,9 +17,9 @@ import { API_LIST_QUERY } from '../../lib/gql/queries';
 
 
 function DialogAddApi(props) {
-    const [name, setName] = React.useState(null);
-    const [api_path, setApi_Path] = React.useState(null);
-    const [api_target, setApi_target] = React.useState(null);
+    const [name, setName] = React.useState('');
+    const [api_path, setApi_Path] = React.useState('');
+    const [api_target, setApi_target] = React.useState('');
 
     const [urls, setUrls] = React.useState([]);
     const [url, setUrl] = React.useState('');
@@ -30,7 +30,6 @@ function DialogAddApi(props) {
 
     const [helpMsgRoot, setHelpMsgRoot] = React.useState('');
     const [helpMsgTarget, setHelpMsgTarget] = React.useState('');
-
 
 
 
@@ -66,7 +65,7 @@ function DialogAddApi(props) {
     }
     const pathChange = (e) => {
         let value = e.target.value;
-        console.log(value.slice(0, 1))
+        //console.log(value.slice(0, 1))
         value.slice(0, 1) === '/' && value.slice(-1) === '/'
             ? (
                 value.length > 2 ?
@@ -112,6 +111,14 @@ function DialogAddApi(props) {
                 setHelpMsgTarget('Must start with http:// or https://')
             )
     }
+    const isDisabled = () => {
+        // console.log(name.length)
+        if (name.length > 0 && api_path.length > 0 && api_target.length > 0)
+            return false
+
+        return true
+    }
+    //  console.log(isDisabled())
     const urlChange = (e) => {
         let value = e.target.value
         setUrl(value)
@@ -214,7 +221,6 @@ function DialogAddApi(props) {
 
                     </FormControl>
 
-
                 </DialogContent>
                 <DialogActions className={classes.dialogActions}>
                     <Button onClick={props.handleClose} color="primary" >
@@ -223,7 +229,7 @@ function DialogAddApi(props) {
                     <Button
                         onClick={handleAddApi}
                         color="primary"
-                        disabled={errorStatusTarget || errorStatusRoot ? true : false}
+                        disabled={isDisabled() || errorStatusTarget || errorStatusRoot ? true : false}
                     >
                         <a className={classes.buttonDialogTextYes}>Create</a>
                     </Button>

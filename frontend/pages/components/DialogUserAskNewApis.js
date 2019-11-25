@@ -178,7 +178,12 @@ function DialogUserAskNewApis(props) {
                                     <Grid container>
                                         <Grid item xs={12} className={classes.padding}>
                                             <Typography>
-                                                <b>Root path:  </b> {row.api_root_url}
+                                                <b>Root path:  </b>
+                                                http://
+                                                {props.TYK.TYK_HOST}
+                                                :
+                                                {props.TYK.TYK_PORT}
+                                                {row.api_root_url}
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6} className={classes.padding}>
