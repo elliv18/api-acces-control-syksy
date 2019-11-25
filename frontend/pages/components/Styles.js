@@ -125,13 +125,11 @@ export const AdminHomeStyles = theme => ({
         width: '99%',
         marginRight: 'auto',
         marginLeft: 'auto',
-        maxHeight: '620px',
         overflow: 'auto',
-        paddingBottom: '10px'
-
+        paddingBottom: '10px',
     },
     table: {
-        minWidth: 750,
+        minWidth: 1000,
         maxHeight: '55%'
         // overflow: 'auto',
     },

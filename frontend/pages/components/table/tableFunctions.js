@@ -16,6 +16,7 @@ export const StyledTableCell = withStyles(theme => ({
         // backgroundColor: theme.palette.secondary.main,
         height: '80px'
     },
+
 }))(TableCell);
 
 export function desc(a, b, orderBy) {

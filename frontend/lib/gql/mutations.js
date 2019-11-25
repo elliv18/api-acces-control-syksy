@@ -82,6 +82,8 @@ export const CURRENTUSER = gql`
       id,
       email,
       api_hash,
+      api_key,
+      google_account,
       userType
       apis {
         api_id,
@@ -108,6 +110,7 @@ export const CREATE_NEW_API_KEY = gql`
         id,
         email,
         api_hash,
+        api_key,
         apis{
           api_id,
           api_root_url,

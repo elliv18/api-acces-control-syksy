@@ -53,19 +53,34 @@ class AdminHome extends React.PureComponent {
             value: '',
             apiList: [],
             openAddApi: false,
-            isUsersConfirm: true
+            isUsersConfirm: true,
+            switchState: this.props.switchState
         };
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        //  console.log(nextProps.switchState, prevState.switchState)
+        if (nextProps.switchState !== prevState.switchState) {
+            return {
+                value: '',
+                switchState: nextProps.switchState,
+                filteredUsers: prevState.allUsers,
+                filteredApis: prevState.apiList
+            }
+        }
+        return null;
     }
 
     async componentDidMount() {
         // USERS
         let data = null
-        await this.state.client
+
+        await this.props.client
             .query({
+
                 query: USERS_QUERY
             })
             .then(res => {
-
                 this.setState({ allUsers: res.data.allUsers, filteredUsers: res.data.allUsers })
             })
             .catch(e => console.log(e))
@@ -74,7 +89,8 @@ class AdminHome extends React.PureComponent {
         // APILIST
         await this.state.client
             .query({
-                query: API_LIST_QUERY
+                query: API_LIST_QUERY,
+
             })
             .then(res => {
                 // console.log(res)
@@ -274,7 +290,6 @@ class AdminHome extends React.PureComponent {
                         onChange={this.handleFilter}
                         value={value} />
                 </div>
-
                 {this.props.switchState === 'USERS'
                     ? <AdminUsersTableBody
                         allUsers={filteredUsers}
@@ -292,6 +307,7 @@ class AdminHome extends React.PureComponent {
                         getSelected={this.getSelected}
                         client={this.state.client}
                         getAddedApiData={this.getAddedApiData}
+                        TYK={this.props.TYK}
 
                     />
 

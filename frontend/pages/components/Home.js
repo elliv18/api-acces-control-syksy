@@ -6,10 +6,14 @@ import { CURRENTUSER } from "../../lib/gql/mutations";
 import AdminHome from './AdminHome'
 import UserHome from './UserHome'
 import { homeStyle } from './Styles'
-
+import getConfig from 'next/config'
 import Router from 'next/router'
 
 const { Consumer } = React.createContext();
+const { publicRuntimeConfig } = getConfig();
+const { TYK_PORT, TYK_HOST } = publicRuntimeConfig;
+
+const TYK = { TYK_HOST, TYK_PORT }
 
 class Home extends React.PureComponent {
   constructor(props) {
@@ -17,11 +21,9 @@ class Home extends React.PureComponent {
 
     this.state = {
       client: props.client,
-      userType: null
+      userType: null,
     };
   }
-
-
 
 
 
@@ -30,10 +32,15 @@ class Home extends React.PureComponent {
     const { classes } = this.props;
 
     if (this.props.currentUser.userType === 'ADMIN') {
-      return <AdminHome userType={userType} switchState={this.props.switchState} />
+      return <AdminHome
+        userType={userType}
+        switchState={this.props.switchState}
+        TYK={TYK}
+      />
     }
     else if (this.props.currentUser.userType === 'USER') {
       return <UserHome
+        TYK={TYK}
         currentUser={this.props.currentUser}
       />
     }

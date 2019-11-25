@@ -176,9 +176,13 @@ function AdminUsersTableBody(props) {
                                 </StyledTableCell>
                                 <StyledTableCell align="center">{row.email}</StyledTableCell>
                                 <StyledTableCell align="center">{row.userType}</StyledTableCell>
-                                <StyledTableCell align="center">{row.id}</StyledTableCell>
-                                <StyledTableCell align="center">{row.api_hash}</StyledTableCell>
-                                <StyledTableCell align="center">
+                                <StyledTableCell align="center">{row.api_key}</StyledTableCell>
+                                <StyledTableCell align="right">
+                                    {moment.unix("1574255843").format('DD.MM.YYYY - HH:mm')}
+
+                                </StyledTableCell>
+
+                                <StyledTableCell align="right">
                                     {row.createdAt !== 'No results found'
                                         ? moment(row.createdAt).format('DD.MM.YYYY - HH:mm')
                                         : row.createdAt

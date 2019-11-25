@@ -41,6 +41,8 @@ class NavBar extends React.PureComponent {
     handleLogOut = () => {
         Cookies.remove("jwtToken");
         Router.push('/')
+        //adds google account rightaway
+        window.location.reload('/')
     };
 
     // menu handlers
@@ -123,6 +125,7 @@ class NavBar extends React.PureComponent {
         const { anchorEl, currentUser, open, openPwReset, openSnack, message, autoHide } = this.state;
         const { classes } = this.props;
 
+
         return (
             <App>
                 <div className={classes.root}>
@@ -147,8 +150,9 @@ class NavBar extends React.PureComponent {
                                         </div>
                                         : null
                                         : null}
-                                {currentUser.userType === 'USER'
+                                {currentUser.userType === 'USER' && !currentUser.google_account
                                     ?
+
                                     <IconButton
                                         color="inherit"
                                         onClick={this.handleClickOpenMenu}
@@ -156,6 +160,7 @@ class NavBar extends React.PureComponent {
                                         <MenuIcon />
                                     </IconButton>
                                     :
+
                                     <Fab
                                         variant="extended"
                                         size="small"
@@ -166,6 +171,7 @@ class NavBar extends React.PureComponent {
                                         <LogOutIcon />
                                         Logout
                                     </Fab>
+
                                 }
                             </Toolbar>
                         </AppBar>
