@@ -17,9 +17,9 @@ const headCells = [
 
     { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
     { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
-    { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
-    { id: 'api_hash', numeric: false, disablePadding: false, label: 'Apihash' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created' },
+    { id: 'api_hash', numeric: false, disablePadding: false, label: 'Api key' },
+    { id: 'api_expiry', numeric: false, disablePadding: false, label: 'Api expires' },
+    { id: 'createdAt', numeric: false, disablePadding: false, label: 'User created' },
 
 ];
 
@@ -54,7 +54,7 @@ function AdminUsersTableHeaders(props) {
                             direction={order}
                             onClick={createSortHandler(headCell.id)}
                         >
-                            <div style={{ color: 'black' }}>{headCell.label}</div>
+                            <div>{headCell.label}</div>
                             {orderBy === headCell.id && headCell.id !== 'actions' ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? '' : ''}
