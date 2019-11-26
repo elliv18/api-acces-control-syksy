@@ -10,7 +10,7 @@ import { withApollo } from 'react-apollo';
 
 import { ADMIN_RESET_PW, CURRENTUSER_UPDATE_PW } from '../../lib/gql/mutations';
 import helpers from '../../src/components/helpers';
-import { dialogResetPwstyle } from './Styles';
+import { dialogResetPwstyle } from '../../src/components/Styles';
 
 
 

@@ -12,7 +12,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withApollo } from "react-apollo";
 import { SIGNUP_MUTATION } from "../../lib/gql/mutations";
-import { signUpStyles } from './Styles'
+import { signUpStyles } from '../../src/components/Styles'
 import Copyright from './Copyright'
 import DialogAlertSignUpIn from "./DialogAlertSignUpIn";
 

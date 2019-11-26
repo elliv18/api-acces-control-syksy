@@ -3,14 +3,14 @@ import { withApollo } from "react-apollo";
 import { Paper, Grid, IconButton, Tooltip, DialogTitle, Dialog, DialogActions, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Typography from '@material-ui/core/Typography';
-import { homeStyleUser } from './Styles'
+import { homeStyleUser } from '../../src/components/Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
 import AddIcon from '@material-ui/icons/Add'
 import DialogUserAskNewApis from "./DialogUserAskNewApis";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import { DialogUserAskNewApisStyle } from './Styles';
+import { DialogUserAskNewApisStyle } from '../../src/components/Styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
