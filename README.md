@@ -59,6 +59,12 @@ Bellow is example `.env` file
 
     # GOOGLE SECRET
     GOOGLE_SECRET=ywHQXfdJQcZwGy1vksRCKgQ5
+
+    # API KEY (NORMAL USER) EXPIRY UNIX TIME
+    APIKEY_EXPIRY_NU_TIME=300
+
+    # API KEY (GOOGLE USER) EXPIRY UNIX TIME
+    APIKEY_EXPIRY_GU_TIME=300
 ```
 
 ## Development environment setup
