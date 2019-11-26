@@ -6,6 +6,7 @@ import {
 import { prisma } from "../../generated/prisma-client";
 import logger from "../../misc/logger";
 import { DEBUG } from "../../environment";
+import apikey_expiry from "../../misc/apiKey_expiry";
 
 export default {
   Query: {
@@ -21,7 +22,13 @@ export default {
         );
       }
 
-      return await prisma.users();
+      const users = await prisma.users();
+
+      users.map(user => {
+        apikey_expiry(user);
+      });
+
+      return users;
     }
   }
 };

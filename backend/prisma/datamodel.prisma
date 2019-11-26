@@ -11,6 +11,7 @@ type User {
   password: String
   api_hash: String
   api_key: String
+  api_expiry: String
   apis: [Api]! @relation(name: "UserApis")
   google: Google @relation(name: "GoogleStuff", link: INLINE, onDelete: CASCADE)
   createdAt: DateTime! @createdAt

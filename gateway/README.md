@@ -183,3 +183,8 @@ If the command succeeds, you will see:
 ```
 
 https://tyk.io/docs/with-tyk-community-edition/tutorials/create-api/
+
+## LINKS
+
+- https://any-api.com/tyk_com/tyk_com/docs/_tyk_apis_
+- http://tyk.management.apievangelist.com/

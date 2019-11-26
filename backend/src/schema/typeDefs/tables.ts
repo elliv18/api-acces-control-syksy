@@ -19,6 +19,7 @@ export default `
         email: String
         api_hash: String
         api_key: String
+        api_expiry: String
         apis: [Api]!
         createdAt: String!
         updatedAt: String!
