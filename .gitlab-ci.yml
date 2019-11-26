@@ -4,8 +4,8 @@ variables:
   REMOTE_DIR: acc-proto
   BACKEND_IMAGE: ${CI_REGISTRY_IMAGE}/backend
   FRONTEND_IMAGE: ${CI_REGISTRY_IMAGE}/frontend
-  PUBLIC_URL:
-  PUBLIC_API_URL:
+  PUBLIC_URL: none
+  PUBLIC_API_URL: none
 
 stages:
   - env
