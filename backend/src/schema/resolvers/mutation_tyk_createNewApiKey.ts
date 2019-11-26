@@ -22,6 +22,11 @@ export default {
         );
       }
 
+      const headers = {
+        "Content-Type": "application/json",
+        "x-tyk-authorization": TYK_GW_SECRET
+      };
+
       // make apikey expiry time
       var time = Date.now();
       const cuTemp = prisma.user({ id: currentUser.id });
@@ -32,15 +37,18 @@ export default {
         time += APIKEY_EXPIRY_NU_TIME;
       }
 
+      // Old api key delete from tyk
+
+      const deleteUrl =
+        "http://gateway:8080/tyk/keys/" + cuTemp.api_hash + "?hashed=true";
+
+      await fetch(deleteUrl, { method: "DELETE", headers: headers });
+
+      // Create new key to tyk
+
       const tykURL = "http://gateway:8080/tyk/keys/create";
 
-      const headers = {
-        "Content-Type": "application/json",
-        "x-tyk-authorization": TYK_GW_SECRET
-      };
-
       // get apis data and make body field
-
       var access_rights = {};
 
       // linked apis id array to make right relations
