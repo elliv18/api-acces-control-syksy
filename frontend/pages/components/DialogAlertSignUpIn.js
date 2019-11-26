@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { dialogStyle } from './Styles'
+import { dialogStyle } from '../../src/components/Styles'
 import { withStyles } from '@material-ui/styles';
 import { Link } from '@material-ui/core';
 

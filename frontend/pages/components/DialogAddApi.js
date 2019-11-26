@@ -11,7 +11,7 @@ import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Select
 import { withApollo } from 'react-apollo';
 import AddIcon from '@material-ui/icons/Add'
 
-import { addUserStyle } from './Styles'
+import { addUserStyle } from '../../src/components/Styles'
 import { CREATE_NEW_API } from '../../lib/gql/mutations';
 import { API_LIST_QUERY } from '../../lib/gql/queries';
 

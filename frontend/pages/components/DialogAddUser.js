@@ -11,7 +11,7 @@ import { withStyles, Button, TextField, InputAdornment, IconButton, Grid, Select
 import { withApollo } from 'react-apollo';
 import { ADD_USER } from '../../lib/gql/mutations';
 
-import { addUserStyle } from './Styles'
+import { addUserStyle } from '../../src/components/Styles'
 import { USERS_QUERY } from '../../lib/gql/queries';
 
 

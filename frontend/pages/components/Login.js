@@ -16,7 +16,7 @@ import { withStyles } from "@material-ui/styles";
 import { LOGIN_MUTATION, GOOGLE_LOGIN } from "../../lib/gql/mutations";
 import Cookies from "js-cookie";
 import Router from "next/router";
-import { loginStyles } from './Styles'
+import { loginStyles } from '../../src/components/Styles'
 import Copyright from './Copyright'
 
 import { GoogleLogin } from 'react-google-login';
