@@ -4,6 +4,7 @@ variables:
   REMOTE_DIR: acc-proto
   BACKEND_IMAGE: ${CI_REGISTRY_IMAGE}/backend
   FRONTEND_IMAGE: ${CI_REGISTRY_IMAGE}/frontend
+  GATEWAY_IMAGE: ${CI_REGISTRY_IMAGE}/gateway
   PUBLIC_URL: none
   PUBLIC_API_URL: none
 
@@ -190,7 +191,6 @@ deploy_gateway:
     - docker:dind
   dependencies:
     - env_prod
-    #- build_frontend
   script:
     - apk update && apk add rsync openssh
     - docker login -u gitlab-ci-token -p "${CI_JOB_TOKEN}" "${CI_REGISTRY}"
