@@ -90,4 +90,4 @@ services:
     restart: always
 volumes:
   postgres: ~
-  redis-data:
+  redis-data: ~
