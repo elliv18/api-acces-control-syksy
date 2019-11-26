@@ -1,0 +1,215 @@
+variables:
+  REMOTE_IP: 172.16.5.146
+  REMOTE_HOST: deploy@${REMOTE_IP}
+  REMOTE_DIR: acc-proto
+  BACKEND_IMAGE: ${CI_REGISTRY_IMAGE}/backend
+  FRONTEND_IMAGE: ${CI_REGISTRY_IMAGE}/frontend
+  PUBLIC_URL:
+  PUBLIC_API_URL:
+
+stages:
+  - env
+  - build
+  - deploy
+
+#########################
+# ENV - START HERE      #
+#########################
+
+env_prod:
+  image: node:slim
+  stage: env
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - "${REMOTE_DIR}/"
+  script:
+    - mkdir "${REMOTE_DIR}"
+    - touch "${REMOTE_DIR}/.env"
+    # Common ENVS
+    - echo "NODE_ENV=production" >> "${REMOTE_DIR}/.env"
+    - echo "DEBUG=0" >> "${REMOTE_DIR}/.env"
+    # BACKEND ENVS
+    - echo "BACKEND_IMAGE=${BACKEND_IMAGE}" >> "${REMOTE_DIR}/.env"
+    - echo "BACKEND_PORT=${BACKEND_PORT}" >> "${REMOTE_DIR}/.env"
+    - echo "BACKEND_HOST=${REMOTE_IP}" >> "${REMOTE_DIR}/.env"
+    - echo "JWT_SECRET=${JWT_SECRET}" >> "${REMOTE_DIR}/.env"
+    - echo "JWT_TIME=${JWT_TIME}" >> "${REMOTE_DIR}/.env"
+    - echo "SALT_ROUNDS=${SALT_ROUNDS}" >> "${REMOTE_DIR}/.env"
+    - echo "MIN_PW=${MIN_PW}" >> "${REMOTE_DIR}/.env"
+    - echo "ROOT_ADMIN_EMAIL=${ROOT_ADMIN_EMAIL}" >> "${REMOTE_DIR}/.env"
+    - echo "ROOT_ADMIN_PASS=${ROOT_ADMIN_PASS}" >> "${REMOTE_DIR}/.env"
+    - echo "APIKEY_EXPIRY_NU_TIME=${APIKEY_EXPIRY_NU_TIME}" >> "${REMOTE_DIR}/.env"
+    - echo "APIKEY_EXPIRY_GU_TIME=${APIKEY_EXPIRY_GU_TIME}" >> "${REMOTE_DIR}/.env"
+    # TYK GATEWAY
+    - echo "TYK_HOST=${TYK_HOST}" >> "${REMOTE_DIR}/.env"
+    - echo "TYK_PORT=${TYK_PORT}" >> "${REMOTE_DIR}/.env"
+    - echo "TYK_GW_SECRET=${TYK_GW_SECRET}" >> "${REMOTE_DIR}/.env"
+    # PRISMA
+    - echo "PRISMA_PORT=3060" >> "${REMOTE_DIR}/.env"
+    # FRONTEND ENVS
+    - echo "FRONTEND_IMAGE=${FRONTEND_IMAGE}" >> "${REMOTE_DIR}/.env"
+    - echo "FRONTEND_PORT=${FRONTEND_PORT}" >> "${REMOTE_DIR}/.env"
+    - echo "FRONTEND_HOST=${REMOTE_IP}" >> "${REMOTE_DIR}/.env"
+    # GOOGLE
+    - echo "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" >> "${REMOTE_DIR}/.env"
+    - echo "GOOGLE_SECRET=${GOOGLE_SECRET}" >> "${REMOTE_DIR}/.env"
+    # PUBLIC URL
+    - echo "PUBLIC_URL=${PUBLIC_URL}" >> "${REMOTE_DIR}/.env"
+    - echo "PUBLIC_API_URL=${PUBLIC_API_URL}" >> "${REMOTE_DIR}/.env"
+
+#########################
+# ENV - ENDS HERE       #
+#########################
+
+#########################
+# BACKEND - START HERE  #
+#########################
+
+build_backend:
+  image: node:slim
+  stage: build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - backend/build/
+  script:
+    - cd backend
+    - yarn install
+    - yarn build
+
+deploy_backend:
+  image: docker:latest
+  stage: deploy
+  services:
+    - docker:dind
+  dependencies:
+    - env_prod
+    - build_backend
+  script:
+    - apk update && apk add rsync openssh
+    - docker login -u gitlab-ci-token -p "${CI_JOB_TOKEN}" "${CI_REGISTRY}"
+    # Prepare SSH settings
+    - mkdir -p ~/.ssh && (umask  077 ; echo "${DEPLOY_KEY_PRIVATE}" | base64 -d > ~/.ssh/id_rsa)
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    # Build images
+    - docker pull "${BACKEND_IMAGE}"
+    - docker build --cache-from "${BACKEND_IMAGE}" -f .dockerfiles/backendProd -t "${BACKEND_IMAGE}" .
+    # Push to remote
+    - docker push "${BACKEND_IMAGE}"
+    # Prepare files for transfer
+    - cp docker-compose.prod.yml "${REMOTE_DIR}/docker-compose.yml"
+    # Copy files to server
+    - rsync -r "${REMOTE_DIR}" "${REMOTE_HOST}:./"
+    # Run container-setup.sh to set up Docker environment on the remote server
+    - ssh ${REMOTE_HOST} /bin/bash "
+      echo ${REMOTE_DIR};
+      cd ~/$REMOTE_DIR;
+      docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
+      docker-compose pull;
+      docker-compose up -d backend prisma postgres;"
+
+#######################
+# BACKEND - ENDS HERE #
+#######################
+
+#########################
+# FRONTEND - START HERE #
+#########################
+
+build_frontend:
+  image: mhart/alpine-node:latest
+  stage: build
+  dependencies:
+    - env_prod
+  artifacts:
+    paths:
+      - frontend/node_modules/
+      - frontend/build/
+  script:
+    - cd frontend
+    - yarn install
+    - DOTENV_PATH=../${REMOTE_DIR}/.env yarn build
+
+deploy_frontend:
+  image: docker:latest
+  stage: deploy
+  services:
+    - docker:dind
+  dependencies:
+    - env_prod
+    - build_frontend
+  script:
+    - apk update && apk add rsync openssh
+    - docker login -u gitlab-ci-token -p "${CI_JOB_TOKEN}" "${CI_REGISTRY}"
+    # Prepare SSH settings
+    - mkdir -p ~/.ssh && (umask  077 ; echo "${DEPLOY_KEY_PRIVATE}" | base64 -d > ~/.ssh/id_rsa)
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    # Build containers
+    - docker pull "${FRONTEND_IMAGE}"
+    - docker build --cache-from "${FRONTEND_IMAGE}" -f .dockerfiles/frontendProd -t "${FRONTEND_IMAGE}" .
+    # Push to remote
+    - docker push "${FRONTEND_IMAGE}"
+    # Prepare files for transfer
+    - cp docker-compose.prod.yml "${REMOTE_DIR}/docker-compose.yml"
+    # Copy files to server
+    - rsync -r "${REMOTE_DIR}" "${REMOTE_HOST}:./"
+    # Run container-setup.sh to set up Docker environment on the remote server
+    - ssh ${REMOTE_HOST} /bin/bash "
+      echo ${REMOTE_DIR};
+      cd ~/$REMOTE_DIR;
+      docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
+      docker-compose pull;
+      docker-compose up -d frontend;"
+########################
+# FRONTEND - ENDS HERE #
+########################
+
+#########################
+# GATEWAY - STARTS HERE #
+#########################
+
+#build_gateway:
+#  image: tykio/tyk-gateway:latest
+#  stage: build
+#  dependencies:
+#    - env_prod
+#  artifacts:
+#    paths:
+#      - gateway/tyk.conf
+#      - /gateway/apps
+#  script:
+#    - cd frontend
+#    - yarn install
+#    - DOTENV_PATH=../${REMOTE_DIR}/.env yarn build
+
+deploy_frontend:
+  image: tykio/tyk-gateway:latest
+  stage: deploy
+  services:
+    - docker:dind
+  dependencies:
+    - env_prod
+    #- build_frontend
+  script:
+    - apk update && apk add rsync openssh
+    - docker login -u gitlab-ci-token -p "${CI_JOB_TOKEN}" "${CI_REGISTRY}"
+    # Prepare SSH settings
+    - mkdir -p ~/.ssh && (umask  077 ; echo "${DEPLOY_KEY_PRIVATE}" | base64 -d > ~/.ssh/id_rsa)
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    # Build containers
+    - docker pull "${GATEWAY_IMAGE}"
+    - docker build --cache-from "${GATEWAY_IMAGE}" -f .dockerfiles/gatewayProd -t "${GATEWAY_IMAGE}" .
+    # Push to remote
+    - docker push "${GATEWAY_IMAGE}"
+    # Prepare files for transfer
+    - cp docker-compose.prod.yml "${REMOTE_DIR}/docker-compose.yml"
+    # Copy files to server
+    - rsync -r "${REMOTE_DIR}" "${REMOTE_HOST}:./"
+    # Run container-setup.sh to set up Docker environment on the remote server
+    - ssh ${REMOTE_HOST} /bin/bash "
+      echo ${REMOTE_DIR};
+      cd ~/$REMOTE_DIR;
+      docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
+      docker-compose pull;
+      docker-compose up -d frontend;"

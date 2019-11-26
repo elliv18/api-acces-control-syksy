@@ -1,0 +1,93 @@
+version: "3.5"
+
+services:
+  prisma:
+    image: prismagraphql/prisma:1.32
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PRISMA_CONFIG: |
+        port: 3060
+        databases:
+          default:
+            connector: postgres
+            host: postgres
+            port: 5432
+            user: prisma
+            password: prisma
+  postgres:
+    image: postgres:10.3
+    restart: always
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  backend:
+    image: ${BACKEND_IMAGE}
+    ports:
+      - "3050:3050"
+    environment:
+      NODE_ENV: production
+      DEBUG: 0
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_PORT: ${BACKEND_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      SALT_ROUNDS: ${SALT_ROUNDS}
+      MIN_PW: ${MIN_PW}
+      ROOT_ADMIN_EMAIL: ${ROOT_ADMIN_EMAIL}
+      ROOT_ADMIN_PASS: ${ROOT_ADMIN_PASS}
+      APIKEY_EXPIRY_NU_TIME: ${APIKEY_EXPIRY_NU_TIME}
+      APIKEY_EXPIRY_GU_TIME: ${APIKEY_EXPIRY_GU_TIME}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      TYK_GW_SECRET: ${TYK_GW_SECRET}
+    env_file: .env
+    depends_on:
+      - prisma
+      - gateway
+    restart: always
+    volumes:
+      - ./logs:/opt/app/logs
+    # reset prisma - uncomment bellow line to do it
+    #command: yarn prisma reset --force
+    # update prisma schema - uncomment bellow line to do it
+    #command: yarn prisma deploy --force
+  frontend:
+    image: ${FRONTEND_IMAGE}
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_PORT: ${BACKEND_PORT}
+      TYK_HOST: ${TYK_HOST}
+      TYK_PORT: ${TYK_PORT}
+      PUBLIC_URL: ${PUBLIC_URL}
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+    restart: always
+  gateway:
+    image: ${GATEWAY_IMAGE}
+    ports:
+      - "8080:8080"
+    #volumes:
+    #  - ./gateway/tyk.conf:/opt/tyk-gateway/tyk.conf
+    #  - ./gateway/apps:/opt/tyk-gateway/apps
+    environment:
+      TYK_GW_SECRET: ${TYK_GW_SECRET}
+    depends_on:
+      - redis
+    restart: always
+  redis:
+    image: redis:5.0-alpine
+    #ports:
+    #  - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+volumes:
+  postgres: ~
+  redis-data:

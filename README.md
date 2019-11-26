@@ -124,3 +124,10 @@ All code has to pass `yarn lint` or it fails the CI.
 Backend log files is saved `backend` folder inside subfolder `logs`. `[root dir]/backend/logs`
 
 Remote server backend logs is inside folder `/opt/app/logs`
+
+## Production server
+
+- 172.16.5.146
+
+- user: student
+- pass: acc2019
