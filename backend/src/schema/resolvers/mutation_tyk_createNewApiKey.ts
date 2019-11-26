@@ -29,7 +29,7 @@ export default {
 
       // make apikey expiry time
       var time = Date.now();
-      const cuTemp = prisma.user({ id: currentUser.id });
+      const cuTemp = await prisma.user({ id: currentUser.id });
 
       if (cuTemp.google_account) {
         time += APIKEY_EXPIRY_GU_TIME;
@@ -39,11 +39,12 @@ export default {
 
       // Old api key delete from tyk
 
-      const deleteUrl =
-        "http://gateway:8080/tyk/keys/" + cuTemp.api_hash + "?hashed=true";
+      if (cuTemp.api_hash !== null) {
+        const deleteUrl =
+          "http://gateway:8080/tyk/keys/" + cuTemp.api_hash + "?hashed=true";
 
-      await fetch(deleteUrl, { method: "DELETE", headers: headers });
-
+        await fetch(deleteUrl, { method: "DELETE", headers: headers });
+      }
       // Create new key to tyk
 
       const tykURL = "http://gateway:8080/tyk/keys/create";
