@@ -37,9 +37,6 @@ class HomeUser extends React.PureComponent {
             openGoogle: this.props.currentUser.google_account
         })
 
-        //console.log(this.props.currentUser.api_key)
-
-        //console.log(this.props.currentUser.apis)
 
     }
     setApiData = (data) => {
