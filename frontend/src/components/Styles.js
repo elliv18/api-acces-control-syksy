@@ -55,7 +55,8 @@ export const homeStyle = theme => ({
 
 export const homeStyleUser = theme => ({
     grid: {
-        width: '90%',
+        width: '100%',
+        marginBottom: 20
         // backgroundColor: theme.palette.primary.main
     },
 
@@ -69,40 +70,37 @@ export const homeStyleUser = theme => ({
         marginLeft: 'auto',
         maxHeight: '620px',
         overflow: 'auto',
-        paddingBottom: '10px',
-        backgroundColor: theme.palette.secondary.main
-
-
-    },
-    card: {
-        margin: 10,
-        width: '90%',
-        borderRadius: 10
-        //background: 'lightGray',
-        // borderStyle: 'solid',
-        //borderColor: 'black'
+        backgroundColor: theme.palette.common.white,
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingTop: 15,
+        paddingBottom: 15
 
     },
+
     title1: {
-        textAlign: 'center',
-        backgroundColor: "#a8a0a099",
-        fontSize: 20,
-        borderRadius: 10
+        fontSize: 30,
 
+        textAlign: 'center',
+        display: 'flex',
+        height: '100%',
     },
-    title2: {
-        padding: 10
-    },
+
     expansionPanelSummary: {
         width: '100%',
-        marginTop: 10,
+        // marginTop: 20,
         borderRadius: 15
     },
-    expansionPanelDiv: {
-        width: '90%'
+    expansionPanelPaper: {
+        width: '98%',
+        marginBottom: 25
     },
     expansionPanel: {
         borderRadius: 10
+    },
+    gridHeader: {
+
+        //backgroundColor: 'lightGray'
     },
     divider: {
         paddingTop: 10,
@@ -123,6 +121,7 @@ export const homeStyleUser = theme => ({
 export const AdminHomeStyles = theme => ({
     root: {
         width: '99%',
+        maxHeight: '85vh',
         marginRight: 'auto',
         marginLeft: 'auto',
         overflow: 'auto',
@@ -212,26 +211,45 @@ export const loginStyles = theme => ({
             backgroundColor: theme.palette.secondary.main
         }
     },
+    root: {
+
+        width: '50%',
+        minWidth: '360px',
+        height: '100%',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        overflow: 'auto',
+        paddingBottom: '10px',
+
+    },
     paper: {
         marginTop: theme.spacing(8),
         display: "flex",
+        padding: '20px',
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        width: '100%'
     },
     avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.primary.main
     },
     form: {
         width: "100%", // Fix IE 11 issue.
         marginTop: theme.spacing(1)
     },
-    submit: {
+    loginButton: {
         margin: theme.spacing(3, 0, 2)
     },
     googleButton: {
         margin: theme.spacing(0, 0, 2),
         textAlign: 'center',
+    },
+    dialogGoogleTitle: {
+        backgroundColor: "#e00408BF",
+    },
+    dialogGoogleActions: {
+        justifyContent: 'center'
+
     }
 });
 
@@ -241,15 +259,30 @@ export const signUpStyles = theme => ({
             backgroundColor: theme.palette.secondary.main
         }
     },
+    root: {
+
+        width: '50%',
+        minWidth: '360px',
+        height: '100%',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        overflow: 'auto',
+        paddingBottom: '10px',
+
+    },
     paper: {
         marginTop: theme.spacing(8),
         display: "flex",
+        padding: '20px',
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        width: '100%',
+        minWidth: '400px',
+
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.primary.main
     },
     form: {
         width: "100%", // Fix IE 11 issue.

@@ -15,6 +15,7 @@ import { SIGNUP_MUTATION } from "../../lib/gql/mutations";
 import { signUpStyles } from '../../src/components/Styles'
 import Copyright from './Copyright'
 import DialogAlertSignUpIn from "./DialogAlertSignUpIn";
+import { Paper } from "@material-ui/core";
 
 
 class SignUp extends React.Component {
@@ -80,9 +81,11 @@ class SignUp extends React.Component {
     const { classes } = this.props;
     const { ok, msg, open } = this.state;
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
+      <div className={classes.root}>
+
+        <Paper elevation={7} className={classes.paper} >
+
+          <CssBaseline />
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -171,18 +174,21 @@ class SignUp extends React.Component {
               </Grid>
             </Grid>
           </form>
-        </div>
-        <Box mt={5}>
-          <Copyright />
-        </Box>
 
-        {
-          // välitetään error message ja ok status dialogille
-          // ok tarkistaa onnistuiko käyttäjän luonti vai ei
-        }
 
-        <DialogAlertSignUpIn open={open} message={msg} handleClose={this.handleClose} ok={ok} />
-      </Container>
+          {
+            /*
+            <Box mt={5}>
+            <Copyright />
+          </Box>
+          */
+            // välitetään error message ja ok status dialogille
+            // ok tarkistaa onnistuiko käyttäjän luonti vai ei
+          }
+
+          <DialogAlertSignUpIn open={open} message={msg} handleClose={this.handleClose} ok={ok} />
+        </Paper>
+      </div>
     );
   }
 }

@@ -230,7 +230,9 @@ function DialogUserAskNewApis(props) {
             <DialogActions className={classes.dialogActions} >
                 <Button
                     className={classes.buttonYes}
-                    variant="outlined"
+                    variant="contained"
+                    color="default"
+
                     onClick={() => {
                         handleGetApiKey()
                         props.handleClose()
@@ -243,7 +245,8 @@ function DialogUserAskNewApis(props) {
                 </Button>
                 <Button
                     className={classes.buttonNo}
-                    variant="outlined"
+                    variant="contained"
+                    color="default"
                     onClick={props.handleClose}
                 >
                     Cancel

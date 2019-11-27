@@ -173,6 +173,7 @@ function AdminUsersTableBody(props) {
                                             <AddIcon />
                                         </IconButton>
                                     </div>
+
                                 </StyledTableCell>
                                 <StyledTableCell align="center">{row.email}</StyledTableCell>
                                 <StyledTableCell align="center">{row.userType}</StyledTableCell>
