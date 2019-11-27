@@ -28,5 +28,22 @@ export default async user => {
         id: user.id
       }
     });
+
+    // deleting old relations
+    const userTemp = await prisma.user({ id: user.id }).apis();
+    var oldApiIds = []; // temp
+    userTemp.map(x => {
+      oldApiIds.push({ id: x.id });
+    });
+    await prisma.updateUser({
+      data: {
+        apis: {
+          disconnect: oldApiIds
+        }
+      },
+      where: {
+        id: user.id
+      }
+    });
   }
 };
