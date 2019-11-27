@@ -212,4 +212,4 @@ deploy_gateway:
       cd ~/$REMOTE_DIR;
       docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY;
       docker-compose pull;
-      docker-compose up -d frontend;"
+      docker-compose up -d gateway redis;"
