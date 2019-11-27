@@ -147,7 +147,7 @@ deploy_frontend:
     - mkdir -p ~/.ssh && (umask  077 ; echo "${DEPLOY_KEY_PRIVATE}" | base64 -d > ~/.ssh/id_rsa)
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     # Build containers
-    - docker pull "${FRONTEND_IMAGE}"
+    #- docker pull "${FRONTEND_IMAGE}"
     - docker build --cache-from "${FRONTEND_IMAGE}" -f .dockerfiles/frontendProd -t "${FRONTEND_IMAGE}" .
     # Push to remote
     - docker push "${FRONTEND_IMAGE}"
@@ -184,7 +184,7 @@ deploy_gateway:
     - mkdir -p ~/.ssh && (umask  077 ; echo "${DEPLOY_KEY_PRIVATE}" | base64 -d > ~/.ssh/id_rsa)
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     # Build containers
-    - docker pull "${GATEWAY_IMAGE}"
+    #- docker pull "${GATEWAY_IMAGE}"
     - docker build --cache-from "${GATEWAY_IMAGE}" -f .dockerfiles/gatewayProd -t "${GATEWAY_IMAGE}" .
     # Push to remote
     - docker push "${GATEWAY_IMAGE}"
