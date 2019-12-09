@@ -7,7 +7,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { IconButton, Tooltip, Checkbox } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
-import { StyledTableCell } from './tableFunctions'
+import { StyledTableCell } from '../../../src/components/tableFunctions'
 import EditIcon from '@material-ui/icons/Edit'
 import { APIS_DELETE } from '../../../lib/gql/mutations';
 

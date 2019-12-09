@@ -1,7 +1,7 @@
 import React from "react";
 import { withApollo } from "react-apollo";
 import Cookies from "js-cookie";
-import { Link, Switch, Fab } from "@material-ui/core";
+import { Link, Switch, Fab, Grid } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import { CURRENTUSER } from "../../lib/gql/mutations";
@@ -13,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Router from 'next/router'
-import { navStyles } from './Styles'
+import { navStyles } from '../../src/components/Styles'
 import DialogResetPw from "./DialogResetPw";
 import App from "./App";
 import DoneSnackbar from "./SnackBar";
@@ -132,47 +132,56 @@ class NavBar extends React.PureComponent {
                     {currentUser.email
                         ? <AppBar position="sticky" className={classes.appBar}>
                             <Toolbar>
-                                <Typography variant="h6" className={classes.title}>
-                                    {currentUser ? currentUser.userType + ": " + currentUser.email : null}
-                                </Typography>
+                                <Grid container >
+                                    <Grid item xs={6}>
+                                        <Typography variant="h6" className={classes.title}>
+                                            {currentUser ? currentUser.userType + ": " + currentUser.email : null}
+                                        </Typography>
+                                    </Grid>
 
-                                {//Näytetään vain adminille switch Users/apis
-                                    currentUser ? currentUser.userType === 'ADMIN' ?
-                                        <div style={{ flexGrow: 1, fontSize: '20px' }}>
-                                            {this.state.switch === 'USERS'
-                                                ? "USERS" : null}
-                                            <Switch
-                                                value={this.state.switch}
-                                                onChange={this.handleChangeSwitch}
-                                            />
-                                            {this.state.switch === 'APIS'
-                                                ? "APIS" : null}
-                                        </div>
-                                        : null
-                                        : null}
-                                {currentUser.userType === 'USER' && !currentUser.google_account
-                                    ?
-
-                                    <IconButton
-                                        color="inherit"
-                                        onClick={this.handleClickOpenMenu}
-                                        aria-label='menu button'>
-                                        <MenuIcon />
-                                    </IconButton>
-                                    :
-
-                                    <Fab
-                                        variant="extended"
-                                        size="small"
-                                        aria-label="like"
-                                        color="secondary"
-                                        onClick={this.handleLogOut}
-                                    >
-                                        <LogOutIcon />
-                                        Logout
-                                    </Fab>
-
-                                }
+                                    <Grid item xs={3}>
+                                        {//Näytetään vain adminille switch Users/apis
+                                            currentUser ? currentUser.userType === 'ADMIN' ?
+                                                <div style={{ flexGrow: 1, fontSize: '20px' }}>
+                                                    {this.state.switch === 'USERS'
+                                                        ? "USERS" : null}
+                                                    <Switch
+                                                        value={this.state.switch}
+                                                        onChange={this.handleChangeSwitch}
+                                                    />
+                                                    {this.state.switch === 'APIS'
+                                                        ? "APIS" : null}
+                                                </div>
+                                                : null
+                                                : null}
+                                    </Grid>
+                                    <Grid item xs={3} >
+                                        {currentUser.userType === 'USER' && !currentUser.google_account
+                                            ?
+                                            <div style={{ textAlign: 'right' }}>
+                                                <IconButton
+                                                    color="inherit"
+                                                    onClick={this.handleClickOpenMenu}
+                                                    aria-label='menu button'>
+                                                    <MenuIcon />
+                                                </IconButton>
+                                            </div>
+                                            :
+                                            <div style={{ textAlign: 'right' }}>
+                                                <Fab
+                                                    variant="extended"
+                                                    size="small"
+                                                    aria-label="like"
+                                                    color="secondary"
+                                                    onClick={this.handleLogOut}
+                                                >
+                                                    <LogOutIcon />
+                                                    Logout
+                                            </Fab>
+                                            </div>
+                                        }
+                                    </Grid>
+                                </Grid>
                             </Toolbar>
                         </AppBar>
                         : <div style={{ height: '64px', backgroundColor: '#B9CCD0' }} />

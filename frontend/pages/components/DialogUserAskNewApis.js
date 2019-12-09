@@ -6,7 +6,7 @@ import { withStyles, Button, DialogContent, Typography, Checkbox, Grid, FormCont
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import { DialogUserAskNewApisStyle } from './Styles';
+import { DialogUserAskNewApisStyle } from '../../src/components/Styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CREATE_NEW_API_KEY } from '../../lib/gql/mutations';
 import { API_LIST_QUERY } from '../../lib/gql/queries';
@@ -230,7 +230,9 @@ function DialogUserAskNewApis(props) {
             <DialogActions className={classes.dialogActions} >
                 <Button
                     className={classes.buttonYes}
-                    variant="outlined"
+                    variant="contained"
+                    color="default"
+
                     onClick={() => {
                         handleGetApiKey()
                         props.handleClose()
@@ -243,7 +245,8 @@ function DialogUserAskNewApis(props) {
                 </Button>
                 <Button
                     className={classes.buttonNo}
-                    variant="outlined"
+                    variant="contained"
+                    color="default"
                     onClick={props.handleClose}
                 >
                     Cancel

@@ -5,7 +5,7 @@ import { Paper, Grid, IconButton, Tooltip, CssBaseline, Toolbar, TextField } fro
 import { withStyles } from "@material-ui/styles";
 // omat componentit
 import ConfirmDialog from "./ConfirmDialog";
-import { AdminHomeStyles } from './Styles'
+import { AdminHomeStyles } from '../../src/components/Styles'
 import DialogResetPw from "./DialogResetPw";
 import DialogAddUser from "./DialogAddUser";
 import helpers from "../../src/components/helpers";

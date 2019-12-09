@@ -3,7 +3,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withStyles, Button } from '@material-ui/core';
 import helpers from '../../src/components/helpers';
-import { Confirmstyle } from './Styles';
+import { Confirmstyle } from '../../src/components/Styles';
 
 
 function ConfirmDialog(props) {

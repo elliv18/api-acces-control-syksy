@@ -1,0 +1,6 @@
+#! dockerfile
+FROM tykio/tyk-gateway:latest
+
+COPY ./gateway/tyk.conf /opt/tyk-gateway/tyk.conf
+COPY ./gateway/apps /opt/tyk-gateway/apps
+

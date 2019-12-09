@@ -5,7 +5,7 @@ import { CURRENTUSER } from "../../lib/gql/mutations";
 
 import AdminHome from './AdminHome'
 import UserHome from './UserHome'
-import { homeStyle } from './Styles'
+import { homeStyle } from '../../src/components/Styles'
 import getConfig from 'next/config'
 import Router from 'next/router'
 

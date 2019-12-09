@@ -3,14 +3,14 @@ import { withApollo } from "react-apollo";
 import { Paper, Grid, IconButton, Tooltip, DialogTitle, Dialog, DialogActions, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import Typography from '@material-ui/core/Typography';
-import { homeStyleUser } from './Styles'
+import { homeStyleUser } from '../../src/components/Styles'
 import { API_LIST_QUERY } from "../../lib/gql/queries";
 import AddIcon from '@material-ui/icons/Add'
 import DialogUserAskNewApis from "./DialogUserAskNewApis";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import { DialogUserAskNewApisStyle } from './Styles';
+import { DialogUserAskNewApisStyle } from '../../src/components/Styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
@@ -37,6 +37,7 @@ class HomeUser extends React.PureComponent {
             openGoogle: this.props.currentUser.google_account
         })
 
+
     }
     setApiData = (data) => {
         this.setState({ apiList: data.apis, apiKey: data.api_key })
@@ -62,13 +63,30 @@ class HomeUser extends React.PureComponent {
         const { classes } = this.props;
 
         return (
-            <Paper className={classes.paper} elevation={7}>
-                <Grid container spacing={0} className={classes.grid}>
-                    <Grid item xs={6}>
-                        <h1 >Your apis </h1>
+            <Paper elevation={5} className={classes.paper}>
+                <Grid
+                    container spacing={0}
+                    className={classes.grid}
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    <Grid item xs={3} className={classes.gridHeader} >
+                        <Typography className={classes.title1}>
+                            Your apis
+                        </Typography>
                     </Grid>
+                    <Grid item xs={6} className={classes.gridHeader}>
+                        {this.state.apiKey
+                            ?
+                            <Typography>
+                                Your api key: {this.state.apiKey}
+                            </Typography>
 
-                    <Grid item xs={6}>
+                            : null
+                        }
+                    </Grid>
+                    <Grid item xs={3} className={classes.gridHeader}>
                         <div style={{ textAlign: 'right' }}>
                             <Tooltip title="Get new apis">
                                 <IconButton
@@ -79,12 +97,7 @@ class HomeUser extends React.PureComponent {
                             </Tooltip>
                         </div>
                     </Grid>
-                    {this.state.apiKey
-                        ? <Grid item xs={12}>
-                            <h3>Your api key: {this.state.apiKey}</h3>
-                        </Grid>
-                        : null
-                    }
+
 
                 </Grid>
                 {
@@ -93,7 +106,7 @@ class HomeUser extends React.PureComponent {
                         apiList.map((row, index) => {
                             //    console.log('row', ...row.urls)
                             return (
-                                <div className={classes.expansionPanelDiv} key={index}>
+                                <Paper elevation={4} className={classes.expansionPanelPaper} key={index}>
                                     <ExpansionPanel
                                         className={classes.expansionPanel}
 
@@ -112,7 +125,7 @@ class HomeUser extends React.PureComponent {
 
                                         <ExpansionPanelDetails>
                                             <Grid container>
-                                                <Grid item xs={12} className={classes.padding}>
+                                                <Grid item xs={12} className={classes.divider}>
                                                     <Typography>
                                                         <b>Root path:  </b>
                                                         http://
@@ -154,7 +167,7 @@ class HomeUser extends React.PureComponent {
                                             </Grid>
                                         </ExpansionPanelDetails>
                                     </ExpansionPanel>
-                                </div>
+                                </Paper>
                             )
                         })
                         : null

@@ -7,7 +7,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { IconButton, Tooltip, Checkbox } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
-import { StyledTableCell } from './tableFunctions'
+import { StyledTableCell } from '../../../src/components/tableFunctions'
 import EditIcon from '@material-ui/icons/Edit'
 
 
@@ -17,7 +17,7 @@ const headCells = [
 
     { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
     { id: 'userType', numeric: false, disablePadding: false, label: 'Usertype' },
-    { id: 'api_hash', numeric: false, disablePadding: false, label: 'Api key' },
+    { id: 'api_key', numeric: false, disablePadding: false, label: 'Api key' },
     { id: 'api_expiry', numeric: false, disablePadding: false, label: 'Api expires' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'User created' },
 
@@ -30,7 +30,7 @@ function AdminUsersTableHeaders(props) {
     };
 
     return (
-        <TableHead>
+        <TableHead >
             <TableRow>
                 <StyledTableCell padding="checkbox">
                     <Checkbox
@@ -49,12 +49,14 @@ function AdminUsersTableHeaders(props) {
 
                     >
                         <TableSortLabel
+
                             hideSortIcon={true}
                             active={headCell.id !== 'actions' && orderBy === headCell.id}
                             direction={order}
                             onClick={createSortHandler(headCell.id)}
+
                         >
-                            <div>{headCell.label}</div>
+                            <div >{headCell.label}</div>
                             {orderBy === headCell.id && headCell.id !== 'actions' ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? '' : ''}

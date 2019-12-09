@@ -16,7 +16,7 @@ import { withStyles } from "@material-ui/styles";
 import { LOGIN_MUTATION, GOOGLE_LOGIN } from "../../lib/gql/mutations";
 import Cookies from "js-cookie";
 import Router from "next/router";
-import { loginStyles } from './Styles'
+import { loginStyles } from '../../src/components/Styles'
 import Copyright from './Copyright'
 
 import { GoogleLogin } from 'react-google-login';
@@ -24,6 +24,7 @@ import { GoogleLogin } from 'react-google-login';
 import getConfig from "next/config";
 import DialogAlertSignUpIn from "./DialogAlertSignUpIn";
 import { USERS_QUERY } from "../../lib/gql/queries";
+import { Paper, Dialog, DialogTitle, DialogActions, DialogContent } from "@material-ui/core";
 
 const { publicRuntimeConfig } = getConfig();
 const { GOOGLE_CLIENT_ID } = publicRuntimeConfig;
@@ -39,6 +40,7 @@ class Login extends React.Component {
       email: "",
       password: "",
       open: false,
+      openGoogle: false,
       msg: '',
       client: props.client
     };
@@ -71,7 +73,7 @@ class Login extends React.Component {
 
 
   onFailure = (error) => {
-    alert(error);
+    this.handleOpenGoogle()
   };
 
 
@@ -133,16 +135,22 @@ class Login extends React.Component {
       null;
   };
 
+  handleOpenGoogle = () => {
+    this.setState({ openGoogle: true })
+  }
+  handleCloseGoogle = () => {
+    this.setState({ openGoogle: false })
+  }
 
 
   render() {
     const { classes } = this.props;
-    const { msg, open } = this.state;
+    const { msg, open, openGoogle } = this.state;
     return (
 
-      < Container component="main" maxWidth="xs" >
-        <CssBaseline />
-        <div className={classes.paper}>
+      <div className={classes.root}>
+        <Paper elevation={7} className={classes.paper} >
+          <CssBaseline />
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -184,15 +192,12 @@ class Login extends React.Component {
                 }
               }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
+              className={classes.loginButton}
               onClick={() =>
                 this.logIn()
               }
@@ -202,7 +207,18 @@ class Login extends React.Component {
             <div className={classes.googleButton}>
               <GoogleLogin
                 clientId={GOOGLE_CLIENT_ID}
-                buttonText="Login with google account"
+                render={renderProps => (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.googleButton}
+                    onClick={renderProps.onClick}
+                  >
+                    Login with Google
+                    </Button>
+                )}
+                buttonText="Login"
                 onSuccess={this.googleResponse}
                 onFailure={this.onFailure}
               />
@@ -220,15 +236,37 @@ class Login extends React.Component {
               </Grid>
             </Grid>
           </form>
-        </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
+          {
+            /*
+            <Box mt={8}>
+            <Copyright />
+          </Box>
+          */
+          }
 
-        <DialogAlertSignUpIn open={open} message={msg} handleClose={this.handleClose} />
+          <DialogAlertSignUpIn open={open} message={msg} handleClose={this.handleClose} />
 
-      </Container >
+        </Paper>
 
+        <Dialog open={openGoogle}>
+          <DialogTitle
+            className={classes.dialogGoogleTitle}
+          >
+            Google login failed!
+            </DialogTitle>
+
+          <DialogActions className={classes.dialogGoogleActions} >
+            <Button
+              onClick={this.handleCloseGoogle}
+            >
+              Close
+                </Button>
+
+          </DialogActions>
+        </Dialog>
+
+
+      </div>
     );
   }
 }
